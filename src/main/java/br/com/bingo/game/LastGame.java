@@ -271,7 +271,7 @@ public class LastGame {
             if(playerData.getPoints() > 0){
                 Bukkit.broadcastMessage(ChatColor.GREEN + Bukkit.getOfflinePlayer(playerData.getUuid()).getName() + ": +" + playerData.getPoints() + " pontos");
             }else{
-                Bukkit.broadcastMessage(ChatColor.RED + Bukkit.getOfflinePlayer(playerData.getUuid()).getName() + ": -" + playerData.getPoints() + " pontos");
+                Bukkit.broadcastMessage(ChatColor.RED + Bukkit.getOfflinePlayer(playerData.getUuid()).getName() + ": " + playerData.getPoints() + " pontos");
             }
             if(PlayersStorageUtil.checkPlayer(playerData)){
                 PlayersStorageUtil.updatePlayer(playerData);
