@@ -114,70 +114,70 @@ public enum Ranks {
         }
         ItemStack potato = new ItemStack(Material.POISONOUS_POTATO);
         ItemMeta potatoMeta = potato.getItemMeta();
-        potatoMeta.setDisplayName(ChatColor.YELLOW + "Batata");
+        potatoMeta.setDisplayName(ChatColor.YELLOW + "✡"  + " Batata");
         potatoMeta.setLore(java.util.Arrays.asList(ChatColor.GRAY + "XP: " + ChatColor.YELLOW + "0" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "49"));
         potato.setItemMeta(potatoMeta);
         inv.setItem(0, potato);
 
         ItemStack coal = new ItemStack(Material.COAL);
         ItemMeta coalMeta = coal.getItemMeta();
-        coalMeta.setDisplayName(ChatColor.GRAY + "Carvão");
+        coalMeta.setDisplayName(ChatColor.GRAY + "♦" + " Carvão");
         coalMeta.setLore(java.util.Arrays.asList(ChatColor.GRAY + "Tier I: " + ChatColor.YELLOW + "50" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "99", ChatColor.GRAY + "Tier II: " + ChatColor.YELLOW + "100" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "149", ChatColor.GRAY + "Tier III: " + ChatColor.YELLOW + "150" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "199"));
         coal.setItemMeta(coalMeta);
         inv.setItem(1, coal);
 
         ItemStack copper = new ItemStack(Material.COPPER_INGOT);
         ItemMeta copperMeta = copper.getItemMeta();
-        copperMeta.setDisplayName(ChatColor.BLUE + "Cobre");
+        copperMeta.setDisplayName(ChatColor.BLUE + "✦" + " Cobre");
         copperMeta.setLore(java.util.Arrays.asList(ChatColor.GRAY + "Tier I: " + ChatColor.YELLOW + "200" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "249", ChatColor.GRAY + "Tier II: " + ChatColor.YELLOW + "250" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "299", ChatColor.GRAY + "Tier III: " + ChatColor.YELLOW + "300" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "349"));
         copper.setItemMeta(copperMeta);
         inv.setItem(2, copper);
 
         ItemStack iron = new ItemStack(Material.IRON_INGOT);
         ItemMeta ironMeta = iron.getItemMeta();
-        ironMeta.setDisplayName(ChatColor.WHITE + "Ferro");
+        ironMeta.setDisplayName(ChatColor.WHITE + "✸" + " Ferro");
         ironMeta.setLore(java.util.Arrays.asList(ChatColor.GRAY + "Tier I: " + ChatColor.YELLOW + "350" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "399", ChatColor.GRAY + "Tier II: " + ChatColor.YELLOW + "400" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "449", ChatColor.GRAY + "Tier III: " + ChatColor.YELLOW + "450" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "499"));
         iron.setItemMeta(ironMeta);
         inv.setItem(3, iron);
 
         ItemStack gold = new ItemStack(Material.GOLD_INGOT);
         ItemMeta goldMeta = gold.getItemMeta();
-        goldMeta.setDisplayName(ChatColor.GOLD + "Ouro");
+        goldMeta.setDisplayName(ChatColor.GOLD + "❊" + " Ouro");
         goldMeta.setLore(java.util.Arrays.asList(ChatColor.GRAY + "Tier I: " + ChatColor.YELLOW + "500" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "549", ChatColor.GRAY + "Tier II: " + ChatColor.YELLOW + "550" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "599", ChatColor.GRAY + "Tier III: " + ChatColor.YELLOW + "600" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "649"));
         gold.setItemMeta(goldMeta);
         inv.setItem(4, gold);
 
         ItemStack diamond = new ItemStack(Material.DIAMOND);
         ItemMeta diamondMeta = diamond.getItemMeta();
-        diamondMeta.setDisplayName(ChatColor.AQUA + "Diamante");
+        diamondMeta.setDisplayName(ChatColor.AQUA + "✮" + " Diamante");
         diamondMeta.setLore(java.util.Arrays.asList(ChatColor.GRAY + "Tier I: " + ChatColor.YELLOW + "650" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "699", ChatColor.GRAY + "Tier II: " + ChatColor.YELLOW + "700" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "749", ChatColor.GRAY + "Tier III: " + ChatColor.YELLOW + "750" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "799"));
         diamond.setItemMeta(diamondMeta);
         inv.setItem(5, diamond);
 
         ItemStack emerald = new ItemStack(Material.EMERALD);
         ItemMeta emeraldMeta = emerald.getItemMeta();
-        emeraldMeta.setDisplayName(ChatColor.GREEN + "Esmeralda");
+        emeraldMeta.setDisplayName(ChatColor.GREEN + "❃" + " Esmeralda");
         emeraldMeta.setLore(java.util.Arrays.asList(ChatColor.GRAY + "Tier I: " + ChatColor.YELLOW + "800" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "849", ChatColor.GRAY + "Tier II: " + ChatColor.YELLOW + "850" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "899", ChatColor.GRAY + "Tier III: " + ChatColor.YELLOW + "900" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "949"));
         emerald.setItemMeta(emeraldMeta);
         inv.setItem(6, emerald);
 
         ItemStack netherite = new ItemStack(Material.NETHERITE_INGOT);
         ItemMeta netheriteMeta = netherite.getItemMeta();
-        netheriteMeta.setDisplayName(ChatColor.RED + "Netherite");
+        netheriteMeta.setDisplayName(ChatColor.RED + "❖" + " Netherite");
         netheriteMeta.setLore(java.util.Arrays.asList(ChatColor.GRAY + "Tier I: " + ChatColor.YELLOW + "950" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "999", ChatColor.GRAY + "Tier II: " + ChatColor.YELLOW + "1000" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "1049", ChatColor.GRAY + "Tier III: " + ChatColor.YELLOW + "1050" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "1099"));
         netherite.setItemMeta(netheriteMeta);
         inv.setItem(7, netherite);
 
         ItemStack dragon = new ItemStack(Material.DRAGON_EGG);
         ItemMeta dragonMeta = dragon.getItemMeta();
-        dragonMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Dragão");
+        dragonMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "✪" + " Dragão");
         dragonMeta.setLore(java.util.Arrays.asList(ChatColor.GRAY + "Tier I: " + ChatColor.YELLOW + "1100" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "1149", ChatColor.GRAY + "Tier II: " + ChatColor.YELLOW + "1150" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "1199", ChatColor.GRAY + "Tier III: " + ChatColor.YELLOW + "1200" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "1249"));
         dragon.setItemMeta(dragonMeta);
         inv.setItem(8, dragon);
 
         ItemStack wither = new ItemStack(Material.NETHER_STAR);
         ItemMeta witherMeta = wither.getItemMeta();
-        witherMeta.setDisplayName(ChatColor.DARK_RED + "Master");
+        witherMeta.setDisplayName(ChatColor.DARK_RED + "㊝" + " Master");
         witherMeta.setLore(java.util.Arrays.asList(ChatColor.GRAY + "XP: " + ChatColor.GOLD + "1250" + ChatColor.GRAY + "+"));
         wither.setItemMeta(witherMeta);
         inv.setItem(13, wither);
