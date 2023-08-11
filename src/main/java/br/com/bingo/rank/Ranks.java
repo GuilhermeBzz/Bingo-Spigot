@@ -1,5 +1,7 @@
 package br.com.bingo.rank;
 
+import br.com.bingo.rank.models.players.PlayersData;
+import br.com.bingo.rank.utils.players.PlayersStorageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -10,33 +12,33 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public enum Ranks {
 
-    Potato(ChatColor.YELLOW, Material.POISONOUS_POTATO, 0, 49, "Batata", 0),
-    COAL_1(ChatColor.GRAY,Material.COAL, 50, 99, "Carvão |", 1),
+    Potato(ChatColor.YELLOW, Material.POISONOUS_POTATO, 0, 49, "Batata", 0 ,"✡"),
+    COAL_1(ChatColor.GRAY,Material.COAL, 50, 99, "Carvão I", 1,"I♦"),
 
-    COAL_2(ChatColor.GRAY,Material.COAL, 100, 149, "Carvão ||", 2),
-    COAL_3(ChatColor.GRAY,Material.COAL, 150, 199, "Carvão |||", 3),
-    COPPER_1(ChatColor.BLUE,Material.COPPER_INGOT, 200, 249, "Cobre |", 1),
-    COPPER_2(ChatColor.BLUE,Material.COPPER_INGOT, 250, 299, "Cobre ||", 2),
-    COPPER_3(ChatColor.BLUE,Material.COPPER_INGOT, 300, 349, "Cobre |||", 3),
-    IRON_1(ChatColor.WHITE,Material.IRON_INGOT, 350, 399, "Ferro |", 1),
-    IRON_2(ChatColor.WHITE,Material.IRON_INGOT, 400, 449, "Ferro ||", 2),
-    IRON_3(ChatColor.WHITE,Material.IRON_INGOT, 450, 499, "Ferro |||", 3),
-    GOLD_1(ChatColor.GOLD,Material.GOLD_INGOT, 500, 549, "Ouro |", 1),
-    GOLD_2(ChatColor.GOLD,Material.GOLD_INGOT, 550, 599, "Ouro ||", 2),
-    GOLD_3(ChatColor.GOLD,Material.GOLD_INGOT, 600, 649, "Ouro |||", 3),
-    DIAMOND_1(ChatColor.AQUA,Material.DIAMOND, 650, 699, "Diamante |", 1),
-    DIAMOND_2(ChatColor.AQUA,Material.DIAMOND, 700, 749, "Diamante ||", 2),
-    DIAMOND_3(ChatColor.AQUA,Material.DIAMOND, 750, 799, "Diamante |||", 3),
-    EMERALD_1(ChatColor.DARK_GREEN,Material.EMERALD, 800, 849, "Esmeralda |", 1),
-    EMERALD_2(ChatColor.DARK_GREEN,Material.EMERALD, 850, 899, "Esmeralda ||", 2),
-    EMERALD_3(ChatColor.DARK_GREEN,Material.EMERALD, 900, 949, "Esmeralda |||", 3),
-    NETHERITE_1(ChatColor.RED,Material.NETHERITE_INGOT, 950, 999, "Netherite |", 1),
-    NETHERITE_2(ChatColor.RED,Material.NETHERITE_INGOT, 1000, 1049, "Netherite ||", 2),
-    NETHERITE_3(ChatColor.RED,Material.NETHERITE_INGOT, 1050, 1099, "Netherite |||", 3),
-    DRAGON_1(ChatColor.LIGHT_PURPLE,Material.DRAGON_EGG, 1100, 1149, "Dragão |", 1),
-    DRAGON_2(ChatColor.LIGHT_PURPLE,Material.DRAGON_EGG, 1150, 1199, "Dragão ||", 2),
-    DRAGON_3(ChatColor.LIGHT_PURPLE,Material.DRAGON_EGG, 1200, 1249, "Dragão |||", 3),
-    MASTER(ChatColor.DARK_RED,Material.NETHER_STAR, 1250, 999999999, "Mestre", 0);
+    COAL_2(ChatColor.GRAY,Material.COAL, 100, 149, "Carvão II", 2,"II♦"),
+    COAL_3(ChatColor.GRAY,Material.COAL, 150, 199, "Carvão III", 3,"III♦"),
+    COPPER_1(ChatColor.BLUE,Material.COPPER_INGOT, 200, 249, "Cobre I", 1,"I✦"),
+    COPPER_2(ChatColor.BLUE,Material.COPPER_INGOT, 250, 299, "Cobre II", 2,"II✦"),
+    COPPER_3(ChatColor.BLUE,Material.COPPER_INGOT, 300, 349, "Cobre III", 3,"III✦"),
+    IRON_1(ChatColor.WHITE,Material.IRON_INGOT, 350, 399, "Ferro I", 1,"I✸"),
+    IRON_2(ChatColor.WHITE,Material.IRON_INGOT, 400, 449, "Ferro II", 2,"II✸"),
+    IRON_3(ChatColor.WHITE,Material.IRON_INGOT, 450, 499, "Ferro III", 3,"III✸"),
+    GOLD_1(ChatColor.GOLD,Material.GOLD_INGOT, 500, 549, "Ouro I", 1,"I❊"),
+    GOLD_2(ChatColor.GOLD,Material.GOLD_INGOT, 550, 599, "Ouro II", 2,"II❊"),
+    GOLD_3(ChatColor.GOLD,Material.GOLD_INGOT, 600, 649, "Ouro III", 3,"III❊"),
+    DIAMOND_1(ChatColor.AQUA,Material.DIAMOND, 650, 699, "Diamante I", 1,"I✮"),
+    DIAMOND_2(ChatColor.AQUA,Material.DIAMOND, 700, 749, "Diamante II", 2,"II✮"),
+    DIAMOND_3(ChatColor.AQUA,Material.DIAMOND, 750, 799, "Diamante III", 3,"III✮"),
+    EMERALD_1(ChatColor.DARK_GREEN,Material.EMERALD, 800, 849, "Esmeralda I", 1,"I❃"),
+    EMERALD_2(ChatColor.DARK_GREEN,Material.EMERALD, 850, 899, "Esmeralda II", 2,"II❃"),
+    EMERALD_3(ChatColor.DARK_GREEN,Material.EMERALD, 900, 949, "Esmeralda III", 3,"III❃"),
+    NETHERITE_1(ChatColor.RED,Material.NETHERITE_INGOT, 950, 999, "Netherite I", 1,"I❖"),
+    NETHERITE_2(ChatColor.RED,Material.NETHERITE_INGOT, 1000, 1049, "Netherite II", 2,"II❖"),
+    NETHERITE_3(ChatColor.RED,Material.NETHERITE_INGOT, 1050, 1099, "Netherite III", 3,"III❖"),
+    DRAGON_1(ChatColor.LIGHT_PURPLE,Material.DRAGON_EGG, 1100, 1149, "Dragão I", 1,"I✪"),
+    DRAGON_2(ChatColor.LIGHT_PURPLE,Material.DRAGON_EGG, 1150, 1199, "Dragão II", 2,"II✪"),
+    DRAGON_3(ChatColor.LIGHT_PURPLE,Material.DRAGON_EGG, 1200, 1249, "Dragão III", 3,"III✪"),
+    MASTER(ChatColor.DARK_RED,Material.NETHER_STAR, 1250, 999999999, "Mestre", 0,"㊝");
 
 
     private final ChatColor color;
@@ -46,13 +48,21 @@ public enum Ranks {
     private final String name;
     private final int tier;
 
-    Ranks(ChatColor color, Material icon, int min, int max, String name, int tier) {
+    private final String prefix;
+
+    Ranks(ChatColor color, Material icon, int min, int max, String name, int tier, String prefix) {
         this.color = color;
         this.icon = icon;
         this.min = min;
         this.max = max;
         this.name = name;
         this.tier = tier;
+        this.prefix = prefix;
+    }
+
+
+    public String getPrefix() {
+        return prefix;
     }
 
     public Material getIcon() {
@@ -173,5 +183,17 @@ public enum Ranks {
         inv.setItem(13, wither);
 
         player.openInventory(inv);
+    }
+
+    public static void setPrefixAndDisplayName(Player player){
+        for(PlayersData playerData : PlayersStorageUtil.getPlayers()){
+            if(playerData.getUuid().equals(player.getUniqueId())){
+                Ranks rank = Ranks.getRank(playerData.getPoints());
+                String prefix = rank.getColor() + rank.getPrefix() + ChatColor.RESET;
+                player.setPlayerListName(prefix + " " + player.getPlayerListName());
+                player.setDisplayName(player.getPlayerListName());
+
+            }
+        }
     }
 }

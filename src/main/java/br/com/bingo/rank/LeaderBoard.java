@@ -77,27 +77,27 @@ public class LeaderBoard {
         Collections.sort(auxList, comparator.reversed());
 
         if(!auxList.isEmpty()){
-            top1.setCustomName(ChatColor.YELLOW + "1º " + Ranks.getRank(auxList.get(0).getPoints()).getColor() + Bukkit.getOfflinePlayer(auxList.get(0).getUuid()).getName() + " §f" + auxList.get(0).getPoints() + " §7pontos");
+            top1.setCustomName(ChatColor.YELLOW + "1º " + Ranks.getRank(auxList.get(0).getPoints()).getColor() + Ranks.getRank(auxList.get(0).getPoints()).getPrefix() + " " + Bukkit.getOfflinePlayer(auxList.get(0).getUuid()).getName() + " §f" + auxList.get(0).getPoints() + " §7pontos");
         }else{
             top1.setCustomName(ChatColor.GRAY + "-");
         }
         if(auxList.size() > 1){
-            top2.setCustomName(ChatColor.YELLOW + "2º " + Ranks.getRank(auxList.get(1).getPoints()).getColor() + Bukkit.getOfflinePlayer(auxList.get(1).getUuid()).getName() + " §f" + auxList.get(1).getPoints() + " §7pontos");
+            top2.setCustomName(ChatColor.YELLOW + "2º " + Ranks.getRank(auxList.get(1).getPoints()).getColor() + Ranks.getRank(auxList.get(1).getPoints()).getPrefix() + " " + Bukkit.getOfflinePlayer(auxList.get(1).getUuid()).getName() + " §f" + auxList.get(1).getPoints() + " §7pontos");
         }else{
             top2.setCustomName(ChatColor.GRAY + "-");
         }
         if(auxList.size() > 2){
-            top3.setCustomName(ChatColor.YELLOW + "3º " + Ranks.getRank(auxList.get(2).getPoints()).getColor() + Bukkit.getOfflinePlayer(auxList.get(2).getUuid()).getName() + " §f" + auxList.get(2).getPoints() + " §7pontos");
+            top3.setCustomName(ChatColor.YELLOW + "3º " + Ranks.getRank(auxList.get(2).getPoints()).getColor() + Ranks.getRank(auxList.get(2).getPoints()).getPrefix() + " " + Bukkit.getOfflinePlayer(auxList.get(2).getUuid()).getName() + " §f" + auxList.get(2).getPoints() + " §7pontos");
         }else{
             top3.setCustomName(ChatColor.GRAY + "-");
         }
         if(auxList.size() > 3){
-            top4.setCustomName(ChatColor.YELLOW + "4º " + Ranks.getRank(auxList.get(3).getPoints()).getColor() + Bukkit.getOfflinePlayer(auxList.get(3).getUuid()).getName() + " §f" + auxList.get(3).getPoints() + " §7pontos");
+            top4.setCustomName(ChatColor.YELLOW + "4º " + Ranks.getRank(auxList.get(3).getPoints()).getColor() + Ranks.getRank(auxList.get(3).getPoints()).getPrefix() + " " + Bukkit.getOfflinePlayer(auxList.get(3).getUuid()).getName() + " §f" + auxList.get(3).getPoints() + " §7pontos");
         }else{
             top4.setCustomName(ChatColor.GRAY + "-");
         }
         if(auxList.size() > 4){
-            top5.setCustomName(ChatColor.YELLOW + "5º " + Ranks.getRank(auxList.get(4).getPoints()).getColor() + Bukkit.getOfflinePlayer(auxList.get(4).getUuid()).getName() + " §f" + auxList.get(4).getPoints() + " §7pontos");
+            top5.setCustomName(ChatColor.YELLOW + "5º " + Ranks.getRank(auxList.get(4).getPoints()).getColor() + Ranks.getRank(auxList.get(4).getPoints()).getPrefix() + " " + Bukkit.getOfflinePlayer(auxList.get(4).getUuid()).getName() + " §f" + auxList.get(4).getPoints() + " §7pontos");
         }else{
             top5.setCustomName(ChatColor.GRAY + "-");
         }

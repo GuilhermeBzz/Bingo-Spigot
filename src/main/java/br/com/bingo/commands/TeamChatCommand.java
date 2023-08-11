@@ -48,7 +48,7 @@ public class TeamChatCommand implements CommandExecutor {
                         } else if (senderTeam.equals(TeamType.TEAM_BLUE)) {
                             tc = ChatColor.BLUE + "[TC] ";
                         }
-                        player.sendMessage(tc + ChatColor.GOLD + ((Player) commandSender).getDisplayName() + ChatColor.WHITE + ": " + String.join(" ", strings));
+                        player.sendMessage(tc + ChatColor.GOLD + ((Player) commandSender).getName() + ChatColor.WHITE + ": " + String.join(" ", strings));
                     }
 
                 }

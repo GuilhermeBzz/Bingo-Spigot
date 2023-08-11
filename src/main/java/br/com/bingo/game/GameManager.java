@@ -8,6 +8,7 @@ import br.com.bingo.kits.KitType;
 import br.com.bingo.quests.Quest;
 import br.com.bingo.quests.QuestManager;
 import br.com.bingo.rank.LeaderBoard;
+import br.com.bingo.rank.Ranks;
 import br.com.bingo.rank.profile.PlayerProfile;
 import br.com.bingo.team.TeamType;
 import br.com.bingo.ui.BarTimer;
@@ -265,7 +266,7 @@ public class GameManager {
 
     public void cancelCommand(Player sender){
         if(!sender.getUniqueId().equals(getGameMaster())){return;}
-        Bukkit.broadcastMessage(ChatColor.RED + "Partida de bingo Cancelada por " + sender.getDisplayName());
+        Bukkit.broadcastMessage(ChatColor.RED + "Partida de bingo Cancelada por " + sender.getName());
         cancelGame();
     }
     public  void cancelCommand(){
@@ -285,6 +286,7 @@ public class GameManager {
                 player.setFoodLevel(20);
                 player.setLevel(0);
                 player.setPlayerListName(player.getName());
+                Ranks.setPrefixAndDisplayName(player);
                 for (PotionEffect effect : player.getActivePotionEffects()) {
                     player.removePotionEffect(effect.getType());
                 }
@@ -352,7 +354,7 @@ public class GameManager {
             for(UUID uuid : playerTeam.keySet()){
                 if(!playerKit.containsKey(uuid)){
                     Player player = Bukkit.getPlayer(uuid);
-                    if(player != null) Bukkit.broadcastMessage(ChatColor.RED + player.getDisplayName() +" nao escolheu um kit!");
+                    if(player != null) Bukkit.broadcastMessage(ChatColor.RED + player.getName() +" nao escolheu um kit!");
                 }
             }
             return;
@@ -396,14 +398,13 @@ public class GameManager {
 
         for(UUID uuid :playerTeam.keySet()){
             Player player = Bukkit.getPlayer(uuid);
-            player.setGameMode(GameMode.SURVIVAL);
+            player.setGameMode(GameMode.ADVENTURE);
             for (PotionEffect effect : player.getActivePotionEffects()) {
                 player.removePotionEffect(effect.getType());
             }
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 99999, 10, false, false, false));
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 99999, 100, false, false, false));
             player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 99999, 200, false, false, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 99999, 200, false, false, false));
             player.setBedSpawnLocation(Bukkit.getWorld("gameWorld").getSpawnLocation(), true);
             player.getInventory().clear();
             player.getInventory().setArmorContents(null);
@@ -433,12 +434,12 @@ public class GameManager {
                 for(UUID uuid : playerTeam.keySet()){
                     Player player = Bukkit.getPlayer(uuid);
                     barTimer.addPlayerToBarTimer(player);
+                    player.setGameMode(GameMode.SURVIVAL);
 
                     player.playSound(player, Sound.ENTITY_WITHER_DEATH, 1.0f, 1.0f);
                     player.removePotionEffect(PotionEffectType.BLINDNESS);
                     player.removePotionEffect(PotionEffectType.SLOW);
                     player.removePotionEffect(PotionEffectType.JUMP);
-                    player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
                     player.sendTitle(ChatColor.GREEN + "Partida Iniciada!", ChatColor.AQUA + "Conclua as Quests da cartela para fazer pontos.",  10, 60, 10);
 
                     player.getInventory().clear();
@@ -533,7 +534,7 @@ public class GameManager {
             this.teamLeader = target.getUniqueId();
             return;
         }
-        player.sendMessage(ChatColor.RED + "Nao foi possivel adicionar " + target.getDisplayName() + " como Team Leader.");
+        player.sendMessage(ChatColor.RED + "Nao foi possivel adicionar " + target.getName() + " como Team Leader.");
     }
 
     public void addPlayerToTeam(Player player, TeamType teamType){
@@ -542,31 +543,33 @@ public class GameManager {
             String teamName = "";
             if(teamType == TeamType.TEAM_RED){
                 teamName = ChatColor.RED + "Vermelho";
-                player.setPlayerListName(ChatColor.RED + player.getDisplayName());
+                player.setPlayerListName(ChatColor.RED + player.getName());
             } else if (teamType == TeamType.TEAM_BLUE) {
                 teamName = ChatColor.BLUE + "Azul";
-                player.setPlayerListName(ChatColor.BLUE + player.getDisplayName());
+                player.setPlayerListName(ChatColor.BLUE + player.getName());
             } else if (teamType == TeamType.SOLO) {
                 teamName = ChatColor.LIGHT_PURPLE + "Solo";
-                player.setPlayerListName(ChatColor.LIGHT_PURPLE + player.getDisplayName());
+                player.setPlayerListName(ChatColor.LIGHT_PURPLE + player.getName());
             }
             player.sendMessage(ChatColor.GREEN + "Você foi adicionado ao Time " + teamName);
 
             if(this.kit) player.sendMessage(ChatColor.AQUA + "Escolha seu Kit no Menu");
         }
+        Ranks.setPrefixAndDisplayName(player);
 
     }
     public void paintTAB(Player player){
         if(playerTeam.containsKey(player.getUniqueId())){
             TeamType teamType = playerTeam.get(player.getUniqueId());
             if(teamType == TeamType.TEAM_RED){
-                player.setPlayerListName(ChatColor.RED + player.getDisplayName());
+                player.setPlayerListName(ChatColor.RED + player.getName());
             } else if (teamType == TeamType.TEAM_BLUE) {
-                player.setPlayerListName(ChatColor.BLUE + player.getDisplayName());
+                player.setPlayerListName(ChatColor.BLUE + player.getName());
             } else if (teamType == TeamType.SOLO) {
-                player.setPlayerListName(ChatColor.LIGHT_PURPLE + player.getDisplayName());
+                player.setPlayerListName(ChatColor.LIGHT_PURPLE + player.getName());
             }
         }
+        Ranks.setPrefixAndDisplayName(player);
     }
 
     public boolean checkPlayerTeam(Player player){
@@ -648,7 +651,7 @@ public class GameManager {
                     player.sendMessage(ChatColor.GREEN + "Voce concluiu a Quest " + ChatColor.YELLOW + quest.getName());
                     player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
                 } else{
-                    player.sendMessage(ChatColor.RED + Bukkit.getPlayer(uuid).getDisplayName()  + " Concluiu a Quest " + ChatColor.YELLOW + quest.getName());
+                    player.sendMessage(ChatColor.RED + Bukkit.getPlayer(uuid).getName()  + " Concluiu a Quest " + ChatColor.YELLOW + quest.getName());
                     player.playSound(player, Sound.ENTITY_ENDER_DRAGON_AMBIENT, 1.0f, 1.0f);
                 }
             }
@@ -668,12 +671,12 @@ public class GameManager {
                                player.sendTitle(ChatColor.GREEN + "Você Ganhou!", ChatColor.AQUA + "Seu time fez " + playerPoints.get(uuidIterator) + ChatColor.AQUA + " Pontos.",  10, 60, 10);
                            }else{
                                player.sendTitle(ChatColor.RED + "Você Perdeu!", ChatColor.AQUA + "Seu time fez " + playerPoints.get(uuidIterator) + ChatColor.AQUA + " Pontos.",  10, 60, 10);
-                               player.sendMessage(ChatColor.RED + Bukkit.getPlayer(entry.getKey()).getDisplayName() + " Ganhou com " + playerPoints.get(entry.getKey()) + " Pontos");
+                               player.sendMessage(ChatColor.RED + Bukkit.getPlayer(entry.getKey()).getName() + " Ganhou com " + playerPoints.get(entry.getKey()) + " Pontos");
                            }
                            player.sendMessage("");
                            player.sendMessage(ChatColor.GOLD + "-=-=-=-=-=-=- PLACAR FINAL -=-=-=-=-=-=-");
                        }
-                       player.sendMessage(ChatColor.GOLD + String.valueOf(count +1) + "o - " + Bukkit.getPlayer(entry.getKey()).getDisplayName() + " com "+ playerPoints.get(entry.getKey()) + " Pontos");
+                       player.sendMessage(ChatColor.GOLD + String.valueOf(count +1) + "o - " + Bukkit.getPlayer(entry.getKey()).getName() + " com "+ playerPoints.get(entry.getKey()) + " Pontos");
                        count++;
                    }
                    player.sendMessage(ChatColor.GOLD + "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
@@ -694,10 +697,10 @@ public class GameManager {
                 if(player == null || !player.isOnline()) continue;
                 Player completer = Bukkit.getPlayer(uuid);
                 if(getPlayerTeam(completer).equals(getPlayerTeam(player))){
-                    player.sendMessage(ChatColor.GREEN + completer.getDisplayName() +" concluiu a Quest " + ChatColor.YELLOW + quest.getName());
+                    player.sendMessage(ChatColor.GREEN + completer.getName() +" concluiu a Quest " + ChatColor.YELLOW + quest.getName());
                     player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
                 } else{
-                    player.sendMessage(ChatColor.RED + completer.getDisplayName() +" concluiu a Quest " + ChatColor.YELLOW + quest.getName());
+                    player.sendMessage(ChatColor.RED + completer.getName() +" concluiu a Quest " + ChatColor.YELLOW + quest.getName());
                     player.playSound(player, Sound.ENTITY_ENDER_DRAGON_AMBIENT, 1.0f, 1.0f);
                 }
             }

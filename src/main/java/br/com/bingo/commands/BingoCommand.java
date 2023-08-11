@@ -60,7 +60,7 @@ public class BingoCommand implements CommandExecutor, TabCompleter {
                         }
                         gameManager.setTeamLeader(target, player);
                         gameManager.addPlayerToTeam(target, TeamType.TEAM_BLUE);
-                        player.sendMessage(ChatColor.GREEN + target.getDisplayName() + " foi definido como Líder do Time" + ChatColor.BLUE + " Azul");
+                        player.sendMessage(ChatColor.GREEN + target.getName() + " foi definido como Líder do Time" + ChatColor.BLUE + " Azul");
                         target.sendMessage(ChatColor.GREEN + "Agora você é líder do Time" + ChatColor.BLUE + " Azul");
                         return false;
                     }
