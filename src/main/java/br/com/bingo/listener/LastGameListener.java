@@ -87,7 +87,7 @@ public class LastGameListener implements Listener {
                 ItemStack playerHead = new ItemStack(Material.PLAYER_HEAD);
                 ItemMeta playerHeadMeta = playerHead.getItemMeta();
                 List<String> lore = new ArrayList<>();
-                lore.add(ChatColor.GRAY + "Pontos: " + ChatColor.GOLD + lastGame.playerPoints.get(uuid));
+                lore.add(ChatColor.GRAY + "Quests Concluidas: " + ChatColor.GOLD + lastGame.playerPoints.get(uuid));
                 if(lastGame.kit) lore.add(ChatColor.GRAY + "Kit: " + ChatColor.GOLD + lastGame.playerKit.get(uuid).getName());
                 if(uuid.equals(bestPlayer)){
                     lore.add(ChatColor.GOLD + "Vencedor");

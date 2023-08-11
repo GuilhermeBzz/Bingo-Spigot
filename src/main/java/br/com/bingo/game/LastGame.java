@@ -264,13 +264,24 @@ public class LastGame {
         //questsData
 
         //atualizar o playersData e o questData com os dados novos
+        Bukkit.broadcastMessage("");
+        Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "---------------- Saldo de Pontos ----------------");
+        Bukkit.broadcastMessage("");
         for(PlayersData playerData : playersData){
+            if(playerData.getPoints() > 0){
+                Bukkit.broadcastMessage(ChatColor.GREEN + Bukkit.getOfflinePlayer(playerData.getUuid()).getName() + ": +" + playerData.getPoints() + " pontos");
+            }else{
+                Bukkit.broadcastMessage(ChatColor.RED + Bukkit.getOfflinePlayer(playerData.getUuid()).getName() + ": -" + playerData.getPoints() + " pontos");
+            }
             if(PlayersStorageUtil.checkPlayer(playerData)){
                 PlayersStorageUtil.updatePlayer(playerData);
-                continue;
+            }else{
+                PlayersStorageUtil.createPlayer(playerData);
             }
-            PlayersStorageUtil.createPlayer(playerData);
         }
+        Bukkit.broadcastMessage("");
+        Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "-------------------------------------------------");
+        Bukkit.broadcastMessage("");
         for(QuestsData questData : questsData){
             if(QuestsStorageUtil.checkQuest(questData)){
                 QuestsStorageUtil.updateQuest(questData);
