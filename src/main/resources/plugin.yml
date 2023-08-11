@@ -2,3 +2,25 @@ name: Bingo
 version: '${project.version}'
 main: br.com.bingo.Bingo
 api-version: '1.20'
+
+commands:
+  bingo:
+  menu:
+  teamchat:
+  tc:
+  ff:
+  invsee:
+  profile:
+  profiles:
+  updateleaderboard:
+  adm:
+  tpp:
+    permission: bingo.endgame
+  gm:
+    permission: bingo.endgame
+permissions:
+  bingo.endgame:
+    description: Dada aos jogadores no final da partida
+    default: op
+
+depend: [NBTAPI]
