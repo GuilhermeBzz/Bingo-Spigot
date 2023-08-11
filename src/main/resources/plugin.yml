@@ -1,0 +1,4 @@
+name: Bingo
+version: '${project.version}'
+main: br.com.bingo.Bingo
+api-version: '1.20'
