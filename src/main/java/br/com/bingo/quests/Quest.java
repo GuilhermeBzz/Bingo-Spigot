@@ -169,6 +169,13 @@ public enum Quest {
     LEVEL_30(QuestType.LEVEL_UP, 30, Material.EXPERIENCE_BOTTLE, "Alcance o Nível 30", 3),
     LEVEL_20(QuestType.LEVEL_UP, 20, Material.EXPERIENCE_BOTTLE, "Alcance o Nível 20", 2),
     LEVEL_10(QuestType.LEVEL_UP, 10, Material.EXPERIENCE_BOTTLE, "Alcance o Nível 10", 1),
+    COLLECT_MUD_BRICKS(QuestType.COLLECT_ITEM, Material.MUD_BRICKS, Material.MUD_BRICKS, "Pegue um Tijolo de Lama", 2),
+    COLLECT_HEART_OF_THE_SEA(QuestType.COLLECT_ITEM, Material.HEART_OF_THE_SEA, Material.HEART_OF_THE_SEA, "Pegue um Coração do Mar", 3),
+    COLLECT_NETHERITE(QuestType.COLLECT_ITEM, Material.NETHERITE_INGOT, Material.NETHERITE_INGOT, "Pegue um Netherite", 3),
+    COLLECT_NAUTILUS(QuestType.COLLECT_ITEM, Material.NAUTILUS_SHELL, Material.NAUTILUS_SHELL, "Pegue uma Concha de Nautilus", 2),
+    COLLECT_POWDER_SNOW(QuestType.COLLECT_ITEM, Material.POWDER_SNOW_BUCKET, Material.POWDER_SNOW_BUCKET, "Pegue um Balde de Neve em Pó", 2),
+    KILL_POLAR_BEAR(QuestType.KILL_MOB, EntityType.POLAR_BEAR, EntityHead.POLAR_BEAR, "Mate um Urso Polar", 3),
+    KILL_PILLAGER(QuestType.KILL_MOB, EntityType.PILLAGER, EntityHead.PILLAGER, "Mate um Pillager", 3),
 
     ;
 

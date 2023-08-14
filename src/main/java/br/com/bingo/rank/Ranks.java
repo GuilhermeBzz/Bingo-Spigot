@@ -2,6 +2,7 @@ package br.com.bingo.rank;
 
 import br.com.bingo.rank.models.players.PlayersData;
 import br.com.bingo.rank.utils.players.PlayersStorageUtil;
+import br.com.bingo.team.TeamType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -9,6 +10,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import xyz.haoshoku.nick.api.NickAPI;
+
+import java.util.Map;
+import java.util.UUID;
 
 public enum Ranks {
 
@@ -185,14 +190,31 @@ public enum Ranks {
         player.openInventory(inv);
     }
 
-    public static void setPrefixAndDisplayName(Player player){
+    public static void setPrefixAndDisplayName(Player player, Map<UUID, TeamType> playerTeams){
         for(PlayersData playerData : PlayersStorageUtil.getPlayers()){
             if(playerData.getUuid().equals(player.getUniqueId())){
+
                 Ranks rank = Ranks.getRank(playerData.getPoints());
                 String prefix = rank.getColor() + rank.getPrefix() + ChatColor.RESET;
-                player.setPlayerListName(prefix + " " + player.getPlayerListName());
-                player.setDisplayName(player.getPlayerListName());
-
+                String textColor = "";
+                if(playerTeams.get(player.getUniqueId()) != null){
+                    if(playerTeams.get(player.getUniqueId()).equals(TeamType.TEAM_BLUE)){
+                        textColor = ChatColor.BLUE + "";
+                    }else if(playerTeams.get(player.getUniqueId()).equals(TeamType.TEAM_RED)){
+                        textColor = ChatColor.RED + "";
+                    } else if (playerTeams.get(player.getUniqueId()).equals(TeamType.SOLO)) {
+                        textColor = ChatColor.LIGHT_PURPLE + "";
+                    }
+                } else{
+                    textColor = ChatColor.WHITE + "";
+                }
+                player.setPlayerListName(prefix + " " + textColor + player.getName());
+                player.setDisplayName(prefix + " " + textColor + player.getName());
+                NickAPI.nick(player, prefix + " " + textColor + player.getName());
+                for(Player online : Bukkit.getOnlinePlayers()){
+                    NickAPI.hidePlayer(online, player);
+                    NickAPI.showPlayer(online, player);
+                }
             }
         }
     }

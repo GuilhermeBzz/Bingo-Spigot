@@ -4,17 +4,22 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class GamemodeCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.List;
+
+public class GamemodeCommand implements CommandExecutor, TabCompleter {
     
     
     
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(!(commandSender instanceof Player)) return false;
-        if(strings.length == 0) return false;
         Player player = (Player) commandSender;
+        if(!player.hasPermission("bingo.endgame")) return false;
+        if(strings.length == 0) return false;
         String gamemode = strings[0];
         if(gamemode.equalsIgnoreCase("0") || gamemode.equalsIgnoreCase("survival")) {
             player.setGameMode(org.bukkit.GameMode.SURVIVAL);
@@ -35,5 +40,19 @@ public class GamemodeCommand implements CommandExecutor {
         }
 
         return false;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+        List<String> list = new ArrayList<>();
+        if(strings.length == 1){
+            list.add("0");
+            list.add("1");
+            list.add("2");
+            list.add("spectator");
+            return list;
+        }
+
+        return null;
     }
 }

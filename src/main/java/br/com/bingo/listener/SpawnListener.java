@@ -6,6 +6,7 @@ import br.com.bingo.game.GameManager;
 import br.com.bingo.game.GameStatus;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,6 +14,8 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
+
+import java.util.Random;
 
 public class SpawnListener implements Listener{
 
@@ -40,6 +43,10 @@ public class SpawnListener implements Listener{
             event.setRespawnLocation(event.getPlayer().getBedSpawnLocation());
         }
 
+        Location respawnLocation = event.getRespawnLocation();
+        if(respawnLocation.add(0,-1,0).getBlock().getType().equals(Material.AIR)){
+            respawnLocation.add(0,-1,0).getBlock().setType(Material.STONE);
+        }
 
         ItemStack item = new ItemStack(Material.PAPER);
         ItemMeta meta = item.getItemMeta();

@@ -285,8 +285,6 @@ public class GameManager {
                 player.setHealth(20);
                 player.setFoodLevel(20);
                 player.setLevel(0);
-                player.setPlayerListName(player.getName());
-                Ranks.setPrefixAndDisplayName(player);
                 for (PotionEffect effect : player.getActivePotionEffects()) {
                     player.removePotionEffect(effect.getType());
                 }
@@ -320,6 +318,11 @@ public class GameManager {
         barTimer.stopBarTimer();
         feast.eraseFeast();
         LeaderBoard.createLeaderBoard();
+
+        for(Player player : Bukkit.getOnlinePlayers()){
+            player.setPlayerListName(player.getName());
+            Ranks.setPrefixAndDisplayName(player, playerTeam);
+        }
 
         if(scoreboardBingo != null) this.scoreboardBingo = new ScoreboardBingo(this);
     }
@@ -555,7 +558,7 @@ public class GameManager {
 
             if(this.kit) player.sendMessage(ChatColor.AQUA + "Escolha seu Kit no Menu");
         }
-        Ranks.setPrefixAndDisplayName(player);
+        Ranks.setPrefixAndDisplayName(player, playerTeam);
 
     }
     public void paintTAB(Player player){
@@ -569,7 +572,7 @@ public class GameManager {
                 player.setPlayerListName(ChatColor.LIGHT_PURPLE + player.getName());
             }
         }
-        Ranks.setPrefixAndDisplayName(player);
+        Ranks.setPrefixAndDisplayName(player, playerTeam);
     }
 
     public boolean checkPlayerTeam(Player player){

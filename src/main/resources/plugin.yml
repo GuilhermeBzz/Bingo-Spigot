@@ -15,12 +15,10 @@ commands:
   updateleaderboard:
   adm:
   tpp:
-    permission: bingo.endgame
   gm:
-    permission: bingo.endgame
 permissions:
   bingo.endgame:
     description: Dada aos jogadores no final da partida
     default: op
 
-depend: [NBTAPI]
+depend: [NBTAPI, NickAPI]

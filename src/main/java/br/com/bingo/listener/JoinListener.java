@@ -69,7 +69,7 @@ public class JoinListener implements Listener {
             PlayerProfile.givePorfileOpener(event.getPlayer());
             gameManager.paintTAB(event.getPlayer());
         }
-        Ranks.setPrefixAndDisplayName(event.getPlayer());
+        Ranks.setPrefixAndDisplayName(event.getPlayer(), gameManager.playerTeam);
         return;
 
 
