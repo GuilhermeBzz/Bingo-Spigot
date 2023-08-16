@@ -48,6 +48,7 @@ public final class Bingo extends JavaPlugin {
         getCommand("profile").setExecutor(new ProfileCommand());
         getCommand("profiles").setExecutor(new ProfileListCommand());
         getCommand("updateleaderboard").setExecutor(new UpdataLeaderBoardCommand());
+        getCommand("skin").setExecutor(new SkinCommand(gameManager));
 
         getServer().getPluginManager().registerEvents(new InventoryListener(gameManager), this);
         getServer().getPluginManager().registerEvents(new LastGameListener(gameManager), this);

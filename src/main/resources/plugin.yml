@@ -16,6 +16,7 @@ commands:
   adm:
   tpp:
   gm:
+  skin:
 permissions:
   bingo.endgame:
     description: Dada aos jogadores no final da partida

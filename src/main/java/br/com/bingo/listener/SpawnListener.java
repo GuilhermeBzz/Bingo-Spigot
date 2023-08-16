@@ -33,6 +33,8 @@ public class SpawnListener implements Listener{
             }
             BingoMenu.giveMenuOpener(event.getPlayer());
             PlayerProfile.givePorfileOpener(event.getPlayer());
+            event.getPlayer().teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
+
         }
         if(gameManager.getGameStatus().equals(GameStatus.CREATED)){return;}
         if(!gameManager.checkPlayerTeam(event.getPlayer())){return;}

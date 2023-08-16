@@ -115,8 +115,8 @@ public class LastGame {
                     lore.add(questColor + "Concluida por " + Bukkit.getOfflinePlayer(playerQuests.get(quest)).getName());
                     lore.add(questColor + questOrder.get(quest).toString() + "ª Quest Concluida");
                     meta.setLore(lore);
-                    questItem.setItemMeta(meta);
                 }
+                questItem.setItemMeta(meta);
 
             } else if (quest.getIcon() instanceof EntityHead){
                 UUID headUuid = UUID.fromString((String) ((EntityHead) quest.getIcon()).UUID);

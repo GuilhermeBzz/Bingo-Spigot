@@ -244,7 +244,7 @@ public class InventoryListener implements Listener {
                     }else {
                         newMeta.setDisplayName(questColor + quest.getName());
                         List<String> lore = new ArrayList<>();
-                        lore.add(questColor + "Concluida por " + Bukkit.getPlayer(gameManager.playerQuests.get(quest)).getDisplayName());
+                        lore.add(questColor + "Concluida por " + Bukkit.getOfflinePlayer(gameManager.playerQuests.get(quest)).getName());
                         lore.add(questColor + gameManager.questOrder.get(quest).toString() + "ª Quest Concluida");
                         newMeta.setLore(lore);
                         questItem.setItemMeta(newMeta);
