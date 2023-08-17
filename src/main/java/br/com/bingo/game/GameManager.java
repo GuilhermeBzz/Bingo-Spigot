@@ -3,6 +3,7 @@ package br.com.bingo.game;
 
 import br.com.bingo.*;
 import br.com.bingo.feast.Feast;
+import br.com.bingo.feast.MiniFeast;
 import br.com.bingo.kits.KitManager;
 import br.com.bingo.kits.KitType;
 import br.com.bingo.quests.Quest;
@@ -51,6 +52,7 @@ public class GameManager {
     public TeamType forfeitingTeam;
 
     public Feast feast;
+    public MiniFeast miniFeast;
     public BarTimer barTimer;
     QuestManager questManager = new QuestManager();
 
@@ -74,6 +76,7 @@ public class GameManager {
         this.kit = false;
         this.barTimer = new BarTimer(this);
         this.feast = new Feast(this);
+        this.miniFeast = new MiniFeast(this);
         this.lastGame = null;
         this.gameDifficulty = 5;
         this.teamWinner = null;
@@ -317,6 +320,7 @@ public class GameManager {
         Bukkit.getScheduler().cancelTasks(plugin);
         barTimer.stopBarTimer();
         feast.eraseFeast();
+        miniFeast.eraseMiniFeast();
         LeaderBoard.createLeaderBoard();
 
         for(Player player : Bukkit.getOnlinePlayers()){
@@ -372,17 +376,11 @@ public class GameManager {
         world.setTime(0L);
         world.setGameRule(GameRule.DO_INSOMNIA, false);
 
-
-
         if(this.gameType == GameType.SOLO){
-
             for(Quest quest : questManager.availableQuests) playerQuests.put(quest, null);
             for(UUID uuid : playerTeam.keySet()) playerPoints.put(uuid, 0);
 
-
-
         } else if (this.gameType == GameType.TEAM_MANUAL || this.gameType == GameType.TEAM_AUTO) {
-
             for(Quest quest : questManager.availableQuests) teamQuests.put(quest, null);
             for(Quest quest : questManager.availableQuests) playerQuests.put(quest, null);
             teamPoints.put(TeamType.TEAM_RED, 0);
@@ -393,11 +391,10 @@ public class GameManager {
 
         for(Quest quest : questManager.availableQuests) questOrder.put(quest, null);
 
-
-        ItemStack item = new ItemStack(Material.PAPER);
-        ItemMeta meta = item.getItemMeta();
+        ItemStack cartela = new ItemStack(Material.PAPER);
+        ItemMeta meta = cartela.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD + "Cartela do Bingo");
-        item.setItemMeta(meta);
+        cartela.setItemMeta(meta);
 
         for(UUID uuid :playerTeam.keySet()){
             Player player = Bukkit.getPlayer(uuid);
@@ -412,124 +409,138 @@ public class GameManager {
             player.getInventory().clear();
             player.getInventory().setArmorContents(null);
             player.setLevel(0);
+            player.getInventory().setItem(8, cartela);
+        }
+        scoreboardBingo.startScoreboard();
+        countDownAndStart(10);
+
+    }
+
+    public void countDownAndStart(int seconds){
+        World world = Bukkit.getWorld("gameWorld");
+
+        if(seconds == 0){
+
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "recipe give @a *");
+            barTimer.startBarTimer();
+            for(UUID uuid : playerTeam.keySet()){
+                Player player = Bukkit.getPlayer(uuid);
+                barTimer.addPlayerToBarTimer(player);
+                player.setGameMode(GameMode.SURVIVAL);
+
+                player.playSound(player, Sound.ENTITY_WITHER_DEATH, 1.0f, 1.0f);
+                player.removePotionEffect(PotionEffectType.BLINDNESS);
+                player.removePotionEffect(PotionEffectType.SLOW);
+                player.removePotionEffect(PotionEffectType.JUMP);
+                player.sendTitle(ChatColor.GREEN + "Partida Iniciada!", ChatColor.AQUA + "Conclua as Quests da cartela para fazer pontos.",  10, 60, 10);
+
+
+                player.getInventory().addItem(new ItemStack(Material.STONE_SWORD));
+                player.getInventory().addItem(new ItemStack(Material.STONE_PICKAXE));
+                player.getInventory().addItem(new ItemStack(Material.STONE_AXE));
+                player.getInventory().addItem(new ItemStack(Material.STONE_SHOVEL));
+                player.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 16));
+                player.getInventory().addItem(new ItemStack(Material.OAK_LOG, 8));
+                player.setHealth(20);
+                player.setFoodLevel(20);
+                player.setSaturation(20);
+                Bukkit.getLogger().info(ChatColor.GOLD + "Jogador: " + player.getName() + " - Time: " + playerTeam.get(player.getUniqueId()).toString());
+
+                if(kit){
+                    for(UUID uuid1 : playerKit.keySet()){
+                        if(playerKit.get(uuid1).equals(KitType.SURPRISE)){
+                            List<KitType> allKits = new ArrayList<>();
+                            Collections.addAll(allKits, KitType.values());
+                            allKits.remove(KitType.SURPRISE);
+                            KitType kitType = allKits.get(new Random().nextInt(allKits.size()));
+                            playerKit.put(uuid1, kitType);
+                        }
+                    }
+
+                    player.sendMessage(ChatColor.WHITE + "Seu Kit é: " +ChatColor.YELLOW + playerKit.get(player.getUniqueId()).getKit().getName() + "!");
+                    playerKit.get(player.getUniqueId()).getKit().startKit(player);
+                }
+
+                //player.getInventory().setItem(8, item);
+
+                Iterator<Advancement> advancements = Bukkit.getServer().advancementIterator();
+                while (advancements.hasNext()) {
+                    AdvancementProgress progress = player.getAdvancementProgress(advancements.next());
+                    for (String s : progress.getAwardedCriteria())
+                        progress.revokeCriteria(s);
+                }
+            }
+            Bukkit.broadcastMessage(ChatColor.GREEN + "O PvP sera liberado em 5 minutos!");
+
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Bingo.getInstance(),  new Runnable() {
+                @Override
+                public void run() {
+                    feast.startFeast(world);
+
+                }
+            }, 30000L); // 30000L
+
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Bingo.getInstance(),  new Runnable() {
+                @Override
+                public void run() {
+                    miniFeast.generateMiniFeast(world);
+
+                }
+            }, 54000L); // 54000L
+
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Bingo.getInstance(),  new Runnable() {
+                @Override
+                public void run() {
+                    miniFeast.generateMiniFeast(world);
+
+                }
+            }, 18000L); // 18000L
+
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Bingo.getInstance(),  new Runnable() {
+                @Override
+                public void run() {
+                    miniFeast.generateMiniFeast(world);
+
+                }
+            }, 24000L); // 24000L
+
+
+            enablePvP(5);
+
+        }else{
+            for(UUID uuid :playerTeam.keySet()){
+                Player player = Bukkit.getPlayer(uuid);
+                player.sendTitle(ChatColor.GREEN + String.valueOf(seconds),"",  0, 20, 0);
+                player.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f);
+            }
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {
+                @Override
+                public void run(){
+                    countDownAndStart(seconds -1);
+                }
+            }, 20L);
+        }
+    }
+
+    public void enablePvP(int minutes){
+        World world = Bukkit.getWorld("gameWorld");
+        if(minutes == 0){
+            world.setPVP(true);
+            Bukkit.broadcastMessage(ChatColor.GREEN + "O PvP foi ativado!");
+            for(UUID uuid : playerTeam.keySet()){
+                Player player = Bukkit.getPlayer(uuid);
+                if(player != null) player.playSound(player.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1, 1);
+            }
+        } else{
+            Bukkit.broadcastMessage(ChatColor.GREEN + String.valueOf(minutes) + " minutos para o PvP ser ativado!");
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {
+                @Override
+                public void run() {
+                    enablePvP(minutes - 1);
+                }
+            }, 1200L);
         }
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {
-            @Override
-            public void run(){
-
-                for(int countdown =3; countdown > 0; countdown--){
-                    for(UUID uuid :playerTeam.keySet()){
-                        Player player = Bukkit.getPlayer(uuid);
-
-                        player.sendTitle(ChatColor.GREEN + String.valueOf(countdown),"",  0, 20, 0);
-                        player.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f);
-                    }
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-
-                    }
-                }
-                //MOMENTO QUE A PARTIDA COMECA PRA VALER
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "recipe give @a *");
-                barTimer.startBarTimer();
-                for(UUID uuid : playerTeam.keySet()){
-                    Player player = Bukkit.getPlayer(uuid);
-                    barTimer.addPlayerToBarTimer(player);
-                    player.setGameMode(GameMode.SURVIVAL);
-
-                    player.playSound(player, Sound.ENTITY_WITHER_DEATH, 1.0f, 1.0f);
-                    player.removePotionEffect(PotionEffectType.BLINDNESS);
-                    player.removePotionEffect(PotionEffectType.SLOW);
-                    player.removePotionEffect(PotionEffectType.JUMP);
-                    player.sendTitle(ChatColor.GREEN + "Partida Iniciada!", ChatColor.AQUA + "Conclua as Quests da cartela para fazer pontos.",  10, 60, 10);
-
-                    player.getInventory().clear();
-                    player.getInventory().setArmorContents(null);
-                    player.getInventory().addItem(new ItemStack(Material.STONE_SWORD));
-                    player.getInventory().addItem(new ItemStack(Material.STONE_PICKAXE));
-                    player.getInventory().addItem(new ItemStack(Material.STONE_AXE));
-                    player.getInventory().addItem(new ItemStack(Material.STONE_SHOVEL));
-                    player.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 16));
-                    player.getInventory().addItem(new ItemStack(Material.OAK_LOG, 8));
-                    player.setHealth(20);
-                    player.setFoodLevel(20);
-                    player.setSaturation(20);
-                    Bukkit.getLogger().info(ChatColor.GOLD + "Jogador: " + player.getName() + " - Time: " + playerTeam.get(player.getUniqueId()).toString());
-
-                    if(kit){
-                        for(UUID uuid1 : playerKit.keySet()){
-                            if(playerKit.get(uuid1).equals(KitType.SURPRISE)){
-                                List<KitType> allKits = new ArrayList<>();
-                                Collections.addAll(allKits, KitType.values());
-                                allKits.remove(KitType.SURPRISE);
-                                KitType kitType = allKits.get(new Random().nextInt(allKits.size()));
-                                playerKit.put(uuid1, kitType);
-                            }
-                        }
-
-                        player.sendMessage(ChatColor.WHITE + "Seu Kit é: " +ChatColor.YELLOW + playerKit.get(player.getUniqueId()).getKit().getName() + "!");
-                        playerKit.get(player.getUniqueId()).getKit().startKit(player);
-                    }
-
-                    player.getInventory().setItem(8, item);
-
-                    Iterator<Advancement> advancements = Bukkit.getServer().advancementIterator();
-                    while (advancements.hasNext()) {
-                        AdvancementProgress progress = player.getAdvancementProgress(advancements.next());
-                        for (String s : progress.getAwardedCriteria())
-                            progress.revokeCriteria(s);
-                    }
-                }
-                Bukkit.broadcastMessage(ChatColor.GREEN + "O PvP sera liberado em 5 minutos!");
-            }
-        }, 60L);
-
-        scoreboardBingo.startScoreboard();
-
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {
-            @Override
-            public void run() {
-                world.setPVP(true);
-                Bukkit.broadcastMessage(ChatColor.GREEN + "O PvP foi ativado!");
-                for(UUID uuid : playerTeam.keySet()){
-                    Player player = Bukkit.getPlayer(uuid);
-                    if(player != null) player.playSound(player.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1, 1);
-                }
-            }
-        }, 6060L);
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {
-            @Override
-            public void run() {
-                Bukkit.broadcastMessage(ChatColor.GREEN + "4 minutos para o PvP ser ativado!");
-            }
-        }, 1260L);
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {
-            @Override
-            public void run() {
-                Bukkit.broadcastMessage(ChatColor.GREEN + "3 minuto para o PvP ser ativado!");
-            }
-        }, 2460L);
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {
-            @Override
-            public void run() {
-                Bukkit.broadcastMessage(ChatColor.GREEN + "2 minutos para o PvP ser ativado!");
-            }
-        }, 3660L);
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {
-            @Override
-            public void run() {
-                Bukkit.broadcastMessage(ChatColor.GREEN + "1 minutos para o PvP ser ativado!");
-            }
-        }, 4860L);
-        Bukkit.getScheduler().scheduleSyncDelayedTask(Bingo.getInstance(),  new Runnable() {
-            @Override
-            public void run() {
-                feast.startFeast(world);
-
-            }
-        }, 30060L); // 30060L
     }
 
     public void setTeamLeader(Player target, Player player){
@@ -821,8 +832,12 @@ public class GameManager {
             int x = destiny.getBlockX() + rand.nextInt(10);
             int z = destiny.getBlockZ() + rand.nextInt(10);
             int y = Bukkit.getWorld("gameWorld").getHighestBlockYAt(x, z);
+            Location finalDestiny = new Location(Bukkit.getWorld("gameWorld"), x, y, z);
+            if(finalDestiny.getBlock().getType().equals(Material.WATER) || finalDestiny.getBlock().getType().equals(Material.LAVA)){
+                finalDestiny.getBlock().setType(Material.GRASS);
+            }
 
-            if(player != null) player.teleport(new Location(Bukkit.getWorld("gameWorld"), x, y, z));
+            if(player != null) player.teleport(finalDestiny);
         }
     }
 

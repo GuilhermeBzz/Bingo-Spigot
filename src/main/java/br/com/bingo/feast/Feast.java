@@ -31,7 +31,7 @@ public class Feast {
         int y = world.getHighestBlockYAt(x, z);
         if(y < 64) y = 64;
         if(y > 200) y = 200;
-        y = y + 10;
+        y = y + 15;
         feastLocation = new Location(world, x, y, z);
         generateFeast(feastLocation);
         Bukkit.broadcastMessage(ChatColor.GREEN + "Feast vai aparecer em 10 minutos em X: " + x + " Y: " + y + " Z: " + z + "!");
