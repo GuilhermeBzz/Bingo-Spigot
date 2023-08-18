@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public enum Ranks {
 
-    Potato(ChatColor.YELLOW, Material.POISONOUS_POTATO, 0, 49, "Batata", 0 ,"✡"),
+    Potato(ChatColor.YELLOW, Material.POISONOUS_POTATO, 0, 49, "Batata", 0 ,"▼"),
     COAL_1(ChatColor.GRAY,Material.COAL, 50, 99, "Carvão I", 1,"I♦"),
 
     COAL_2(ChatColor.GRAY,Material.COAL, 100, 149, "Carvão II", 2,"II♦"),
@@ -43,7 +43,7 @@ public enum Ranks {
     DRAGON_1(ChatColor.LIGHT_PURPLE,Material.DRAGON_EGG, 1100, 1149, "Dragão I", 1,"I✪"),
     DRAGON_2(ChatColor.LIGHT_PURPLE,Material.DRAGON_EGG, 1150, 1199, "Dragão II", 2,"II✪"),
     DRAGON_3(ChatColor.LIGHT_PURPLE,Material.DRAGON_EGG, 1200, 1249, "Dragão III", 3,"III✪"),
-    MASTER(ChatColor.DARK_RED,Material.NETHER_STAR, 1250, 999999999, "Mestre", 0,"㊝");
+    MASTER(ChatColor.DARK_RED,Material.NETHER_STAR, 1250, 999999999, "Mestre", 0,"Ω");
 
 
     private final ChatColor color;
@@ -119,7 +119,7 @@ public enum Ranks {
         }
         ItemStack potato = new ItemStack(Material.POISONOUS_POTATO);
         ItemMeta potatoMeta = potato.getItemMeta();
-        potatoMeta.setDisplayName(ChatColor.YELLOW + "✡"  + " Batata");
+        potatoMeta.setDisplayName(ChatColor.YELLOW + "▼"  + " Batata");
         potatoMeta.setLore(java.util.Arrays.asList(ChatColor.GRAY + "XP: " + ChatColor.YELLOW + "0" + ChatColor.GRAY + "-" + ChatColor.YELLOW + "49"));
         potato.setItemMeta(potatoMeta);
         inv.setItem(0, potato);
@@ -182,7 +182,7 @@ public enum Ranks {
 
         ItemStack wither = new ItemStack(Material.NETHER_STAR);
         ItemMeta witherMeta = wither.getItemMeta();
-        witherMeta.setDisplayName(ChatColor.DARK_RED + "㊝" + " Master");
+        witherMeta.setDisplayName(ChatColor.DARK_RED + "Ω" + " Master");
         witherMeta.setLore(java.util.Arrays.asList(ChatColor.GRAY + "XP: " + ChatColor.GOLD + "1250" + ChatColor.GRAY + "+"));
         wither.setItemMeta(witherMeta);
         inv.setItem(13, wither);
