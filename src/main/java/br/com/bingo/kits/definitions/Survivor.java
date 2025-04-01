@@ -3,6 +3,7 @@ package br.com.bingo.kits.definitions;
 import br.com.bingo.kits.Kit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -25,7 +26,7 @@ public class Survivor extends Kit {
         chestplateMeta.setUnbreakable(true);
         chestplateMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         chestplate.setItemMeta(chestplateMeta);
-        chestplateMeta.addEnchant(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 4, true);
+        chestplateMeta.addEnchant(Enchantment.PROTECTION, 4, true);
 
         ItemStack goldenApple = new ItemStack(Material.GOLDEN_APPLE);
         ItemMeta goldenAppleMeta = goldenApple.getItemMeta();
@@ -57,7 +58,7 @@ public class Survivor extends Kit {
         chestplateMeta.setUnbreakable(true);
         chestplateMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         chestplate.setItemMeta(chestplateMeta);
-        chestplateMeta.addEnchant(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2, true);
+        chestplateMeta.addEnchant(Enchantment.PROTECTION, 2, true);
 
         ItemStack beef = new ItemStack(Material.COOKED_BEEF);
         ItemMeta beefMeta = beef.getItemMeta();
@@ -81,7 +82,7 @@ public class Survivor extends Kit {
         chestplateMeta.setUnbreakable(true);
         chestplateMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         chestplate.setItemMeta(chestplateMeta);
-        chestplateMeta.addEnchant(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 4, true);
+        chestplateMeta.addEnchant(Enchantment.PROTECTION, 4, true);
 
         ItemStack goldenApple = new ItemStack(Material.GOLDEN_APPLE);
         ItemMeta goldenAppleMeta = goldenApple.getItemMeta();

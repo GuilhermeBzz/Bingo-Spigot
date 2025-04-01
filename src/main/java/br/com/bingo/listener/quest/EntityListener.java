@@ -70,24 +70,51 @@ public class EntityListener implements Listener {
     }
 
     @EventHandler
-    public void onSpawnEvent(EntitySpawnEvent event){
-        if(!event.getEntity().getType().equals(EntityType.WARDEN)){return;}
+    public void onSpawnEvent(CreatureSpawnEvent event){
         if(!gameManager.isGameStarted()){return;}
+        EntityType eventEntityType = event.getEntity().getType();
+        if(!eventEntityType.equals(EntityType.WARDEN) && !eventEntityType.equals(EntityType.ALLAY)){return;}
         for(Quest quest : gameManager.getAvailableQuests()){
-            if(!(quest.getType() == QuestType.WARDEN)){continue;}
+            if(quest.getType() != QuestType.SPAWN){continue;}
             Location location = event.getLocation();
-            Player nearestPlayer = null;
-            double nearestDistance = 9999999;
-            for(UUID uuid : gameManager.playerTeam.keySet()){
-                Location playerLocation = Bukkit.getPlayer(uuid).getLocation();
-                if(playerLocation.distance(location) < nearestDistance){
-                    nearestPlayer = Bukkit.getPlayer(uuid);
-                    nearestDistance = playerLocation.distance(location);
+            Player nearestPlayer = getNearestPlayer(location);
+            if(nearestPlayer == null){return;}
+            if(quest.getTarget().equals(EntityType.WARDEN)){
+                gameManager.completeQuest(nearestPlayer.getUniqueId(), quest);
+                return;
+            } else if(quest.getTarget().equals(EntityType.ALLAY)){
+                if(event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.DUPLICATION)){
+                    gameManager.completeQuest(nearestPlayer.getUniqueId(), quest);
+                    return;
                 }
             }
-            gameManager.completeQuest(nearestPlayer.getUniqueId(), quest);
             return;
         }
+    }
+
+    @EventHandler
+    public void dyeSheepEvent(SheepDyeWoolEvent event){
+        if(!gameManager.isGameStarted()){return;}
+        Player player = event.getPlayer();
+        if(!gameManager.checkPlayerTeam(player)){return;}
+        for(Quest quest : gameManager.getAvailableQuests()){
+            if(quest.getType() != QuestType.DYE){continue;}
+            gameManager.completeQuest(player.getUniqueId(), quest);
+            return;
+        }
+    }
+
+    public Player getNearestPlayer(Location location){
+        Player nearestPlayer = null;
+        double nearestDistance = 9999999;
+        for(UUID uuid : gameManager.playerTeam.keySet()){
+            Location playerLocation = Bukkit.getPlayer(uuid).getLocation();
+            if(playerLocation.distance(location) < nearestDistance){
+                nearestPlayer = Bukkit.getPlayer(uuid);
+                nearestDistance = playerLocation.distance(location);
+            }
+        }
+        return nearestPlayer;
     }
 
 }

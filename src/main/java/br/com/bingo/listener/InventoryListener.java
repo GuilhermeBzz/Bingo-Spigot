@@ -1,7 +1,7 @@
 package br.com.bingo.listener;
 
 import br.com.bingo.ui.BingoMenu;
-import br.com.bingo.EntityHead;
+import br.com.bingo.quests.EntityHead;
 import br.com.bingo.game.GameManager;
 import br.com.bingo.game.GameStatus;
 import br.com.bingo.game.GameType;
@@ -22,6 +22,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import com.mojang.authlib.GameProfile;
+import org.bukkit.profile.PlayerProfile;
+import org.bukkit.profile.PlayerTextures;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class InventoryListener implements Listener {
-    private GameManager gameManager;
+    private final GameManager gameManager;
 
     public InventoryListener(GameManager gameManager){
         this.gameManager = gameManager;
@@ -128,19 +130,30 @@ public class InventoryListener implements Listener {
                 }
                 else if (quest.getIcon() instanceof EntityHead) {
                     UUID headUuid = UUID.fromString((String) ((EntityHead) quest.getIcon()).UUID);
-
                     String texture = ((EntityHead) quest.getIcon()).texture;
+
                     GameProfile profile = new GameProfile(headUuid, "pizza");
-                    profile.getProperties().put("textures", new Property("textures", texture ));
-                    Field profileField;
+                    profile.getProperties().put("textures", new Property("textures", texture));
 
                     questItem = new ItemStack(Material.PLAYER_HEAD);
                     SkullMeta meta = (SkullMeta) questItem.getItemMeta();
 
                     assert meta != null;
-                    profileField = meta.getClass().getDeclaredField("profile");
-                    profileField.setAccessible(true);
-                    profileField.set(meta, profile);
+                    try {
+                        // Pega o campo correto para a versão 1.21.4
+                        Field profileField = meta.getClass().getDeclaredField("profile");
+                        profileField.setAccessible(true);
+
+                        // Converte o GameProfile para o novo tipo ResolvableProfile
+                        Object resolvableProfile = Class.forName("net.minecraft.world.item.component.ResolvableProfile")
+                                .getConstructor(GameProfile.class)
+                                .newInstance(profile);
+
+                        profileField.set(meta, resolvableProfile); // Define o perfil corretamente
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    questItem.setItemMeta(meta);
 
 
                     ItemMeta newMeta = null;
@@ -210,19 +223,30 @@ public class InventoryListener implements Listener {
                     questItem.setItemMeta(meta);
                 } else if (quest.getIcon() instanceof EntityHead) {
                     UUID headUuid = UUID.fromString((String) ((EntityHead) quest.getIcon()).UUID);
-
                     String texture = ((EntityHead) quest.getIcon()).texture;
+
                     GameProfile profile = new GameProfile(headUuid, "pizza");
-                    profile.getProperties().put("textures", new Property("textures", texture ));
-                    Field profileField;
+                    profile.getProperties().put("textures", new Property("textures", texture));
 
                     questItem = new ItemStack(Material.PLAYER_HEAD);
                     SkullMeta meta = (SkullMeta) questItem.getItemMeta();
 
                     assert meta != null;
-                    profileField = meta.getClass().getDeclaredField("profile");
-                    profileField.setAccessible(true);
-                    profileField.set(meta, profile);
+                    try {
+                        // Pega o campo correto para a versão 1.21.4
+                        Field profileField = meta.getClass().getDeclaredField("profile");
+                        profileField.setAccessible(true);
+
+                        // Converte o GameProfile para o novo tipo ResolvableProfile
+                        Object resolvableProfile = Class.forName("net.minecraft.world.item.component.ResolvableProfile")
+                                .getConstructor(GameProfile.class)
+                                .newInstance(profile);
+
+                        profileField.set(meta, resolvableProfile); // Define o perfil corretamente
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    questItem.setItemMeta(meta);
 
 
                     ItemMeta newMeta = null;

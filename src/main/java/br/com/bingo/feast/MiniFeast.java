@@ -42,7 +42,7 @@ public class MiniFeast {
             }
         }
         miniFeastLocations.add(location);
-        generateMiniFeast(location);
+        constructMiniFeast(location);
         fillChests(location);
 
         int finalX = location.getBlockX();
@@ -59,7 +59,7 @@ public class MiniFeast {
         miniFeastLocations = null;
     }
 
-    public void generateMiniFeast(Location location){
+    public void constructMiniFeast(Location location){
         try{
             SchematicManager.buildSchematic( "mini_feast.schem", location);
         } catch (IOException e){

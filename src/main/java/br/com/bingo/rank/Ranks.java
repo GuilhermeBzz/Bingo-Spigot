@@ -195,8 +195,8 @@ public enum Ranks {
             if(playerData.getUuid().equals(player.getUniqueId())){
 
                 Ranks rank = Ranks.getRank(playerData.getPoints());
-                String prefix = rank.getColor() + rank.getPrefix() + ChatColor.RESET;
-                String textColor = "";
+                String prefix = rank.getColor() + rank.getPrefix();
+                String textColor = ChatColor.WHITE + "";
                 if(playerTeams.get(player.getUniqueId()) != null){
                     if(playerTeams.get(player.getUniqueId()).equals(TeamType.TEAM_BLUE)){
                         textColor = ChatColor.BLUE + "";
@@ -205,16 +205,18 @@ public enum Ranks {
                     } else if (playerTeams.get(player.getUniqueId()).equals(TeamType.SOLO)) {
                         textColor = ChatColor.LIGHT_PURPLE + "";
                     }
-                } else{
-                    textColor = ChatColor.WHITE + "";
                 }
-                player.setPlayerListName(prefix + " " + textColor + player.getName());
-                player.setDisplayName(prefix + " " + textColor + player.getName());
-                NickAPI.nick(player, prefix + " " + textColor + player.getName());
-                for(Player online : Bukkit.getOnlinePlayers()){
-                    NickAPI.hidePlayer(online, player);
-                    NickAPI.showPlayer(online, player);
-                }
+                String finalName = prefix + " " + textColor + NickAPI.getOriginalName(player) + ChatColor.WHITE;
+
+                Bukkit.getLogger().info("Setando nome para: " + finalName + " para " + player.getName());
+
+                player.setPlayerListName(finalName);
+                player.setDisplayName(finalName);
+                NickAPI.setNick(player, finalName);
+                //for(Player online : Bukkit.getOnlinePlayers()){
+                //    NickAPI.hidePlayer(online, player);
+                //    NickAPI.showPlayer(online, player);
+                //}
             }
         }
     }

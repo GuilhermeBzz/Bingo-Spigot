@@ -6,17 +6,20 @@ import org.bukkit.ChatColor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import br.com.bingo.quests.Difficulty;
 
 public class QuestManager {
 
     public List<Quest> availableQuests = new ArrayList<>();
+
     public void initializeQuests(int difficulty){
         availableQuests = new ArrayList<>();
 
         List<Quest> allQuests = new ArrayList<>();
         Collections.addAll(allQuests, Quest.values());
-        allQuests.remove(Quest.KILL_PLAYER);
+        allQuests.removeIf(quest -> quest.getDifficulty() == 4);
         List<Quest> easyQuests = new ArrayList<>();
         List<Quest> mediumQuests = new ArrayList<>();
         List<Quest> hardQuests = new ArrayList<>();
@@ -69,5 +72,17 @@ public class QuestManager {
 
         Bukkit.getLogger().info(ChatColor.LIGHT_PURPLE + "NEW: " + availableQuests.toString());
 
+    }
+
+
+    public Quest getSpecialQuest(){
+
+        ArrayList<Quest> allQuests = new ArrayList<>();
+        Collections.addAll(allQuests, Quest.values());
+        List<Quest> specialQuests =  allQuests.stream().filter(quest ->
+                quest.getDifficulty() == 4).collect(Collectors.toList());;
+
+        Collections.shuffle(specialQuests);
+        return specialQuests.get(0);
     }
 }

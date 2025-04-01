@@ -5,7 +5,6 @@ import br.com.bingo.game.GameType;
 import br.com.bingo.game.LastGame;
 import br.com.bingo.quests.Quest;
 import br.com.bingo.team.TeamType;
-import br.com.bingo.ui.BingoMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

@@ -8,6 +8,7 @@ import br.com.bingo.kits.KitManager;
 import br.com.bingo.kits.KitType;
 import br.com.bingo.quests.Quest;
 import br.com.bingo.quests.QuestManager;
+import br.com.bingo.quests.QuestType;
 import br.com.bingo.rank.LeaderBoard;
 import br.com.bingo.rank.Ranks;
 import br.com.bingo.rank.profile.PlayerProfile;
@@ -15,15 +16,20 @@ import br.com.bingo.team.TeamType;
 import br.com.bingo.ui.BarTimer;
 import br.com.bingo.ui.BingoMenu;
 import br.com.bingo.ui.ScoreboardBingo;
+import br.com.bingo.web.WebService;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
+import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.BiomeSearchResult;
+import xyz.haoshoku.nick.api.NickAPI;
 
 
 import java.io.File;
@@ -50,11 +56,16 @@ public class GameManager {
     public Map<TeamType, Integer> teamPoints = new HashMap<>();
     public Map<UUID, Boolean> playerForfeit = new HashMap<>();
     public TeamType forfeitingTeam;
+    public Map<Biome, Location> biomeLocationMap = new HashMap<>();
+    public Map<Biome, Material> biomeIconsMap = new HashMap<>();
+    public Map<Biome, String> biomeNameMap = new HashMap<>();
+    Map<UUID, Map<Biome, Location>> playersBiomeMap = new HashMap<>();
 
     public Feast feast;
     public MiniFeast miniFeast;
     public BarTimer barTimer;
     QuestManager questManager = new QuestManager();
+    public String gameWebId;
 
     public Map<UUID, KitType> playerKit = new HashMap<>();
     public LastGame lastGame;
@@ -63,8 +74,6 @@ public class GameManager {
     public TeamType teamWinner;
 
     public boolean ranked;
-
-
 
 
     public GameManager(Bingo plugin) {
@@ -82,6 +91,69 @@ public class GameManager {
         this.teamWinner = null;
         this.ranked = false;
     }
+
+    public void generateBiomeMap(){
+        biomeLocationMap.clear();
+        biomeLocationMap.put(Biome.BADLANDS, null);
+        biomeLocationMap.put(Biome.DESERT, null);
+        biomeLocationMap.put(Biome.SAVANNA, null);
+        biomeLocationMap.put(Biome.PALE_GARDEN, null);
+        biomeLocationMap.put(Biome.JUNGLE, null);
+        biomeLocationMap.put(Biome.BAMBOO_JUNGLE, null);
+        biomeLocationMap.put(Biome.DEEP_DARK, null);
+        biomeLocationMap.put(Biome.LUSH_CAVES, null);
+        biomeLocationMap.put(Biome.SNOWY_TAIGA, null);
+        biomeLocationMap.put(Biome.MUSHROOM_FIELDS, null);
+        biomeLocationMap.put(Biome.COLD_OCEAN, null);
+        biomeLocationMap.put(Biome.SWAMP, null);
+        biomeLocationMap.put(Biome.CHERRY_GROVE, null);
+        biomeLocationMap.put(Biome.DARK_FOREST, null);
+        biomeLocationMap.put(Biome.OCEAN, null);
+    }
+
+    public void generateBiomeIcons(){
+        biomeIconsMap.clear();
+        biomeIconsMap.put(Biome.BADLANDS, Material.RED_SAND);
+        biomeIconsMap.put(Biome.DESERT, Material.CACTUS);
+        biomeIconsMap.put(Biome.SAVANNA, Material.ACACIA_LOG);
+        biomeIconsMap.put(Biome.PALE_GARDEN, Material.PEONY);
+        biomeIconsMap.put(Biome.JUNGLE, Material.JUNGLE_LOG);
+        biomeIconsMap.put(Biome.BAMBOO_JUNGLE, Material.BAMBOO);
+        biomeIconsMap.put(Biome.DEEP_DARK, Material.SCULK_VEIN);
+        biomeIconsMap.put(Biome.LUSH_CAVES, Material.AZALEA);
+        biomeIconsMap.put(Biome.SNOWY_TAIGA, Material.SNOW_BLOCK);
+        biomeIconsMap.put(Biome.MUSHROOM_FIELDS, Material.RED_MUSHROOM);
+        biomeIconsMap.put(Biome.COLD_OCEAN, Material.ICE);
+        biomeIconsMap.put(Biome.SWAMP, Material.LILY_PAD);
+        biomeIconsMap.put(Biome.CHERRY_GROVE, Material.CHERRY_LOG);
+        biomeIconsMap.put(Biome.DARK_FOREST, Material.DARK_OAK_LOG);
+        biomeIconsMap.put(Biome.OCEAN, Material.WATER_BUCKET);
+    }
+
+    public void generateBiomeNames(){
+        biomeNameMap.clear();
+        biomeNameMap.put(Biome.BADLANDS, "Badlands");
+        biomeNameMap.put(Biome.DESERT, "Deserto");
+        biomeNameMap.put(Biome.SAVANNA, "Savana");
+        biomeNameMap.put(Biome.PALE_GARDEN, "Jardim Palido");
+        biomeNameMap.put(Biome.JUNGLE, "Jungle");
+        biomeNameMap.put(Biome.BAMBOO_JUNGLE, "Bamboo Jungle");
+        biomeNameMap.put(Biome.DEEP_DARK, "Deep Dark");
+        biomeNameMap.put(Biome.LUSH_CAVES, "Lush Caves");
+        biomeNameMap.put(Biome.SNOWY_TAIGA, "Snowy Taiga");
+        biomeNameMap.put(Biome.MUSHROOM_FIELDS, "Mushroom Fields");
+        biomeNameMap.put(Biome.COLD_OCEAN, "Cold Ocean");
+        biomeNameMap.put(Biome.SWAMP, "Swamp");
+        biomeNameMap.put(Biome.CHERRY_GROVE, "Cherry Grove");
+        biomeNameMap.put(Biome.DARK_FOREST, "Dark Forest");
+        biomeNameMap.put(Biome.OCEAN, "Ocean");
+    }
+
+    public Map<Biome, Material> getBiomeIconsMap(){
+        return biomeIconsMap;
+    }
+
+
 
     public void createCommand(Player sender, GameType gameType, boolean kitNew, int gameDifficulty, boolean rankedNew){
         if(existGame() || isGameStarted()){
@@ -122,17 +194,20 @@ public class GameManager {
 
     }
 
+
     public void createGame(Player player, GameType gameType){
 
         Bukkit.broadcastMessage(ChatColor.GREEN + "Gerando mapa...");
 
-            this.gameMaster = player.getUniqueId();
-            this.gameStatus = GameStatus.CREATED;
-            this.gameType = gameType;
-            this.forfeitingTeam = null;
-            this.teamWinner = null;
+        this.gameMaster = player.getUniqueId();
+        this.gameStatus = GameStatus.CREATED;
+        this.gameType = gameType;
+        this.forfeitingTeam = null;
+        this.teamWinner = null;
 
-
+        generateBiomeIcons();
+        generateBiomeMap();
+        generateBiomeNames();
         generateWorlds();
         player.sendMessage("Partida Criada!");
         Bukkit.broadcastMessage(ChatColor.GREEN + "Dificuldade: " + ChatColor.YELLOW + gameDifficulty);
@@ -144,7 +219,34 @@ public class GameManager {
             else Bukkit.broadcastMessage(ChatColor.GREEN + "Partida Nao Rankeada");
         }
 
+    }
 
+    public void searchBiomes(World world){
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->{
+
+            ArrayList<Biome> biomeList = new ArrayList<>(biomeLocationMap.keySet());
+            while(!biomeList.isEmpty()){
+                Bukkit.getLogger().info("Procurando...");
+                BiomeSearchResult biomeSearchResult = world.locateNearestBiome(world.getSpawnLocation(), 5000,32,64,biomeList.toArray(new Biome[0]));
+                if(biomeSearchResult != null){
+                    Bukkit.getLogger().info("Bioma encontrado: " + biomeNameMap.get(biomeSearchResult.getBiome()));
+                    Biome biome = biomeSearchResult.getBiome();
+                    Location location = biomeSearchResult.getLocation();
+                    biomeLocationMap.put(biome, location);
+                    biomeList.remove(biome);
+                } else{
+                    Bukkit.getLogger().info("Biomas nao encontrados: " + biomeList.toString());
+                    biomeList.clear();
+                }
+            }
+            ArrayList<Biome> notFoundBiomes = new ArrayList<>();
+            for(Biome biome : biomeLocationMap.keySet()){
+                if(biomeLocationMap.get(biome) == null){
+                    notFoundBiomes.add(biome);
+                }
+            }
+            Bukkit.getLogger().info("Biomas não encontrados: " + notFoundBiomes.toString());
+        });
     }
 
     public void forfeitCommand(Player sender){
@@ -249,6 +351,7 @@ public class GameManager {
     }
     public void finishGame(){
         this.gameStatus = GameStatus.FINISHED;
+
         Bukkit.getScheduler().cancelTasks(plugin);
         Bukkit.broadcastMessage("Use /tpp <player> para teletransportar para um jogador");
         Bukkit.broadcastMessage("Use /gm <gameMode> para mudar seu gamemode");
@@ -256,15 +359,17 @@ public class GameManager {
             Player player = Bukkit.getPlayer(uuid);
             if(player != null && player.isOnline()) {
                 player.setGameMode(GameMode.CREATIVE);
+                HashMap<UUID, PermissionAttachment> perms = new HashMap<>();
+                PermissionAttachment attachment = player.addAttachment(Bingo.getInstance());
+                perms.put(player.getUniqueId(), attachment);
+                PermissionAttachment pperms = perms.get(player.getUniqueId());
+                pperms.setPermission("bingo.endgame", true);
+                player.recalculatePermissions();
             }
-            HashMap<UUID, PermissionAttachment> perms = new HashMap<UUID, PermissionAttachment>();
-            PermissionAttachment attachment = player.addAttachment(Bingo.getInstance());
-            perms.put(player.getUniqueId(), attachment);
-            PermissionAttachment pperms = perms.get(player.getUniqueId());
-            pperms.setPermission("bingo.endgame", true);
-            player.recalculatePermissions();
+
         }
         lastGame = new LastGame(this.gameType, this.playerQuests, this.teamQuests, this.questOrder, this.playerTeam, this.playerPoints, this.teamPoints, this.playerKit, this.teamWinner, this.ranked);
+        WebService.endGame(this.gameWebId);
     }
 
     public void cancelCommand(Player sender){
@@ -279,6 +384,7 @@ public class GameManager {
     public void cancelGame(){
         Bukkit.getLogger().info("Cancelando Bingo...");
 
+        WebService.endGame(this.gameWebId);
         for(UUID uuid : this.playerTeam.keySet()){
             Player player = Bukkit.getPlayer(uuid);
             if(player != null) {
@@ -291,7 +397,7 @@ public class GameManager {
                 for (PotionEffect effect : player.getActivePotionEffects()) {
                     player.removePotionEffect(effect.getType());
                 }
-                HashMap<UUID, PermissionAttachment> perms = new HashMap<UUID, PermissionAttachment>();
+                HashMap<UUID, PermissionAttachment> perms = new HashMap<>();
                 PermissionAttachment attachment = player.addAttachment(Bingo.getInstance());
                 perms.put(player.getUniqueId(), attachment);
                 PermissionAttachment pperms = perms.get(player.getUniqueId());
@@ -317,16 +423,22 @@ public class GameManager {
         this.kit = false;
         this.gameDifficulty = 5;
         this.ranked = false;
+        this.biomeLocationMap= new HashMap<>();
+        this.biomeIconsMap  = new HashMap<>();
+        this.playersBiomeMap = new HashMap<>();
+        this.gameWebId = null;
         Bukkit.getScheduler().cancelTasks(plugin);
         barTimer.stopBarTimer();
         feast.eraseFeast();
         miniFeast.eraseMiniFeast();
         LeaderBoard.createLeaderBoard();
 
-        for(Player player : Bukkit.getOnlinePlayers()){
-            player.setPlayerListName(player.getName());
-            Ranks.setPrefixAndDisplayName(player, playerTeam);
-        }
+        Bukkit.getScheduler().runTaskLater(Bingo.getInstance(), () -> {
+            for(Player player : Bukkit.getOnlinePlayers()){
+                player.setPlayerListName(player.getName() + ChatColor.WHITE);
+                Ranks.setPrefixAndDisplayName(player, playerTeam);
+            }
+        }, 20L); // 1 segundo de delay
 
         if(scoreboardBingo != null) this.scoreboardBingo = new ScoreboardBingo(this);
     }
@@ -347,15 +459,11 @@ public class GameManager {
         }
 
         sender.sendMessage(ChatColor.GREEN + "Iniciando partida!");
-        try {
-            startGame();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        startGame();
 
         Bukkit.getLogger().info("Iniciando partida...");
     }
-    public void startGame() throws InterruptedException {
+    public void startGame() {
 
         if(this.kit && playerKit.size()!= playerTeam.size()){
             for(UUID uuid : playerTeam.keySet()){
@@ -385,15 +493,33 @@ public class GameManager {
             for(Quest quest : questManager.availableQuests) playerQuests.put(quest, null);
             teamPoints.put(TeamType.TEAM_RED, 0);
             teamPoints.put(TeamType.TEAM_BLUE, 0);
-
-
         }
 
         for(Quest quest : questManager.availableQuests) questOrder.put(quest, null);
 
+        List<Quest> questList = new ArrayList<>(playerQuests.keySet());
+
+        if(gameType.equals(GameType.SOLO)){
+            List<Player> playerList = new ArrayList<>();
+            for(UUID uuid : playerTeam.keySet()){
+                Player player = Bukkit.getPlayer(uuid);
+                playerList.add(player);
+            }
+            this.gameWebId = WebService.startMatchSolo(questList, playerList);
+        } else{
+            this.gameWebId = WebService.startMatch(questList);
+        }
+        if(this.gameWebId == null){
+            Bukkit.broadcastMessage(ChatColor.RED + "Web Service não foi criado.");
+        } else{
+            String url = WebService.urlBase;
+            Bukkit.broadcastMessage(ChatColor.GREEN + "Web Service criado. Acesse em: " + ChatColor.WHITE + ChatColor.UNDERLINE + url);
+        }
+
         ItemStack cartela = new ItemStack(Material.PAPER);
         ItemMeta meta = cartela.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD + "Cartela do Bingo");
+        meta.setCustomModelData(777);
         cartela.setItemMeta(meta);
 
         for(UUID uuid :playerTeam.keySet()){
@@ -403,17 +529,77 @@ public class GameManager {
                 player.removePotionEffect(effect.getType());
             }
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 99999, 10, false, false, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 99999, 100, false, false, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 99999, 200, false, false, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 99999, 100, false, false, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 99999, 200, false, false, false));
             player.setBedSpawnLocation(Bukkit.getWorld("gameWorld").getSpawnLocation(), true);
             player.getInventory().clear();
             player.getInventory().setArmorContents(null);
             player.setLevel(0);
             player.getInventory().setItem(8, cartela);
+
+            if(playerKit.get(player.getUniqueId()).equals(KitType.EXPLORER)){
+                giveNewBiome(player);
+            }
         }
         scoreboardBingo.startScoreboard();
         countDownAndStart(10);
 
+    }
+
+    public void giveNewBiome(Player player){
+        Map<Biome, Location> playerBiomes = playersBiomeMap.get(player.getUniqueId());
+        ArrayList<Biome> allValidBiomes = new ArrayList<>();
+        if(biomeLocationMap == null || biomeLocationMap.isEmpty()){
+            player.sendMessage(ChatColor.RED + "Biomas nao encontrados. Tente novamente mais tarde.");
+            return;
+        }
+        for(Biome biome : biomeLocationMap.keySet()){
+            if(biomeLocationMap.get(biome) != null){
+                allValidBiomes.add(biome);
+            }
+        }
+
+        if(playerBiomes == null ||playerBiomes.isEmpty()){
+           playerBiomes = new HashMap<>();
+           Biome newBiome = allValidBiomes.get(new Random().nextInt(allValidBiomes.size() - 1));
+
+            playerBiomes.put(newBiome, biomeLocationMap.get(newBiome));
+            player.sendMessage(ChatColor.GOLD + "Novo Bioma desbloquado: " + ChatColor.YELLOW + biomeNameMap.get(newBiome));
+            playersBiomeMap.put(player.getUniqueId(), playerBiomes);
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Bingo.getInstance(),  new Runnable() {
+                @Override
+                public void run() {
+                    giveNewBiome(player);
+                }
+            }, 3600L);
+            return;
+        }
+        ArrayList<Biome> playerBiomeList = new ArrayList<>(playerBiomes.keySet());
+
+        boolean done = false;
+
+        while(!done){
+            Biome newBiome = allValidBiomes.get(new Random().nextInt(allValidBiomes.size()));
+            if(!playerBiomeList.contains(newBiome)){
+                playerBiomes.put(newBiome, biomeLocationMap.get(newBiome));
+                player.sendMessage(ChatColor.GOLD + "Novo Bioma desbloquado: " + ChatColor.YELLOW + biomeNameMap.get(newBiome));
+                playersBiomeMap.put(player.getUniqueId(), playerBiomes);
+                done = true;
+            }else{
+                allValidBiomes.remove(newBiome);
+            }
+        }
+        if(allValidBiomes.size() == playerBiomes.size()) return;
+        Bukkit.getScheduler().scheduleSyncDelayedTask(Bingo.getInstance(),  new Runnable() {
+            @Override
+            public void run() {
+                giveNewBiome(player);
+            }
+        }, 3600L);
+    }
+
+    public Map<Biome, Location> getPlayerBiomes(UUID uuid){
+        return playersBiomeMap.get(uuid);
     }
 
     public void countDownAndStart(int seconds){
@@ -430,20 +616,16 @@ public class GameManager {
 
                 player.playSound(player, Sound.ENTITY_WITHER_DEATH, 1.0f, 1.0f);
                 player.removePotionEffect(PotionEffectType.BLINDNESS);
-                player.removePotionEffect(PotionEffectType.SLOW);
-                player.removePotionEffect(PotionEffectType.JUMP);
+                player.removePotionEffect(PotionEffectType.SLOWNESS);
+                player.removePotionEffect(PotionEffectType.JUMP_BOOST);
                 player.sendTitle(ChatColor.GREEN + "Partida Iniciada!", ChatColor.AQUA + "Conclua as Quests da cartela para fazer pontos.",  10, 60, 10);
 
+                giveStarterKit(player);
 
-                player.getInventory().addItem(new ItemStack(Material.STONE_SWORD));
-                player.getInventory().addItem(new ItemStack(Material.STONE_PICKAXE));
-                player.getInventory().addItem(new ItemStack(Material.STONE_AXE));
-                player.getInventory().addItem(new ItemStack(Material.STONE_SHOVEL));
-                player.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 16));
-                player.getInventory().addItem(new ItemStack(Material.OAK_LOG, 8));
                 player.setHealth(20);
                 player.setFoodLevel(20);
                 player.setSaturation(20);
+                player.getEnderChest().clear();
                 Bukkit.getLogger().info(ChatColor.GOLD + "Jogador: " + player.getName() + " - Time: " + playerTeam.get(player.getUniqueId()).toString());
 
                 if(kit){
@@ -452,12 +634,16 @@ public class GameManager {
                             List<KitType> allKits = new ArrayList<>();
                             Collections.addAll(allKits, KitType.values());
                             allKits.remove(KitType.SURPRISE);
+                            if(gameType.equals(GameType.SOLO)) {
+                                allKits.remove(KitType.SEDEX);
+                                allKits.remove(KitType.PAO);
+                            }
                             KitType kitType = allKits.get(new Random().nextInt(allKits.size()));
                             playerKit.put(uuid1, kitType);
                         }
                     }
 
-                    player.sendMessage(ChatColor.WHITE + "Seu Kit é: " +ChatColor.YELLOW + playerKit.get(player.getUniqueId()).getKit().getName() + "!");
+                    player.sendMessage(ChatColor.WHITE + "Seu Kit é: " +ChatColor.YELLOW + (playerKit.get(player.getUniqueId()).getKit().getName()) + "!");
                     playerKit.get(player.getUniqueId()).getKit().startKit(player);
                 }
 
@@ -522,6 +708,15 @@ public class GameManager {
         }
     }
 
+    public void giveStarterKit(Player player){
+        player.getInventory().addItem(new ItemStack(Material.STONE_SWORD));
+        player.getInventory().addItem(new ItemStack(Material.STONE_PICKAXE));
+        player.getInventory().addItem(new ItemStack(Material.STONE_AXE));
+        player.getInventory().addItem(new ItemStack(Material.STONE_SHOVEL));
+        player.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 16));
+        player.getInventory().addItem(new ItemStack(Material.OAK_LOG, 8));
+    }
+
     public void enablePvP(int minutes){
         World world = Bukkit.getWorld("gameWorld");
         if(minutes == 0){
@@ -557,13 +752,13 @@ public class GameManager {
             String teamName = "";
             if(teamType == TeamType.TEAM_RED){
                 teamName = ChatColor.RED + "Vermelho";
-                player.setPlayerListName(ChatColor.RED + player.getName());
+                player.setPlayerListName(ChatColor.RED + player.getName() + ChatColor.WHITE);
             } else if (teamType == TeamType.TEAM_BLUE) {
                 teamName = ChatColor.BLUE + "Azul";
-                player.setPlayerListName(ChatColor.BLUE + player.getName());
+                player.setPlayerListName(ChatColor.BLUE + player.getName() + ChatColor.WHITE);
             } else if (teamType == TeamType.SOLO) {
                 teamName = ChatColor.LIGHT_PURPLE + "Solo";
-                player.setPlayerListName(ChatColor.LIGHT_PURPLE + player.getName());
+                player.setPlayerListName(ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.WHITE);
             }
             player.sendMessage(ChatColor.GREEN + "Você foi adicionado ao Time " + teamName);
 
@@ -576,11 +771,11 @@ public class GameManager {
         if(playerTeam.containsKey(player.getUniqueId())){
             TeamType teamType = playerTeam.get(player.getUniqueId());
             if(teamType == TeamType.TEAM_RED){
-                player.setPlayerListName(ChatColor.RED + player.getName());
+                player.setPlayerListName(ChatColor.RED + player.getName() + ChatColor.WHITE);
             } else if (teamType == TeamType.TEAM_BLUE) {
-                player.setPlayerListName(ChatColor.BLUE + player.getName());
+                player.setPlayerListName(ChatColor.BLUE + player.getName() + ChatColor.WHITE);
             } else if (teamType == TeamType.SOLO) {
-                player.setPlayerListName(ChatColor.LIGHT_PURPLE + player.getName());
+                player.setPlayerListName(ChatColor.LIGHT_PURPLE + player.getName() + ChatColor.WHITE);
             }
         }
         Ranks.setPrefixAndDisplayName(player, playerTeam);
@@ -625,24 +820,24 @@ public class GameManager {
 
     public void completeQuest(UUID uuid, Quest quest){
 
+        Player playerThatCompleted = Bukkit.getPlayer(uuid);
+        WebService.completeQuest(quest, playerThatCompleted, playerTeam.get(uuid), this.gameWebId);
         questManager.availableQuests.remove(quest);
         if(getAvailableQuests().size() == questLeftWhenChange){
             if(getAvailableQuests().contains(Quest.QUESTION)){
-                questManager.replaceQuest(Quest.QUESTION, Quest.KILL_PLAYER);
+                Quest newQuest = questManager.getSpecialQuest();
+                questManager.replaceQuest(Quest.QUESTION, newQuest);
                 questOrder.remove(Quest.QUESTION);
-                questOrder.put(Quest.KILL_PLAYER, null);
+                questOrder.put(newQuest, null);
 
-                if(getGameType() == GameType.SOLO){
-                    playerQuests.remove(Quest.QUESTION);
-                    playerQuests.put(Quest.KILL_PLAYER, null);
-                }
-                else{
+                if (getGameType() != GameType.SOLO) {
                     teamQuests.remove(Quest.QUESTION);
-                    teamQuests.put(Quest.KILL_PLAYER, null);
-                    playerQuests.remove(Quest.QUESTION);
-                    playerQuests.put(Quest.KILL_PLAYER, null);
+                    teamQuests.put(newQuest, null);
                 }
-                Bukkit.broadcastMessage(ChatColor.DARK_RED + "Nova Quest! " + ChatColor.YELLOW + Quest.KILL_PLAYER.getName());
+                playerQuests.remove(Quest.QUESTION);
+                playerQuests.put(newQuest, null);
+                Bukkit.broadcastMessage(ChatColor.DARK_RED + "Nova Quest! " + ChatColor.YELLOW + newQuest.getName());
+                WebService.updateQuest(this.gameWebId, newQuest);
             }
 
             if(kit){
@@ -821,6 +1016,8 @@ public class GameManager {
 
         Bukkit.broadcastMessage(ChatColor.AQUA + "Mundo gerado com sucesso!");
 
+        searchBiomes(overworld);
+
     }
 
     public void teleportPlayersToGame() {
@@ -834,10 +1031,13 @@ public class GameManager {
             int y = Bukkit.getWorld("gameWorld").getHighestBlockYAt(x, z);
             Location finalDestiny = new Location(Bukkit.getWorld("gameWorld"), x, y, z);
             if(finalDestiny.getBlock().getType().equals(Material.WATER) || finalDestiny.getBlock().getType().equals(Material.LAVA)){
-                finalDestiny.getBlock().setType(Material.GRASS);
+                finalDestiny.getBlock().setType(Material.GRASS_BLOCK);
             }
+            finalDestiny.add(0,2,0);
 
-            if(player != null) player.teleport(finalDestiny);
+            if(player == null) continue;
+            player.teleport(finalDestiny);
+            NickAPI.refreshPlayer(player);
         }
     }
 

@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -53,10 +54,18 @@ public class GamblerListener implements Listener {
                 gameManager.playerKit.put(event.getWhoClicked().getUniqueId(), kitType);
                 event.getWhoClicked().sendMessage(ChatColor.GREEN + "Você selecionou o kit " + ChatColor.AQUA + kitType.getName());
                 event.getWhoClicked().closeInventory();
-                event.getWhoClicked().getInventory().remove(Material.EYE_ARMOR_TRIM_SMITHING_TEMPLATE);
+                event.getWhoClicked().getInventory().remove(Material.GOLD_INGOT);
                 kits.remove(event.getWhoClicked().getUniqueId());
                 Kit kit = kitType.getKit();
-                kit.startKit((Player) event.getWhoClicked());
+                if(gameManager.getAvailableQuests().size() <= gameManager.questLeftWhenChange){
+                    kit.giveKit((Player) event.getWhoClicked());
+                } else{
+                    kit.startKit((Player) event.getWhoClicked());
+                }
+
+                if(kitType.equals(KitType.EXPLORER)){
+                    gameManager.giveNewBiome((Player) event.getWhoClicked());
+                }
                 return;
             }
         }
@@ -83,7 +92,10 @@ public class GamblerListener implements Listener {
             Collections.addAll(allKits, KitType.values());
             allKits.remove(KitType.GAMBLER);
             allKits.remove(KitType.SURPRISE);
-            if (gameManager.getGameType().equals(GameType.SOLO)) allKits.remove(KitType.PAO);
+            if (gameManager.getGameType().equals(GameType.SOLO)){
+                allKits.remove(KitType.PAO);
+                allKits.remove(KitType.SEDEX);
+            }
             Collections.shuffle(allKits);
             gamblerKits = new ArrayList<>(allKits.subList(0, 3));
             kits.put(player.getUniqueId(), gamblerKits);
@@ -95,6 +107,7 @@ public class GamblerListener implements Listener {
             ItemStack kitItem = new ItemStack(kitType.getIcon());
             ItemMeta kitItemMeta = kitItem.getItemMeta();
             kitItemMeta.setDisplayName(ChatColor.AQUA + kitType.getName());
+            kitItemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
             List<String> lore = new ArrayList<>();
             lore.add(ChatColor.GRAY + kitType.getDescription());
             lore.add("");

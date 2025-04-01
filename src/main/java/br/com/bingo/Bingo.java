@@ -9,6 +9,8 @@ import br.com.bingo.rank.LeaderBoard;
 import br.com.bingo.rank.utils.match.MatchesStorageUtil;
 import br.com.bingo.rank.utils.players.PlayersStorageUtil;
 import br.com.bingo.rank.utils.quests.QuestsStorageUtil;
+import br.com.bingo.recipes.CustomRecipe;
+import br.com.bingo.web.WebService;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -35,6 +37,7 @@ public final class Bingo extends JavaPlugin {
             e.printStackTrace();
         }
 
+        CustomRecipe.registerRecipes(this);
 
         getCommand("bingo").setExecutor(new BingoCommand(gameManager));
         getCommand("menu").setExecutor(new MenuCommand(gameManager));
@@ -49,7 +52,7 @@ public final class Bingo extends JavaPlugin {
         getCommand("profiles").setExecutor(new ProfileListCommand());
         getCommand("updateleaderboard").setExecutor(new UpdataLeaderBoardCommand());
         getCommand("skin").setExecutor(new SkinCommand(gameManager));
-
+        getCommand("bingoDebug").setExecutor(new BingoDebugCommand(gameManager));
         getServer().getPluginManager().registerEvents(new InventoryListener(gameManager), this);
         getServer().getPluginManager().registerEvents(new LastGameListener(gameManager), this);
         getServer().getPluginManager().registerEvents(new MaterialListener(gameManager), this);
@@ -86,11 +89,17 @@ public final class Bingo extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EndermageListener(), this);
         getServer().getPluginManager().registerEvents(new CultivatorListener(), this);
         getServer().getPluginManager().registerEvents(new ProfileListener(), this);
+        getServer().getPluginManager().registerEvents(new BlacksmithListener(gameManager), this);
+        getServer().getPluginManager().registerEvents(new ExplorerListener(gameManager), this);
+        getServer().getPluginManager().registerEvents(new SoulboundListener(gameManager), this);
+        getServer().getPluginManager().registerEvents(new PyroListener(gameManager), this);
+        getServer().getPluginManager().registerEvents(new BeastmasterListener(gameManager), this);
 
         LeaderBoard.createLeaderBoard();
     }
     @Override
     public void onDisable() {
+        WebService.endGame(gameManager.gameWebId);
         LeaderBoard.clearEntities();
 
     }

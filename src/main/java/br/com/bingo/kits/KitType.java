@@ -3,8 +3,6 @@ package br.com.bingo.kits;
 
 import br.com.bingo.kits.definitions.*;
 import org.bukkit.Material;
-import org.bukkit.advancement.Advancement;
-import org.bukkit.advancement.AdvancementDisplay;
 
 public enum KitType {
 
@@ -29,6 +27,10 @@ public enum KitType {
     ARCHITECT("Architect", Material.SHULKER_SHELL, "Use seu Builder para construir rapidamente!", new Architect()),
     SEDEX("Sedex", Material.CHEST, "Use seu Sedex para enviar pegar itens dos seus aliados!", new Sedex()),
     CULTIVATOR("Cultivator", Material.WHEAT, "Segure sua enxada para que as plantas cresçam rapidamente!", new Cultivator()),
+    BLACKSMITH("Blacksmith", Material.COAL, "Cozinhe minérios automaticamente no seu inventário!", new Blacksmith()),
+    EXPLORER("Explorer", Material.GRASS_BLOCK, "Encontre facilmente novos biomas!", new Explorer()),
+    SOULBOUND("Soulbound", Material.DRAGON_BREATH, "Abra seu Enderchest Portatil e use seu portal para voltar para a base!", new Soulbound()),
+    PYRO("Pyro", Material.FLINT_AND_STEEL, "Use seu fogo para queimar seus inimigos e não tome dano para o fogo !", new Pyro()),
     ;
 
 

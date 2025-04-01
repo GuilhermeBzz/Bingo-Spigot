@@ -15,8 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 
-import java.util.Random;
-
 public class SpawnListener implements Listener{
 
     GameManager gameManager;
@@ -51,8 +49,10 @@ public class SpawnListener implements Listener{
         }
 
         ItemStack item = new ItemStack(Material.PAPER);
+        gameManager.giveStarterKit(event.getPlayer());
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD + "Cartela do Bingo");
+        meta.setCustomModelData(777);
         item.setItemMeta(meta);
         event.getPlayer().getInventory().addItem(item);
 

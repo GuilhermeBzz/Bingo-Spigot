@@ -13,7 +13,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -136,7 +135,7 @@ public class CultivatorListener implements Listener {
                 ageable.setAge(Math.min(ageable.getAge() + 1, ageable.getMaximumAge()));
                 block.setBlockData(ageable);
                 block.getWorld().playSound(block.getLocation(), Sound.ITEM_BONE_MEAL_USE, 1.0f, 1.0f);
-                block.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, block.getLocation().add(0.5, 0.5, 0.5), 10);
+                block.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, block.getLocation().add(0.5, 0.5, 0.5), 10);
             }
         } else if(block instanceof Sapling){
             Sapling sapling = (Sapling) blockData;
@@ -144,7 +143,7 @@ public class CultivatorListener implements Listener {
                 sapling.setStage(sapling.getMaximumStage());
                 block.setBlockData(sapling);
                 block.getWorld().playSound(block.getLocation(), Sound.ITEM_BONE_MEAL_USE, 1.0f, 1.0f);
-                block.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, block.getLocation().add(0.5, 0.5, 0.5), 10);
+                block.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, block.getLocation().add(0.5, 0.5, 0.5), 10);
             }
         }
     }

@@ -9,7 +9,6 @@ import br.com.bingo.ui.BingoMenu;
 import br.com.bingo.game.GameManager;
 import br.com.bingo.game.GameStatus;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -24,7 +23,7 @@ import java.util.UUID;
 
 public class JoinListener implements Listener {
 
-    private GameManager gameManager;
+    private final GameManager gameManager;
 
     public JoinListener(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -42,36 +41,44 @@ public class JoinListener implements Listener {
         World world = event.getPlayer().getWorld();
 
         if(gameManager.getGameStatus().equals(GameStatus.NONE)){
-            event.getPlayer().teleport(Bukkit.getWorlds().get(0).getSpawnLocation().add(0, 1, 0));
-            event.getPlayer().setGameMode(GameMode.ADVENTURE);
-            for (PotionEffect effect : event.getPlayer().getActivePotionEffects()) {
-                event.getPlayer().removePotionEffect(effect.getType());
-            }
-            if(!PlayersStorageUtil.checkPlayerInstance(event.getPlayer())){
-                PlayersStorageUtil.createPlayer(new PlayersData(event.getPlayer().getUniqueId()));
-            }
-            event.getPlayer().getInventory().clear();
-            BingoMenu.giveMenuOpener(event.getPlayer());
-            PlayerProfile.givePorfileOpener(event.getPlayer());
-            Player player = event.getPlayer();
-            HashMap<UUID, PermissionAttachment> perms = new HashMap<UUID, PermissionAttachment>();
-            PermissionAttachment attachment = player.addAttachment(Bingo.getInstance());
-            perms.put(player.getUniqueId(), attachment);
-            PermissionAttachment pperms = perms.get(player.getUniqueId());
-            pperms.setPermission("bingo.endgame", false);
-            player.recalculatePermissions();
-        }
-        if(gameManager.getGameStatus().equals(GameStatus.CREATED)){
-            event.getPlayer().teleport(Bukkit.getWorlds().get(0).getSpawnLocation().add(0, 1, 0));
+            setPlayerDefaultState(event.getPlayer());
+        } else if(gameManager.getGameStatus().equals(GameStatus.CREATED)){
+            event.getPlayer().teleport(Bukkit.getWorlds().get(0).getSpawnLocation().add(0, 2, 0));
             event.getPlayer().setGameMode(GameMode.ADVENTURE);
             event.getPlayer().getInventory().clear();
             BingoMenu.giveMenuOpener(event.getPlayer());
             PlayerProfile.givePorfileOpener(event.getPlayer());
             gameManager.paintTAB(event.getPlayer());
+        } else if(gameManager.getGameStatus().equals(GameStatus.STARTED) && !gameManager.checkPlayerTeam(event.getPlayer())){
+            setPlayerDefaultState(event.getPlayer());
         }
         Ranks.setPrefixAndDisplayName(event.getPlayer(), gameManager.playerTeam);
         return;
+    }
 
-
+    public void setPlayerDefaultState(Player player){
+        player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation().add(0, 2, 0));
+        player.setGameMode(GameMode.ADVENTURE);
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            player.removePotionEffect(effect.getType());
+        }
+        if(!PlayersStorageUtil.checkPlayerInstance(player)){
+            PlayersStorageUtil.createPlayer(new PlayersData(player.getUniqueId()));
+        }
+        player.setFireTicks(0);
+        player.setHealth(20);
+        player.setFoodLevel(20);
+        player.setLevel(0);
+        player.setExp(0);
+        player.setSaturation(20);
+        player.getInventory().clear();
+        BingoMenu.giveMenuOpener(player);
+        PlayerProfile.givePorfileOpener(player);
+        HashMap<UUID, PermissionAttachment> perms = new HashMap<>();
+        PermissionAttachment attachment = player.addAttachment(Bingo.getInstance());
+        perms.put(player.getUniqueId(), attachment);
+        PermissionAttachment pperms = perms.get(player.getUniqueId());
+        pperms.setPermission("bingo.endgame", false);
+        player.recalculatePermissions();
     }
 }

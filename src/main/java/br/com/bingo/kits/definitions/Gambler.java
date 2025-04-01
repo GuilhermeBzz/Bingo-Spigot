@@ -2,19 +2,15 @@ package br.com.bingo.kits.definitions;
 
 import br.com.bingo.Bingo;
 import br.com.bingo.kits.Kit;
-import br.com.bingo.kits.KitType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class Gambler extends Kit {
     @Override
@@ -29,11 +25,12 @@ public class Gambler extends Kit {
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {
             @Override
             public void run() {
-                ItemStack item = new ItemStack(Material.EYE_ARMOR_TRIM_SMITHING_TEMPLATE);
+                ItemStack item = new ItemStack(Material.GOLD_INGOT);
                 ItemMeta itemMeta = item.getItemMeta();
                 itemMeta.setDisplayName(ChatColor.GOLD + "Escolher Kit");
                 itemMeta.setUnbreakable(true);
                 itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+                itemMeta.setCustomModelData(777);
                 item.setItemMeta(itemMeta);
 
                 ArrayList<ItemStack> items = new ArrayList<>();
@@ -54,11 +51,12 @@ public class Gambler extends Kit {
     @Override
     public void onStartRespawn(Player player){
         if(player.getWorld().getPVP()){
-            ItemStack item = new ItemStack(Material.EYE_ARMOR_TRIM_SMITHING_TEMPLATE);
+            ItemStack item = new ItemStack(Material.GOLD_INGOT);
             ItemMeta itemMeta = item.getItemMeta();
             itemMeta.setDisplayName(ChatColor.GOLD + "Escolher Kit");
             itemMeta.setUnbreakable(true);
             itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+            itemMeta.setCustomModelData(777);
             item.setItemMeta(itemMeta);
 
             ArrayList<ItemStack> items = new ArrayList<>();
@@ -75,11 +73,12 @@ public class Gambler extends Kit {
     @Override
     public void onRespawn(Player player){
         if(player.getWorld().getPVP()){
-            ItemStack item = new ItemStack(Material.EYE_ARMOR_TRIM_SMITHING_TEMPLATE);
+            ItemStack item = new ItemStack(Material.GOLD_INGOT);
             ItemMeta itemMeta = item.getItemMeta();
             itemMeta.setDisplayName(ChatColor.GOLD + "Escolher Kit");
             itemMeta.setUnbreakable(true);
             itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+            itemMeta.setCustomModelData(777);
             item.setItemMeta(itemMeta);
 
             ArrayList<ItemStack> items = new ArrayList<>();

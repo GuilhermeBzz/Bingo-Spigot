@@ -3,6 +3,7 @@ package br.com.bingo.listener.quest;
 import br.com.bingo.game.GameManager;
 import br.com.bingo.quests.Quest;
 import br.com.bingo.quests.QuestType;
+import br.com.bingo.quests.SpecialCollectQuantity;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -16,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class MaterialListener implements Listener {
 
-    private GameManager gameManager;
+    private final GameManager gameManager;
 
     public MaterialListener(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -32,6 +33,18 @@ public class MaterialListener implements Listener {
                     if(quest.getType() == QuestType.COLLECT_ITEM){
                         if(item.getType() == quest.getTarget() && !item.getItemMeta().hasItemFlag(ItemFlag.HIDE_UNBREAKABLE)){
                             gameManager.completeQuest(player.getUniqueId(), quest);
+                            return;
+                        }
+                    } else if(quest.getType() == QuestType.SPECIAL_COLLECT) {
+                        if (item.getType() == quest.getTarget() && !item.getItemMeta().hasItemFlag(ItemFlag.HIDE_UNBREAKABLE)) {
+                            for (SpecialCollectQuantity specialQuest : SpecialCollectQuantity.values()) {
+                                if (specialQuest.getQuest().equals(quest)) {
+                                    if (specialQuest.getQuantity() == item.getAmount()) {
+                                        gameManager.completeQuest(player.getUniqueId(), quest);
+                                        return;
+                                    }
+                                }
+                            }
                             return;
                         }
                     }
@@ -64,6 +77,35 @@ public class MaterialListener implements Listener {
                         } else if (outroItem != null){
                             if(outroItem.getType() == quest.getTarget() && !outroItem.getItemMeta().hasItemFlag(ItemFlag.HIDE_UNBREAKABLE)){
                                 gameManager.completeQuest(player.getUniqueId(), quest);
+                                return;
+                            }
+                        }
+                    }
+                } else if(quest.getType() == QuestType.SPECIAL_COLLECT){
+                    if(clickedInventory != null){
+                        if(event.getView().getTitle().equals(ChatColor.DARK_PURPLE + "Cartela do Bingo") || event.getView().getTitle().equals(ChatColor.DARK_RED + "Menu") || event.getView().getTitle().equals(ChatColor.DARK_PURPLE + "Kits") || event.getView().getTitle().equals(ChatColor.DARK_RED + "Criar Partida")) continue;
+                        if(clickedItem != null){
+                            if(clickedItem.getType() == quest.getTarget() && !clickedItem.getItemMeta().hasItemFlag(ItemFlag.HIDE_UNBREAKABLE)){
+                                for(SpecialCollectQuantity specialQuest : SpecialCollectQuantity.values()){
+                                    if(specialQuest.getQuest().equals(quest)){
+                                        if(specialQuest.getQuantity() == clickedItem.getAmount()){
+                                            gameManager.completeQuest(player.getUniqueId(), quest);
+                                            return;
+                                        }
+                                    }
+                                }
+                                return;
+                            }
+                        } else if (outroItem != null){
+                            if(outroItem.getType() == quest.getTarget() && !outroItem.getItemMeta().hasItemFlag(ItemFlag.HIDE_UNBREAKABLE)){
+                                for(SpecialCollectQuantity specialQuest : SpecialCollectQuantity.values()){
+                                    if(specialQuest.getQuest().equals(quest)){
+                                        if(specialQuest.getQuantity() == outroItem.getAmount()){
+                                            gameManager.completeQuest(player.getUniqueId(), quest);
+                                            return;
+                                        }
+                                    }
+                                }
                                 return;
                             }
                         }

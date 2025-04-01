@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -28,10 +29,10 @@ public class HunterListener implements Listener {
     }
 
 
-
     @EventHandler
     public void onCompassClick(PlayerInteractEvent event){
         Player player = event.getPlayer();
+        if(event.getItem() == null){return;}
         if(!player.getInventory().getItemInMainHand().getType().equals(Material.COMPASS)){return;}
         if(!player.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Hunter's Compass")){return;}
 
@@ -94,7 +95,13 @@ public class HunterListener implements Listener {
             compassCooldown.put(player.getUniqueId(), currentTime);
             player.sendMessage(ChatColor.GREEN + "Bussola apontando para um jogador");
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 10*20, 2));
+
+            CompassMeta compassMeta = (CompassMeta) event.getItem().getItemMeta();
+            compassMeta.setLodestone(target.getLocation());
+            compassMeta.setLodestoneTracked(false);
+            event.getItem().setItemMeta(compassMeta);
             player.setCompassTarget(target.getLocation());
+
             target.sendMessage(ChatColor.RED + "Um jogador está te caçando! Ele está a " + (int)distance + " blocos de distância");
             return;
         }

@@ -1,7 +1,5 @@
 package br.com.bingo.kits;
 
-import br.com.bingo.game.GameManager;
-import br.com.bingo.kits.definitions.Hunter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -26,6 +24,7 @@ public class KitManager {
             ItemStack kitItem = new ItemStack(kitType.getIcon());
             ItemMeta kitItemMeta = kitItem.getItemMeta();
             kitItemMeta.setDisplayName(ChatColor.AQUA + kitType.getName());
+            kitItemMeta.setCustomModelData(777);
             List<String> lore = new ArrayList<>();
             lore.add(ChatColor.GRAY + kitType.getDescription());
             lore.add("");

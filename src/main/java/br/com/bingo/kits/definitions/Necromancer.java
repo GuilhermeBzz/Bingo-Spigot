@@ -3,7 +3,6 @@ package br.com.bingo.kits.definitions;
 import br.com.bingo.kits.Kit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -19,6 +18,7 @@ public class Necromancer extends Kit {
         hoeMeta.setDisplayName(ChatColor.GOLD + "Necromancer's Hoe");
         hoeMeta.setUnbreakable(true);
         hoeMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        hoeMeta.setCustomModelData(777);
         hoe.setItemMeta(hoeMeta);
 
         ArrayList<ItemStack> items = new ArrayList<>();
@@ -33,6 +33,7 @@ public class Necromancer extends Kit {
         hoeMeta.setDisplayName(ChatColor.GOLD + "Necromancer's Hoe");
         hoeMeta.setUnbreakable(true);
         hoeMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        hoeMeta.setCustomModelData(777);
         hoe.setItemMeta(hoeMeta);
 
         ArrayList<ItemStack> items = new ArrayList<>();
@@ -48,6 +49,7 @@ public class Necromancer extends Kit {
         hoeMeta.setDisplayName(ChatColor.GOLD + "Necromancer's Hoe");
         hoeMeta.setUnbreakable(true);
         hoeMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        hoeMeta.setCustomModelData(777);
         hoe.setItemMeta(hoeMeta);
 
         for(ItemStack item : player.getInventory().getContents()){

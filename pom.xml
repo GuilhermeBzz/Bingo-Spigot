@@ -48,7 +48,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.1</version>
                 <configuration>
-                    <outputDirectory>E:\Folders\Codigos Programacao\Java\Plugins\Servidor Paper 1.20.1\plugins</outputDirectory>
+                    <outputDirectory>C:\Spigot\Servidor Spigot 1.21.4\plugins</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>
@@ -62,7 +62,7 @@
 
     <repositories>
         <repository>
-            <id>spigotmc-repo</id>
+            <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
@@ -79,9 +79,8 @@
             <layout>default</layout>
         </repository>
         <repository>
-            <id>Intelligence Repository-haoshoku</id>
-            <name>Intelligence Repository</name>
-            <url>https://mvn.intelligence-modding.de/#/haoshoku</url>
+            <id>nickapi</id>
+            <url>https://haoshoku.xyz:8081/repository/default/</url>
         </repository>
 
 
@@ -92,7 +91,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.20.1-R0.1-SNAPSHOT</version>
+            <version>1.21.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -109,7 +108,7 @@
         <dependency>
             <groupId>de.tr7zw</groupId>
             <artifactId>item-nbt-api-plugin</artifactId>
-            <version>2.11.3</version>
+            <version>2.14.1</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -118,8 +117,9 @@
         </dependency>
         <dependency>
             <groupId>xyz.haoshoku.nick</groupId>
-            <artifactId>NickAPI</artifactId>
-            <version>v6.5.3</version>
+            <artifactId>nickapi</artifactId>
+            <version>7.6</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

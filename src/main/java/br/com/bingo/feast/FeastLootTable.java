@@ -1,14 +1,11 @@
 package br.com.bingo.feast;
 
 import org.bukkit.Material;
-import org.bukkit.PortalType;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
 
 import java.util.*;
 
@@ -16,7 +13,7 @@ public enum FeastLootTable {
 
 
     BEEF(Material.COOKED_BEEF, 5, 10, null, 0.5),
-    DSWORD(Material.DIAMOND_SWORD, 1, 1,new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.DAMAGE_ALL, 5)} , 0.1),
+    DSWORD(Material.DIAMOND_SWORD, 1, 1,new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.SHARPNESS, 5)} , 0.1),
     TNT(Material.TNT, 1, 5, null, 0.25),
     BREAD(Material.BREAD, 8, 16, null, 0.5),
     OAKLOG(Material.OAK_LOG, 8, 16, null, 0.7),
@@ -25,14 +22,14 @@ public enum FeastLootTable {
     EYE(Material.ENDER_EYE, 1, 11, null, 0.3),
     GAPPLE(Material.GOLDEN_APPLE, 1, 8, null, 0.4),
     E_GAPPLE(Material.ENCHANTED_GOLDEN_APPLE, 1, 3, null, 0.2),
-    BOW(Material.BOW, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.ARROW_DAMAGE, 5), new EnchantmentIntegerPair(Enchantment.ARROW_INFINITE, 1)}, 0.2),
-    D_BOOTS(Material.DIAMOND_BOOTS, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.PROTECTION_ENVIRONMENTAL, 4), new EnchantmentIntegerPair(Enchantment.PROTECTION_FALL, 4)}, 0.1),
-    D_LEGGINGS(Material.DIAMOND_LEGGINGS, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.PROTECTION_ENVIRONMENTAL, 4)}, 0.1),
-    D_CHESTPLATE(Material.DIAMOND_CHESTPLATE, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.PROTECTION_ENVIRONMENTAL, 4)}, 0.1),
-    D_HELMET(Material.DIAMOND_HELMET, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.PROTECTION_ENVIRONMENTAL, 4)}, 0.1),
-    D_PICKAXE(Material.DIAMOND_PICKAXE, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.DIG_SPEED, 5)}, 0.1),
-    D_AXE(Material.DIAMOND_AXE, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.DIG_SPEED, 5)}, 0.1),
-    D_SHOVEL(Material.DIAMOND_SHOVEL, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.DIG_SPEED, 5)}, 0.1),
+    BOW(Material.BOW, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.POWER, 5), new EnchantmentIntegerPair(Enchantment.INFINITY, 1)}, 0.2),
+    D_BOOTS(Material.DIAMOND_BOOTS, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.PROTECTION, 4), new EnchantmentIntegerPair(Enchantment.FEATHER_FALLING, 4)}, 0.1),
+    D_LEGGINGS(Material.DIAMOND_LEGGINGS, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.PROTECTION, 4)}, 0.1),
+    D_CHESTPLATE(Material.DIAMOND_CHESTPLATE, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.PROTECTION, 4)}, 0.1),
+    D_HELMET(Material.DIAMOND_HELMET, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.PROTECTION, 4)}, 0.1),
+    D_PICKAXE(Material.DIAMOND_PICKAXE, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.EFFICIENCY, 5)}, 0.1),
+    D_AXE(Material.DIAMOND_AXE, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.EFFICIENCY, 5)}, 0.1),
+    D_SHOVEL(Material.DIAMOND_SHOVEL, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.EFFICIENCY, 5)}, 0.1),
     PANDA(Material.PANDA_SPAWN_EGG, 1, 3, null, 0.15),
     PIG(Material.PIG_SPAWN_EGG, 1, 3, null, 0.15),
     COW(Material.COW_SPAWN_EGG, 1, 3, null, 0.15),
@@ -46,7 +43,7 @@ public enum FeastLootTable {
     WARDEN(Material.WARDEN_SPAWN_EGG, 1, 1, null, 0.001),
     POTION(Material.SPLASH_POTION, 1, 1, null, 0.7),
     ANVIL(Material.ANVIL, 1, 1, null, 0.5),
-    FISHING(Material.FISHING_ROD, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.LUCK, 3), new EnchantmentIntegerPair(Enchantment.LURE, 3)}, 0.4),
+    FISHING(Material.FISHING_ROD, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.LUCK_OF_THE_SEA, 3), new EnchantmentIntegerPair(Enchantment.LURE, 3)}, 0.4),
     WATER(Material.WATER_BUCKET, 1, 1, null, 0.6),
     LAVA(Material.LAVA_BUCKET, 1, 1, null, 0.6),
     BAMBOO(Material.BAMBOO, 1, 5, null, 0.3),
@@ -104,8 +101,8 @@ public enum FeastLootTable {
     }
 
     public static class EnchantmentIntegerPair{
-        private Enchantment enchantment;
-        private int level;
+        private final Enchantment enchantment;
+        private final int level;
 
         public EnchantmentIntegerPair(Enchantment enchantment, int level){
             this.enchantment = enchantment;

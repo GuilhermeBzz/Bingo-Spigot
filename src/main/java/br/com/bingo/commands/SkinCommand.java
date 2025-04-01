@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import xyz.haoshoku.nick.api.NickAPI;
 
 import java.util.ArrayList;
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 public class SkinCommand implements CommandExecutor, TabCompleter {

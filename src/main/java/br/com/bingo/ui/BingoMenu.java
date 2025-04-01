@@ -43,6 +43,7 @@ public class BingoMenu {
         ItemStack paper = new ItemStack(Material.PAPER);
         ItemMeta paperMeta = paper.getItemMeta();
         paperMeta.setDisplayName(ChatColor.GOLD + "Pegar Cartela");
+        paperMeta.setCustomModelData(777);
         paper.setItemMeta(paperMeta);
 
         ItemStack grass = new ItemStack(Material.GRASS_BLOCK);

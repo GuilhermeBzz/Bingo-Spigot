@@ -9,7 +9,7 @@ import org.bukkit.event.enchantment.EnchantItemEvent;
 
 public class EnchantListener implements Listener {
 
-    private GameManager gameManager;
+    private final GameManager gameManager;
 
 
     public EnchantListener(GameManager gameManager) {

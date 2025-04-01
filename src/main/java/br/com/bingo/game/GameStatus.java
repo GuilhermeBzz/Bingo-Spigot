@@ -4,5 +4,5 @@ public enum GameStatus {
     NONE,
     CREATED,
     STARTED,
-    FINISHED;
+    FINISHED
 }

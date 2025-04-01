@@ -9,10 +9,12 @@ public enum QuestType {
     DIE,
     ENCHANT,
     SHEAR,
-    WARDEN,
+    SPAWN,
     BEDROCK,
     KILL_PLAYER,
     NONE,
     LEVEL_UP,
-    ADVANCEMENT;
+    ADVANCEMENT,
+    DYE,
+    SPECIAL_COLLECT,
 }

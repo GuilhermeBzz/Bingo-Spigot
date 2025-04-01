@@ -18,7 +18,10 @@ public class Sedex extends Kit {
         itemMeta.setDisplayName(ChatColor.GOLD + "SEDEX 10");
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        itemMeta.setLore(new ArrayList<String>(){{add(ChatColor.RED + "NAO CLIQUE NESSE ITEM QUANDO USANDO O KIT");}});
+        itemMeta.setCustomModelData(777);
+        itemMeta.setLore(new ArrayList<>() {{
+            add(ChatColor.RED + "NAO CLIQUE NESSE ITEM QUANDO USANDO O KIT");
+        }});
         item.setItemMeta(itemMeta);
 
         ArrayList<ItemStack> items = new ArrayList<>();
@@ -34,7 +37,10 @@ public class Sedex extends Kit {
         itemMeta.setDisplayName(ChatColor.GOLD + "PAC");
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        itemMeta.setLore(new ArrayList<String>(){{add(ChatColor.RED + "NAO CLIQUE NESSE ITEM QUANDO USANDO O KIT");}});
+        itemMeta.setCustomModelData(777);
+        itemMeta.setLore(new ArrayList<>() {{
+            add(ChatColor.RED + "NAO CLIQUE NESSE ITEM QUANDO USANDO O KIT");
+        }});
         item.setItemMeta(itemMeta);
 
         ArrayList<ItemStack> items = new ArrayList<>();

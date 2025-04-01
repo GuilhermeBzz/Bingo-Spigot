@@ -15,7 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class BingoCommand implements CommandExecutor, TabCompleter {
@@ -106,6 +105,7 @@ public class BingoCommand implements CommandExecutor, TabCompleter {
                 ItemStack item = new ItemStack(Material.PAPER);
                 ItemMeta meta = item.getItemMeta();
                 meta.setDisplayName(ChatColor.GOLD + "Cartela do Bingo");
+                meta.setCustomModelData(777);
                 item.setItemMeta(meta);
                 player.getInventory().addItem(item);
             }else {

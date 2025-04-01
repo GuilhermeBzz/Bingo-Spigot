@@ -6,7 +6,6 @@ import br.com.bingo.team.TeamType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -169,7 +168,7 @@ public class NecromancerListener implements Listener {
 
         }
         if(mobs.size() >= 6){
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20*10, 3));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 20*10, 3));
         }
     }
 }

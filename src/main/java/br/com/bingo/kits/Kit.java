@@ -20,7 +20,7 @@ public abstract class Kit {
         return name;
     }
 
-    public void addKitItems(ArrayList<ItemStack> items, Player player){
+    public static void addKitItems(ArrayList<ItemStack> items, Player player){
         int emptySlots = 0;
         for(ItemStack item : player.getInventory().getStorageContents()){
             if(item == null || item.getType().isAir()){

@@ -21,7 +21,7 @@ public enum MiniFeastLootTable {
     PEARL(Material.ENDER_PEARL, 1, 2, null, 0.3),
     GAPPLE(Material.GOLDEN_APPLE, 1, 3, null, 0.2),
     DIAMOND(Material.DIAMOND, 1, 3, null, 0.2),
-    IRON_PICK_E(Material.IRON_PICKAXE, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.DIG_SPEED, 3)}, 0.2),
+    IRON_PICK_E(Material.IRON_PICKAXE, 1, 1, new EnchantmentIntegerPair[]{new EnchantmentIntegerPair(Enchantment.EFFICIENCY, 3)}, 0.2),
     IRON_PICK(Material.IRON_PICKAXE, 1, 1, null, 0.5),
     IRON_AXE(Material.IRON_AXE, 1, 1, null, 0.5),
     IRON_SHOVEL(Material.IRON_SHOVEL, 1, 1, null, 0.5),
@@ -73,8 +73,8 @@ public enum MiniFeastLootTable {
     }
 
     public static class EnchantmentIntegerPair{
-        private Enchantment enchantment;
-        private int level;
+        private final Enchantment enchantment;
+        private final int level;
 
         public EnchantmentIntegerPair(Enchantment enchantment, int level){
             this.enchantment = enchantment;

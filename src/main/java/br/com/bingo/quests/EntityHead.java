@@ -1,4 +1,4 @@
-package br.com.bingo;
+package br.com.bingo.quests;
 
 public enum EntityHead {
     GOAT(
@@ -349,6 +349,18 @@ public enum EntityHead {
     UNKNOWN(
             "937fb91e-562d-4ab3-b495-3c8b183c38bb",
             "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmFkYzA0OGE3Y2U3OGY3ZGFkNzJhMDdkYTI3ZDg1YzA5MTY4ODFlNTUyMmVlZWQxZTNkYWYyMTdhMzhjMWEifX19"
+    ),
+    ARMADILLO(
+            "ce5beb25-3715-4a06-99ce-44224434cb27",
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2U0ZDUwZTViZTM1MjE2ZjkxNTliODdiNmEzMzU2MzA5ZjU3NGE1NDE5NzY4NTg4NDhmY2FiYjI3YjY3Y2YxYyJ9fX0="
+    ),
+    ALLAY(
+            "3338ac33-a526-4b43-b838-061446933966",
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTUwMjk0YTE3NDczMTBmMTA0MTI0YzYzNzNjYzYzOWI3MTJiYWE1N2I3ZDkyNjI5N2I2NDUxODhiN2JiOWFiOSJ9fX0="
+    ),
+    ABSORPTION(
+            "f5bf84c1-54ff-428c-acb6-c2ad1ee19caa",
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGRmYWRhNjdjYjI2MTQxMGEyNDg5MGVjNzRkMWNiNjA1NTE3ZGYxNDY5YzE5YmRjNWZlM2FhNDQ4ODc3YzYyMSJ9fX0="
     );
 
     public final String UUID;

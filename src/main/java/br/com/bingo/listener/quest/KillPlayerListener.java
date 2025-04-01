@@ -25,17 +25,15 @@ public class KillPlayerListener implements Listener {
         if(!gameManager.isGameStarted()){return;}
         for(Quest quest : gameManager.getAvailableQuests()){
             if(!(quest.getType() == QuestType.KILL_PLAYER)){continue;}
-            if(gameManager.getGameType().equals(GameType.SOLO)){
-                gameManager.completeQuest(event.getEntity().getKiller().getUniqueId(), quest);
-                return;
-            }
-            else {
+            if (!gameManager.getGameType().equals(GameType.SOLO)) {
                 TeamType killerTeam = gameManager.getPlayerTeam(event.getEntity().getKiller());
                 TeamType killedTeam = gameManager.getPlayerTeam(event.getEntity());
-                if(killedTeam.equals(killerTeam)){return;}
-                gameManager.completeQuest(event.getEntity().getKiller().getUniqueId(), quest);
-                return;
+                if (killedTeam.equals(killerTeam)) {
+                    return;
+                }
             }
+            gameManager.completeQuest(event.getEntity().getKiller().getUniqueId(), quest);
+            return;
         }
     }
 

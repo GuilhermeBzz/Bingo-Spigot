@@ -23,7 +23,7 @@ public class Fisherman extends Kit {
         rod.setItemMeta(rodMeta);
 
         rod.addUnsafeEnchantment(Enchantment.LURE ,10);
-        rod.addUnsafeEnchantment(Enchantment.LUCK, 10);
+        rod.addUnsafeEnchantment(Enchantment.LUCK_OF_THE_SEA, 10);
 
         ItemStack net = new ItemStack(Material.LEAD);
         ItemMeta netMeta = net.getItemMeta();
@@ -49,7 +49,7 @@ public class Fisherman extends Kit {
         rod.setItemMeta(rodMeta);
 
         rod.addEnchantment(Enchantment.LURE ,3);
-        rod.addEnchantment(Enchantment.LUCK, 3);
+        rod.addEnchantment(Enchantment.LUCK_OF_THE_SEA, 3);
 
         ArrayList<ItemStack> items = new ArrayList<>();
         items.add(rod);
@@ -76,7 +76,7 @@ public class Fisherman extends Kit {
             if(item != null){
                 if(item.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.GOLD + "Fisherman's Rod")){
                     item.addUnsafeEnchantment(Enchantment.LURE, 10);
-                    item.addUnsafeEnchantment(Enchantment.LUCK, 10);
+                    item.addUnsafeEnchantment(Enchantment.LUCK_OF_THE_SEA, 10);
                 }
             }
         }

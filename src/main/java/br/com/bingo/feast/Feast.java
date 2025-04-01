@@ -81,7 +81,7 @@ public class Feast {
 
         for(Location chest : chests){
             chest.getBlock().setType(Material.CHEST);
-            chest.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, chest, 1);
+            chest.getWorld().spawnParticle(Particle.EXPLOSION, chest, 1);
             chest.getWorld().playSound(chest, Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
             fillChest(chest);
         }

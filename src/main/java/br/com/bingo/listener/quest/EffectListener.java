@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityPotionEffectEvent;
 
 public class EffectListener implements Listener {
 
-    private GameManager gameManager;
+    private final GameManager gameManager;
 
     public EffectListener(GameManager gameManager) {this.gameManager = gameManager;}
 

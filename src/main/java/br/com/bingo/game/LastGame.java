@@ -1,6 +1,6 @@
 package br.com.bingo.game;
 
-import br.com.bingo.EntityHead;
+import br.com.bingo.quests.EntityHead;
 import br.com.bingo.kits.KitType;
 import br.com.bingo.quests.Quest;
 import br.com.bingo.rank.models.match.MatchesData;
@@ -120,19 +120,32 @@ public class LastGame {
 
             } else if (quest.getIcon() instanceof EntityHead){
                 UUID headUuid = UUID.fromString((String) ((EntityHead) quest.getIcon()).UUID);
-
                 String texture = ((EntityHead) quest.getIcon()).texture;
+
                 GameProfile profile = new GameProfile(headUuid, "pizza");
-                profile.getProperties().put("textures", new Property("textures", texture ));
-                Field profileField;
+                profile.getProperties().put("textures", new Property("textures", texture));
 
                 questItem = new ItemStack(Material.PLAYER_HEAD);
                 SkullMeta meta = (SkullMeta) questItem.getItemMeta();
 
                 assert meta != null;
-                profileField = meta.getClass().getDeclaredField("profile");
-                profileField.setAccessible(true);
-                profileField.set(meta, profile);
+                try {
+                    // Pega o campo correto para a versão 1.21.4
+                    Field profileField = meta.getClass().getDeclaredField("profile");
+                    profileField.setAccessible(true);
+
+                    // Converte o GameProfile para o novo tipo ResolvableProfile
+                    Object resolvableProfile = Class.forName("net.minecraft.world.item.component.ResolvableProfile")
+                            .getConstructor(GameProfile.class)
+                            .newInstance(profile);
+
+                    profileField.set(meta, resolvableProfile); // Define o perfil corretamente
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                questItem.setItemMeta(meta);
+
+
                 ItemMeta newMeta = null;
 
                 if(gameType.equals(GameType.SOLO)){

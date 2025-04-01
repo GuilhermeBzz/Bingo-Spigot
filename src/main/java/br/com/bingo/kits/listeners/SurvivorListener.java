@@ -39,7 +39,7 @@ public class SurvivorListener implements Listener {
             event.getPlayer().setFoodLevel(20);
             event.getPlayer().setSaturation(20);
             event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*15, 0));
-            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20*10, 5));
+            event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 20*10, 5));
             event.getPlayer().sendMessage(ChatColor.GREEN + "Você usou sua maçã especial!");
         }
     }

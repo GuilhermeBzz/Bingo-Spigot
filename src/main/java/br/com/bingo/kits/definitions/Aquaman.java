@@ -11,8 +11,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-
 public class Aquaman extends Kit {
 
     public Aquaman(){
@@ -44,8 +42,8 @@ public class Aquaman extends Kit {
         helmetMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         helmetMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         helmet.setItemMeta(helmetMeta);
-        helmet.addEnchantment(Enchantment.WATER_WORKER,1);
-        helmet.addUnsafeEnchantment(Enchantment.OXYGEN,5);
+        helmet.addEnchantment(Enchantment.AQUA_AFFINITY,1);
+        helmet.addUnsafeEnchantment(Enchantment.RESPIRATION,5);
         helmet.addEnchantment(Enchantment.BINDING_CURSE,1);
 
         //items.add(helmet);
@@ -80,8 +78,8 @@ public class Aquaman extends Kit {
         helmetMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         helmetMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         helmet.setItemMeta(helmetMeta);
-        helmet.addEnchantment(Enchantment.WATER_WORKER,1);
-        helmet.addUnsafeEnchantment(Enchantment.OXYGEN,5);
+        helmet.addEnchantment(Enchantment.AQUA_AFFINITY,1);
+        helmet.addUnsafeEnchantment(Enchantment.RESPIRATION,5);
         helmet.addEnchantment(Enchantment.BINDING_CURSE,1);
 
         //items.add(helmet);

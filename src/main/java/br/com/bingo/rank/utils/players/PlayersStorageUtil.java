@@ -1,11 +1,9 @@
 package br.com.bingo.rank.utils.players;
 
 import br.com.bingo.Bingo;
-import br.com.bingo.rank.models.match.MatchesData;
 import br.com.bingo.rank.models.players.PlayersData;
 import com.google.gson.Gson;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.io.*;

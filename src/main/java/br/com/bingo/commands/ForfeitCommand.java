@@ -1,7 +1,6 @@
 package br.com.bingo.commands;
 
 import br.com.bingo.game.GameManager;
-import br.com.bingo.game.GameType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

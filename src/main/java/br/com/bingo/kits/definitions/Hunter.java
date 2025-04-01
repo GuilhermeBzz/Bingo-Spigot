@@ -3,6 +3,7 @@ package br.com.bingo.kits.definitions;
 import br.com.bingo.kits.Kit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -34,7 +35,7 @@ public class Hunter extends Kit {
         swordMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         swordMeta.setDisplayName(ChatColor.GOLD + "Hunter's Sword");
         sword.setItemMeta(swordMeta);
-        sword.addEnchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 5);
+        sword.addEnchantment(Enchantment.SHARPNESS, 5);
         items.add(sword);
 
         player.sendMessage(ChatColor.GREEN + "Voce recebeu o seu kit!");
@@ -51,7 +52,7 @@ public class Hunter extends Kit {
         swordMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         swordMeta.setDisplayName(ChatColor.GOLD + "Hunter's Sword");
         sword.setItemMeta(swordMeta);
-        sword.addEnchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 2);
+        sword.addEnchantment(org.bukkit.enchantments.Enchantment.SHARPNESS, 2);
         items.add(sword);
 
         player.sendMessage(ChatColor.GREEN + "Voce recebeu o seu kit!");
@@ -64,7 +65,7 @@ public class Hunter extends Kit {
         for(ItemStack item : player.getInventory().getContents()){
             if(item != null){
                 if(item.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.GOLD + "Hunter's Sword")){
-                    item.addEnchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 5);
+                    item.addEnchantment(org.bukkit.enchantments.Enchantment.SHARPNESS, 5);
                 }
             }
         }

@@ -1,7 +1,7 @@
 name: Bingo
 version: '${project.version}'
 main: br.com.bingo.Bingo
-api-version: '1.20'
+api-version: '1.21'
 
 commands:
   bingo:
@@ -17,6 +17,7 @@ commands:
   tpp:
   gm:
   skin:
+  bingoDebug:
 permissions:
   bingo.endgame:
     description: Dada aos jogadores no final da partida

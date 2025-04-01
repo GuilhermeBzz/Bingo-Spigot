@@ -3,13 +3,10 @@ package br.com.bingo;
 import de.tr7zw.nbtapi.NBTFile;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Sound;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class SchematicManager {
 
@@ -23,9 +20,7 @@ public class SchematicManager {
         var height = nbt.getShort("Height");
         var width = nbt.getShort("Width");
         var length = nbt.getShort("Length");
-        System.out.println(height + " " + width + " " + length);
         var metadata = nbt.getCompound("Metadata");
-        System.out.println(metadata);
         var offsetX = metadata.getInteger("WEOffsetX");
         var offsetY = metadata.getInteger("WEOffsetY");
         var offsetZ = metadata.getInteger("WEOffsetZ");
