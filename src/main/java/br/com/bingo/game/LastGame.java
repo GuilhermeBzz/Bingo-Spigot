@@ -1,8 +1,17 @@
 package br.com.bingo.game;
 
-import br.com.bingo.quests.EntityHead;
+import br.com.bingo.*;
+import br.com.bingo.feast.Feast;
+import br.com.bingo.feast.MiniFeast;
+import br.com.bingo.kits.KitManager;
 import br.com.bingo.kits.KitType;
+import br.com.bingo.quests.EntityHead;
 import br.com.bingo.quests.Quest;
+import br.com.bingo.quests.QuestManager;
+import br.com.bingo.quests.QuestType;
+import br.com.bingo.rank.LeaderBoard;
+import br.com.bingo.rank.RankCalculator;
+import br.com.bingo.rank.Ranks;
 import br.com.bingo.rank.models.match.MatchesData;
 import br.com.bingo.rank.models.match.PlayersFromMatch;
 import br.com.bingo.rank.models.match.QuestsFromMatch;
@@ -12,16 +21,27 @@ import br.com.bingo.rank.utils.match.MatchesStorageUtil;
 import br.com.bingo.rank.utils.players.PlayersStorageUtil;
 import br.com.bingo.rank.utils.quests.QuestsStorageUtil;
 import br.com.bingo.team.TeamType;
+import br.com.bingo.ui.BarTimer;
+import br.com.bingo.ui.BingoMenu;
+import br.com.bingo.ui.ScoreboardBingo;
+import br.com.bingo.web.WebService;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.*;
+import org.bukkit.advancement.Advancement;
+import org.bukkit.advancement.AdvancementProgress;
+import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.BiomeSearchResult;
+import xyz.haoshoku.nick.api.NickAPI;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -210,110 +230,29 @@ public class LastGame {
             Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "A partida não foi contabilizada pois não é ranqueada");
             return;
         }
-        ArrayList<QuestsFromMatch> questsFromMatches = new ArrayList<>();
-        Map<UUID, Integer> easyQuestCompleted = new HashMap<>();
-        Map<UUID, Integer> mediumQuestCompleted = new HashMap<>();
-        Map<UUID, Integer> hardQuestCompleted = new HashMap<>();
-        ArrayList<QuestsData> questsData = new ArrayList<>();
-        for(Quest quest : playerQuests.keySet()){
-            if(playerQuests.get(quest) != null){
-                questsData.add(new QuestsData(quest.getName(), quest.getDifficulty(), 1, 0));
-                questsFromMatches.add(new QuestsFromMatch(quest.getName(), quest.getDifficulty(), playerQuests.get(quest)));
-                switch (quest.getDifficulty()){
-                    case 1:
-                        if(easyQuestCompleted.containsKey(playerQuests.get(quest))){
-                            easyQuestCompleted.put(playerQuests.get(quest), easyQuestCompleted.get(playerQuests.get(quest)) + 1);
-                        }else{
-                            easyQuestCompleted.put(playerQuests.get(quest), 1);
-                        }
-                        break;
-                    case 2:
-                        if(mediumQuestCompleted.containsKey(playerQuests.get(quest))){
-                            mediumQuestCompleted.put(playerQuests.get(quest), mediumQuestCompleted.get(playerQuests.get(quest)) + 1);
-                        }else{
-                            mediumQuestCompleted.put(playerQuests.get(quest), 1);
-                        }
-                        break;
-                    case 3:
-                        if(hardQuestCompleted.containsKey(playerQuests.get(quest))){
-                            hardQuestCompleted.put(playerQuests.get(quest), hardQuestCompleted.get(playerQuests.get(quest)) + 1);
-                        }else{
-                            hardQuestCompleted.put(playerQuests.get(quest), 1);
-                        }
-                        break;
-                }
-            }else{
-                questsData.add(new QuestsData(quest.getName(), quest.getDifficulty(), 0, 1));
-                questsFromMatches.add(new QuestsFromMatch(quest.getName(), quest.getDifficulty(), null));
-            }
-        }
-        ArrayList<PlayersData> playersData = new ArrayList<>();
-        ArrayList<PlayersFromMatch> playersFromMatches = new ArrayList<>();
-        for(UUID uuid : playerTeam.keySet()){
-            int easy = 0;
-            int medium = 0;
-            int hard = 0;
-            if(easyQuestCompleted.containsKey(uuid)){
-                easy = easyQuestCompleted.get(uuid);
-            }
-            if(mediumQuestCompleted.containsKey(uuid)){
-                medium = mediumQuestCompleted.get(uuid);
-            }
-            if(hardQuestCompleted.containsKey(uuid)){
-                hard = hardQuestCompleted.get(uuid);
-            }
-            boolean winner = playerTeam.get(uuid) == teamWinner;
-            playersFromMatches.add(new PlayersFromMatch(uuid, Bukkit.getOfflinePlayer(uuid).getName(),winner, easy, medium, hard));
-            if(winner){
-                playersData.add(new PlayersData(uuid, 1,1, easy, medium, hard));
-            }else{
-                playersData.add(new PlayersData(uuid, 0,1, easy, medium, hard));
-            }
-        }
 
-        String matchId = UUID.randomUUID().toString();
-        MatchesData matchesData = new MatchesData(matchId, questsFromMatches, playersFromMatches);
-        //playersData
-        //questsData
+        // Calculate rank results using the new RankCalculator
+        List<RankCalculator.RankResult> rankResults = RankCalculator.calculateRankResults(playerTeam, playerQuests, teamWinner);
+        
+        // Update player ranks
+        RankCalculator.updatePlayerRanks(rankResults);
 
-        //atualizar o playersData e o questData com os dados novos
+        // Display results
         Bukkit.broadcastMessage("");
         Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "---------------- Saldo de Pontos ----------------");
         Bukkit.broadcastMessage("");
-        for(PlayersData playerData : playersData){
-            if(playerData.getPoints() > 0){
-                Bukkit.broadcastMessage(ChatColor.GREEN + Bukkit.getOfflinePlayer(playerData.getUuid()).getName() + ": +" + playerData.getPoints() + " pontos");
-            }else{
-                Bukkit.broadcastMessage(ChatColor.RED + Bukkit.getOfflinePlayer(playerData.getUuid()).getName() + ": " + playerData.getPoints() + " pontos");
-            }
-            if(PlayersStorageUtil.checkPlayer(playerData)){
-                PlayersStorageUtil.updatePlayer(playerData);
-            }else{
-                PlayersStorageUtil.createPlayer(playerData);
-            }
+        
+        for(RankCalculator.RankResult result : rankResults) {
+            String status = result.isWinner ? ChatColor.GREEN + "Vencedor" : ChatColor.RED + "Perdedor";
+            Bukkit.broadcastMessage(ChatColor.GOLD + result.playerName + ": " + status);
+            Bukkit.broadcastMessage(ChatColor.GRAY + "Quests Faceis: " + ChatColor.GREEN + result.easyQuests);
+            Bukkit.broadcastMessage(ChatColor.GRAY + "Quests Medias: " + ChatColor.GREEN + result.mediumQuests);
+            Bukkit.broadcastMessage(ChatColor.GRAY + "Quests Dificeis: " + ChatColor.GREEN + result.hardQuests);
+            Bukkit.broadcastMessage(ChatColor.GRAY + "Pontos: " + ChatColor.GREEN + result.points);
+            Bukkit.broadcastMessage("");
         }
-        Bukkit.broadcastMessage("");
-        Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "-------------------------------------------------");
-        Bukkit.broadcastMessage("");
-        for(QuestsData questData : questsData){
-            if(QuestsStorageUtil.checkQuest(questData)){
-                QuestsStorageUtil.updateQuest(questData);
-                continue;
-            }
-            QuestsStorageUtil.addQuest(questData);
-        }
-        MatchesStorageUtil.addMatch(matchesData);
-
-
-        try {
-            MatchesStorageUtil.saveMatches();
-            PlayersStorageUtil.savePlayers();
-            QuestsStorageUtil.saveQuests();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
+        
+        Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "----------------------------------------");
     }
 }
 

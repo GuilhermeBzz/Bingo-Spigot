@@ -99,7 +99,7 @@ public final class Bingo extends JavaPlugin {
     }
     @Override
     public void onDisable() {
-        WebService.endGame(gameManager.gameWebId);
+        WebService.endGame(gameManager.gameWebId, false, null);
         LeaderBoard.clearEntities();
 
     }

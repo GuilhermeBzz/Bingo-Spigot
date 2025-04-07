@@ -76,7 +76,7 @@ public enum Quest {
     COLLECT_POLISHED_ANDESITE_STAIRS(QuestType.COLLECT_ITEM, Material.POLISHED_ANDESITE_STAIRS, Material.POLISHED_ANDESITE_STAIRS, "Colete uma Escada de Andesito Polido", 1),
     COLLECT_CHISELED_QUARTZ_BLOCK(QuestType.COLLECT_ITEM, Material.CHISELED_QUARTZ_BLOCK, Material.CHISELED_QUARTZ_BLOCK, "Colete um Bloco de Quartzo Entalhada", 2),
     COLLECT_POLISHED_BASALT(QuestType.COLLECT_ITEM, Material.POLISHED_BASALT, Material.POLISHED_BASALT, "Colete um Basalto Polido", 2),
-    COLLECT_POLISHED_BLACKSTONE_BRICK_WALL(QuestType.COLLECT_ITEM, Material.POLISHED_BLACKSTONE_BRICK_WALL, Material.POLISHED_BLACKSTONE_BRICK_WALL, "Colete um Tijolo de Blackstone Polido", 2),
+    COLLECT_POLISHED_BLACKSTONE_BRICK_WALL(QuestType.COLLECT_ITEM, Material.POLISHED_BLACKSTONE_BRICK_WALL, Material.POLISHED_BLACKSTONE_BRICK_WALL, "Colete uma Parede de Tijolo de Blackstone Polido", 2),
     COLLECT_POTATO(QuestType.COLLECT_ITEM, Material.POTATO, Material.POTATO, "Colete uma Batata", 1),
     COLLECT_MAGMA_BLOCK(QuestType.COLLECT_ITEM, Material.MAGMA_BLOCK, Material.MAGMA_BLOCK, "Colete um Bloco de Magma", 1),
     COLLECT_NETHER_WART_BLOCK(QuestType.COLLECT_ITEM, Material.NETHER_WART_BLOCK, Material.NETHER_WART_BLOCK, "Colete um Bloco de Fungo do Nether", 2),
@@ -228,6 +228,11 @@ public enum Quest {
     COLLECT_NETHER_CAMPFIRE(QuestType.COLLECT_ITEM, Material.SOUL_CAMPFIRE, Material.SOUL_CAMPFIRE, "Colete uma Fogueira da Alma", 2),
     COLLECT_37_FURNACES(QuestType.SPECIAL_COLLECT, Material.FURNACE, Material.FURNACE, "Colete 37 Fornalhas", 4),
     COLLECT_64_BLUE_WOOL(QuestType.SPECIAL_COLLECT, Material.BLUE_WOOL, Material.BLUE_WOOL, "Colete um pack de  Lã Azul", 4),
+    COLLECT_PURPLE_CONCRETE(QuestType.COLLECT_ITEM, Material.PURPLE_CONCRETE, Material.PURPLE_CONCRETE, "Colete um  Concreto Roxo", 1),
+    COLLECT_GRAY_STAINED_GLASS(QuestType.COLLECT_ITEM, Material.GRAY_STAINED_GLASS, Material.GRAY_STAINED_GLASS, "Colete um Vidro Tingido Cinza", 2),
+    COLLECT_COAL_BLOCK(QuestType.COLLECT_ITEM, Material.COAL_BLOCK, Material.COAL_BLOCK, "Colete um Bloco de Carvão", 1),
+    COLLECT_RAW_GOLD_BLOCK(QuestType.COLLECT_ITEM, Material.RAW_GOLD_BLOCK, Material.RAW_GOLD_BLOCK, "Colete um Bloco de Ouro Cru", 1),
+    COLLECT_WIND_CHARGE(QuestType.COLLECT_ITEM, Material.WIND_CHARGE, Material.WIND_CHARGE, "Colete um Wind Charge", 3),
 
     ;
 

@@ -34,9 +34,9 @@ public class ScoutListener implements Listener {
             }
             cooldowns.put(event.getPlayer().getUniqueId(), currentTime);
             if(event.getItem().getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Boost")){
-                event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 10, 1));
-            } else{
                 event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 20, 3));
+            } else{
+                event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20 * 30, 5));
             }
             event.getPlayer().sendMessage(ChatColor.GREEN + "Você usou o boost!");
         }

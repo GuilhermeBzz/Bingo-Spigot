@@ -6,6 +6,7 @@ import br.com.bingo.team.TeamType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -44,7 +45,12 @@ public class NecromancerListener implements Listener {
         }
         long currentTime = System.currentTimeMillis();
         long lastUsedTime = cooldowns.getOrDefault(player.getUniqueId(), 0L);
-        long cooldown = 7*60*1000;
+        long cooldown = 0;
+        if(gameManager.getAvailableQuests().size() >= gameManager.questLeftWhenChange){
+            cooldown = 1000 * 60 * 5;
+        } else{
+            cooldown = 1000 * 60 * 3;
+        }
         if(currentTime - lastUsedTime < cooldown){
             player.sendMessage(ChatColor.RED + "Aguarde " + ((cooldown/1000)-(((currentTime - lastUsedTime)) / 1000)) + " segundos para usar novamente");
             return;
@@ -71,7 +77,7 @@ public class NecromancerListener implements Listener {
                         mobs.add(EntityType.CREEPER);
                         break;
                     case 3:
-                        mobs.add(EntityType.SILVERFISH);
+                        mobs.add(EntityType.SPIDER);
                         break;
                     default:
                         mobs.add(EntityType.ZOMBIE);
@@ -82,8 +88,8 @@ public class NecromancerListener implements Listener {
         } else if (player.getInventory().getItemInMainHand().getType().equals(Material.NETHERITE_HOE)) {
             //ADVANCED
             Random random = new Random();
-            for(int i = 0; i < 7; i++){
-                int randomMob = random.nextInt(9);
+            for(int i = 0; i < 8; i++){
+                int randomMob = random.nextInt(11);
                 switch (randomMob){
                     case 0:
                         mobs.add(EntityType.HUSK);
@@ -111,6 +117,12 @@ public class NecromancerListener implements Listener {
                         break;
                     case 8:
                         mobs.add(EntityType.PHANTOM);
+                        break;
+                    case 9:
+                        mobs.add(EntityType.WITHER_SKELETON);
+                        break;
+                    case 10:
+                        mobs.add(EntityType.BREEZE);
                         break;
                     default:
                         mobs.add(EntityType.ZOMBIE);
@@ -164,8 +176,9 @@ public class NecromancerListener implements Listener {
 
 
             double y = 2;
-            player.getWorld().spawnEntity(player.getLocation().add(x, y, z), entity);
-
+            Entity mob =  player.getWorld().spawnEntity(player.getLocation().add(x, y, z), entity);
+            mob.setCustomName("necro");
+            mob.setCustomNameVisible(false);
         }
         if(mobs.size() >= 6){
             player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 20*10, 3));

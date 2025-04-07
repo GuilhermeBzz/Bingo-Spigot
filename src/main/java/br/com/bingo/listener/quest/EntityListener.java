@@ -25,6 +25,11 @@ public class EntityListener implements Listener {
         Entity entity = event.getEntity();
         if(!(entity instanceof Mob)){return;}
         Player player = event.getEntity().getKiller();
+        if(entity.getCustomName() != null && entity.getCustomName().equalsIgnoreCase("necro")){
+            event.setDroppedExp(0);
+            event.getDrops().clear();
+        }
+
 
         if(player == null){return;}
         if(!gameManager.checkPlayerTeam(player)){return;}
@@ -32,6 +37,7 @@ public class EntityListener implements Listener {
         for(Quest quest : gameManager.getAvailableQuests()){
             if(!(quest.getType() == QuestType.KILL_MOB)){continue;}
             if(entity.getType().equals(quest.getTarget()) ){
+                if(entity.getCustomName() != null && entity.getCustomName().equalsIgnoreCase("necro")) continue;
                 gameManager.completeQuest(player.getUniqueId(), quest);
                 return;
             }

@@ -369,7 +369,7 @@ public class GameManager {
 
         }
         lastGame = new LastGame(this.gameType, this.playerQuests, this.teamQuests, this.questOrder, this.playerTeam, this.playerPoints, this.teamPoints, this.playerKit, this.teamWinner, this.ranked);
-        WebService.endGame(this.gameWebId);
+        WebService.endGame(this.gameWebId, this.ranked, this.playerTeam);
     }
 
     public void cancelCommand(Player sender){
@@ -384,7 +384,7 @@ public class GameManager {
     public void cancelGame(){
         Bukkit.getLogger().info("Cancelando Bingo...");
 
-        WebService.endGame(this.gameWebId);
+        WebService.endGame(this.gameWebId, this.ranked, this.playerTeam);
         for(UUID uuid : this.playerTeam.keySet()){
             Player player = Bukkit.getPlayer(uuid);
             if(player != null) {

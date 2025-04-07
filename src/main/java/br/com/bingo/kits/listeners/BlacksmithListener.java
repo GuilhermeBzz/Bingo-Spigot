@@ -11,6 +11,8 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -36,6 +38,18 @@ public class BlacksmithListener implements Listener {
                 Material.RAW_COPPER, Material.COPPER_INGOT,
                 Material.RAW_GOLD, Material.GOLD_INGOT
         );
+
+        List<Material> validResults = List.of(
+                Material.RAW_COPPER_BLOCK,
+                Material.RAW_IRON_BLOCK,
+                Material.RAW_GOLD_BLOCK
+        );
+
+        Material result = null;
+        if(event.getInventory().getResult() != null && event.getInventory().getResult().getType() != Material.AIR){
+            result = event.getInventory().getResult().getType();
+        }
+        if(validResults.contains(result)) return;
 
         ItemStack[] matrix = event.getInventory().getMatrix();
         if(isBlackSmith(player)){

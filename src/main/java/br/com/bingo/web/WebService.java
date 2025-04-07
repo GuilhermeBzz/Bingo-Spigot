@@ -2,6 +2,8 @@ package br.com.bingo.web;
 
 import br.com.bingo.Bingo;
 import br.com.bingo.quests.Quest;
+import br.com.bingo.rank.models.players.PlayersData;
+import br.com.bingo.rank.utils.players.PlayersStorageUtil;
 import br.com.bingo.team.TeamType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -15,6 +17,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class WebService {
@@ -80,11 +84,31 @@ public class WebService {
         Bukkit.getLogger().info("Questa completada: " + quest.getName());
     }
 
-    public static void endGame(String gameId){
+    public static void endGame(String gameId, Boolean isRanked,  Map<UUID, TeamType> playerTeam){
         if(gameId == null) return;
         allQuests = null;
         EndGameDto endGameDto = new EndGameDto();
         endGameDto.setGameId(gameId);
+        endGameDto.setRanked(isRanked);
+        boolean isSoloOrNull = false;
+
+        if(!isRanked || playerTeam == null ){
+            endGameDto.setPlayerUpdates(new ArrayList<>());
+            isSoloOrNull = true;
+        }
+
+        if(!isSoloOrNull && isRanked){
+            for(UUID uuid : playerTeam.keySet()){
+                if(!isSoloOrNull && playerTeam.get(uuid) == TeamType.SOLO){
+                    isSoloOrNull = true;
+                    endGameDto.setPlayerUpdates(new ArrayList<>());
+                }
+            }
+        }
+        if(!isSoloOrNull && isRanked){
+            List<UUID> uuidList = new ArrayList<>(playerTeam.keySet());
+            endGameDto.setPlayerUpdates(generatePlayerUpdateDto(uuidList));
+        }
 
         String url = urlBase + ":" + "/api/games/" + gameId + "/end";
 
@@ -202,14 +226,19 @@ public class WebService {
         return createGameSoloDto;
     }
 
-//    private static QuestDto getQuestFromName(String name){
-//        for(QuestDto quest : allQuests){
-//            if(quest.getName().equals(name)){
-//                return quest;
-//            }
-//        }
-//        return null;
-//    }
+    private static List<PlayerUpdateDto> generatePlayerUpdateDto(List<UUID> uuidList){
+        List<PlayerUpdateDto> response = new ArrayList<>();
+        for(UUID uuid : uuidList){
+            Player player = Bukkit.getPlayer(uuid);
+            PlayerUpdateDto playerUpdateDto = new PlayerUpdateDto();
+            playerUpdateDto.setPlayerName(player.getName());
+            playerUpdateDto.setPlayerId(uuid.toString());
+            PlayersData playerData = PlayersStorageUtil.getPlayer(uuid.toString());
+            playerUpdateDto.setMmr(playerData.getPoints());
+            response.add(playerUpdateDto);
+        }
+        return response;
+    }
 
 
 }
