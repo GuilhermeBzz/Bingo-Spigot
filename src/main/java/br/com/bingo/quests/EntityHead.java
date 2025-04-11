@@ -361,6 +361,10 @@ public enum EntityHead {
     ABSORPTION(
             "f5bf84c1-54ff-428c-acb6-c2ad1ee19caa",
             "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGRmYWRhNjdjYjI2MTQxMGEyNDg5MGVjNzRkMWNiNjA1NTE3ZGYxNDY5YzE5YmRjNWZlM2FhNDQ4ODc3YzYyMSJ9fX0="
+    ),
+    HEROBRINE(
+            "d0b15454-36fa-43e4-a247-f882bb9fe288",
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOThiN2NhM2M3ZDMxNGE2MWFiZWQ4ZmMxOGQ3OTdmYzMwYjZlZmM4NDQ1NDI1YzRlMjUwOTk3ZTUyZTZjYiJ9fX0="
     );
 
     public final String UUID;

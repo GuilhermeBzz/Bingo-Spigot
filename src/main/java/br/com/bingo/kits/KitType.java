@@ -31,6 +31,7 @@ public enum KitType {
     EXPLORER("Explorer", Material.GRASS_BLOCK, "Encontre facilmente novos biomas!", new Explorer()),
     SOULBOUND("Soulbound", Material.DRAGON_BREATH, "Abra seu Enderchest Portatil e use seu portal para voltar para a base!", new Soulbound()),
     PYRO("Pyro", Material.FLINT_AND_STEEL, "Use seu fogo para queimar seus inimigos e não tome dano para o fogo !", new Pyro()),
+    ALCHEMIST("Alchemist", Material.EXPERIENCE_BOTTLE, "Crie itens com receitas especiais!", new Alchemist()),
     ;
 
 

@@ -1106,6 +1106,7 @@ public class GameManager {
             player.sendMessage(ChatColor.RED + "O jogo já começou!");
             return;
         }
+        player.setGameMode(GameMode.ADVENTURE);
         player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
     }
 

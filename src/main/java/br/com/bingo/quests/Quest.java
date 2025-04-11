@@ -1,6 +1,5 @@
 package br.com.bingo.quests;
 
-import br.com.bingo.quests.EntityHead;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -233,7 +232,16 @@ public enum Quest {
     COLLECT_COAL_BLOCK(QuestType.COLLECT_ITEM, Material.COAL_BLOCK, Material.COAL_BLOCK, "Colete um Bloco de Carvão", 1),
     COLLECT_RAW_GOLD_BLOCK(QuestType.COLLECT_ITEM, Material.RAW_GOLD_BLOCK, Material.RAW_GOLD_BLOCK, "Colete um Bloco de Ouro Cru", 1),
     COLLECT_WIND_CHARGE(QuestType.COLLECT_ITEM, Material.WIND_CHARGE, Material.WIND_CHARGE, "Colete um Wind Charge", 3),
-
+    COLLECT_CHAIN_CHESTPLATE(QuestType.COLLECT_ITEM, Material.CHAINMAIL_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, "Colete uma Armadura de Corrente", 2),
+    COLLECT_DIAMOND_FULL_SET(QuestType.FULL_SET, Material.DIAMOND, Material.DIAMOND_CHESTPLATE, "Colete um Set Completo de Diamante", 4),
+    COLLECT_GOLDEN_FULL_SET(QuestType.FULL_SET, Material.GOLD_INGOT, Material.GOLDEN_CHESTPLATE, "Colete um Set Completo de Ouro", 4),
+    COLLECT_IRON_FULL_SET(QuestType.FULL_SET, Material.IRON_INGOT, Material.IRON_CHESTPLATE, "Colete um Set Completo de Ferro", 4),
+    COLLECT_LEATHER_FULL_SET(QuestType.FULL_SET, Material.LEATHER, Material.LEATHER_CHESTPLATE, "Colete um Set Completo de Couro", 4),
+    COLLECT_CHAIN_FULL_SET(QuestType.FULL_SET, Material.CHAINMAIL_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, "Colete um Set Completo de Cota de Malha", 4),
+    COLLECT_BOOKSHELF(QuestType.COLLECT_ITEM, Material.BOOKSHELF, Material.BOOKSHELF, "Colete uma Estante", 2),
+    COLLECT_CHISELED_BOOKSHELF(QuestType.COLLECT_ITEM, Material.CHISELED_BOOKSHELF, Material.CHISELED_BOOKSHELF, "Colete uma Estante Entalhada", 1),
+    COLLECT_JUNGLE_SAPPLING(QuestType.COLLECT_ITEM, Material.JUNGLE_SAPLING, Material.JUNGLE_SAPLING, "Colete uma Muda de Jungle", 1),
+    BUILD_HEROBRINE_TOTEM(QuestType.BUILD_STRUCTURE, "Herobrine", EntityHead.HEROBRINE, "Construa um Totem do Herobrine", 4),
     ;
 
 

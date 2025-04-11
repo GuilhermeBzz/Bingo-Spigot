@@ -81,6 +81,13 @@ public class QuestManager {
         Collections.addAll(allQuests, Quest.values());
         List<Quest> specialQuests =  allQuests.stream().filter(quest ->
                 quest.getDifficulty() == 4).collect(Collectors.toList());;
+        List<Quest> armorQuests =  allQuests.stream().filter(quest ->
+                quest.getType() == QuestType.FULL_SET).collect(Collectors.toList());
+
+        Collections.shuffle(armorQuests);
+        Quest armorQuest = armorQuests.get(0);
+
+        specialQuests.removeIf(quest -> quest.getTarget() == QuestType.FULL_SET && quest.equals(armorQuest));
 
         Collections.shuffle(specialQuests);
         return specialQuests.get(0);

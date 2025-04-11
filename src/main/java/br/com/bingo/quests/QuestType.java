@@ -17,4 +17,6 @@ public enum QuestType {
     ADVANCEMENT,
     DYE,
     SPECIAL_COLLECT,
+    FULL_SET,
+    BUILD_STRUCTURE,
 }

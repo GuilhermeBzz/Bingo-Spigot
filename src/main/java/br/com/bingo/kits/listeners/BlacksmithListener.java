@@ -26,6 +26,12 @@ public class BlacksmithListener implements Listener {
 
     @EventHandler
     public void onPrepareCraft(PrepareItemCraftEvent event) {
+        Material result = null;
+        if(event.getInventory().getResult() != null && event.getInventory().getResult().getType() != Material.AIR){
+            result = event.getInventory().getResult().getType();
+        }
+        if(result == null) return;
+
         Player player = (Player) event.getView().getPlayer();
         Map<Material, Material> smeltingMap = Map.of(
                 Material.IRON_ORE, Material.IRON_INGOT,
@@ -45,10 +51,7 @@ public class BlacksmithListener implements Listener {
                 Material.RAW_GOLD_BLOCK
         );
 
-        Material result = null;
-        if(event.getInventory().getResult() != null && event.getInventory().getResult().getType() != Material.AIR){
-            result = event.getInventory().getResult().getType();
-        }
+
         if(validResults.contains(result)) return;
 
         ItemStack[] matrix = event.getInventory().getMatrix();
@@ -71,10 +74,6 @@ public class BlacksmithListener implements Listener {
             }
 
         }
-
-
-
-
     }
 
 
