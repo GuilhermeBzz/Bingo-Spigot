@@ -22,4 +22,4 @@ permissions:
     description: Dada aos jogadores no final da partida
     default: op
 
-depend: [NBTAPI, NickAPI]
+depend: [NBTAPI]
