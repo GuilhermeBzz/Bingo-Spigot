@@ -32,27 +32,33 @@ public class JoinListener implements Listener {
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent event){
 
-        if(gameManager.isGameStarted()){
-            gameManager.paintTAB(event.getPlayer());
-            gameManager.updateScoreboard();
-            gameManager.barTimer.addPlayerToBarTimer(event.getPlayer());
+        Player player = event.getPlayer();
+
+        if(!Bingo.getInstance().isPlayerInOriginalName(player.getUniqueId())){
+            Bingo.getInstance().setPlayerOriginalName(player.getUniqueId(), player.getName());
         }
 
-        World world = event.getPlayer().getWorld();
+        if(gameManager.isGameStarted()){
+            gameManager.paintTAB(player);
+            gameManager.updateScoreboard();
+            gameManager.barTimer.addPlayerToBarTimer(player);
+        }
+
+        World world = player.getWorld();
 
         if(gameManager.getGameStatus().equals(GameStatus.NONE)){
-            setPlayerDefaultState(event.getPlayer());
+            setPlayerDefaultState(player);
         } else if(gameManager.getGameStatus().equals(GameStatus.CREATED)){
-            event.getPlayer().teleport(Bukkit.getWorlds().get(0).getSpawnLocation().add(0, 2, 0));
-            event.getPlayer().setGameMode(GameMode.ADVENTURE);
-            event.getPlayer().getInventory().clear();
-            BingoMenu.giveMenuOpener(event.getPlayer());
-            PlayerProfile.givePorfileOpener(event.getPlayer());
-            gameManager.paintTAB(event.getPlayer());
-        } else if(gameManager.getGameStatus().equals(GameStatus.STARTED) && !gameManager.checkPlayerTeam(event.getPlayer())){
-            setPlayerDefaultState(event.getPlayer());
+            player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation().add(0, 2, 0));
+            player.setGameMode(GameMode.ADVENTURE);
+            player.getInventory().clear();
+            BingoMenu.giveMenuOpener(player);
+            PlayerProfile.givePorfileOpener(player);
+            gameManager.paintTAB(player);
+        } else if(gameManager.getGameStatus().equals(GameStatus.STARTED) && !gameManager.checkPlayerTeam(player)){
+            setPlayerDefaultState(player);
         }
-        Ranks.setPrefixAndDisplayName(event.getPlayer(), gameManager.playerTeam);
+        Ranks.setPrefixAndDisplayName(player, gameManager.playerTeam);
         return;
     }
 

@@ -81,7 +81,7 @@ public class WebService {
         String json = CompleteQuestDto.toJson(completeQuestDto);
         Bukkit.getLogger().info(json);
         sendAsyncPostRequest(url, json);
-        Bukkit.getLogger().info("Questa completada: " + quest.getName());
+        Bukkit.getLogger().info("Quest completada: " + quest.getName());
     }
 
     public static void endGame(String gameId, Boolean isRanked,  Map<UUID, TeamType> playerTeam){

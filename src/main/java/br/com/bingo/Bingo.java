@@ -15,15 +15,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public final class Bingo extends JavaPlugin {
     private static Bingo instance;
     GameManager gameManager;
+    Map<UUID, String> playerOriginalName;
 
     @Override
     public void onEnable() {
         Bukkit.getLogger().info("Iniciando Plugin....");
         instance = this;
+        playerOriginalName = new HashMap<>();
 
         gameManager = new GameManager(this);
 
@@ -51,7 +56,6 @@ public final class Bingo extends JavaPlugin {
         getCommand("profile").setExecutor(new ProfileCommand());
         getCommand("profiles").setExecutor(new ProfileListCommand());
         getCommand("updateleaderboard").setExecutor(new UpdataLeaderBoardCommand());
-        getCommand("skin").setExecutor(new SkinCommand(gameManager));
         getCommand("bingoDebug").setExecutor(new BingoDebugCommand(gameManager));
         getServer().getPluginManager().registerEvents(new InventoryListener(gameManager), this);
         getServer().getPluginManager().registerEvents(new LastGameListener(gameManager), this);
@@ -107,6 +111,21 @@ public final class Bingo extends JavaPlugin {
 
     }
 
+    public Map<UUID, String> getPlayerOriginalNameMap(){
+        return playerOriginalName;
+    }
+
+    public void setPlayerOriginalName(UUID uuid, String name){
+        playerOriginalName.put(uuid, name);
+    }
+
+    public boolean isPlayerInOriginalName(UUID uuid){
+        return playerOriginalName.containsKey(uuid);
+    }
+
+    public String getPlayerOriginalName(UUID uuid){
+        return playerOriginalName.getOrDefault(uuid, "Error");
+    }
 
 
     public static Bingo getInstance(){

@@ -29,7 +29,6 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.BiomeSearchResult;
-import xyz.haoshoku.nick.api.NickAPI;
 
 
 import java.io.File;
@@ -542,6 +541,12 @@ public class GameManager {
             }
         }
         scoreboardBingo.startScoreboard();
+
+        for(UUID uuid :playerTeam.keySet()){
+            Player player = Bukkit.getPlayer(uuid);
+            if(player == null) continue;
+            Ranks.setPrefixAndDisplayName(player, playerTeam);
+        }
         countDownAndStart(10);
 
     }
@@ -1037,7 +1042,7 @@ public class GameManager {
 
             if(player == null) continue;
             player.teleport(finalDestiny);
-            NickAPI.refreshPlayer(player);
+            Ranks.setPrefixAndDisplayName(player, playerTeam);
         }
     }
 

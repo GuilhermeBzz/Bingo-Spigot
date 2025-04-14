@@ -45,12 +45,22 @@ public class MiniFeast {
         constructMiniFeast(location);
         fillChests(location);
 
-        int finalX = location.getBlockX();
-        int finalZ = location.getBlockZ();
-        int maxX = (finalX/100) * 100;
-        int minX = maxX - 100;
-        int maxZ = (finalZ/100) * 100;
-        int minZ = maxZ - 100;
+        int maxX = 0;
+        int minX = (x/100) * 100;
+        int maxZ = 0;
+        int minZ = (z/100) * 100;
+
+        if(x>=0){    // 889 = 800 -> 900
+            maxX = minX + 100;
+        } else{     // -889 = -800 -> -900
+            maxX = minX - 100;
+        }
+        if(z>=0){    // 889 = 800 -> 900
+            maxZ = minZ + 100;
+        } else{     // -889 = -800 -> -900
+            maxZ = minZ - 100;
+        }
+
         Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "Um MiniFeast apareceu entre " + ChatColor.GOLD + "X: " + minX +  " e " + maxX +  ChatColor.LIGHT_PURPLE + " e " + ChatColor.GOLD + "Z: " + minZ + " e " + maxZ + "!");
 
     }

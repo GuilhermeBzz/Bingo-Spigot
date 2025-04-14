@@ -119,8 +119,11 @@ public class JokerListener implements Listener{
                 Collections.shuffle(itemsList);
                 if(advanced){
                     List<ItemStack> dropList;
-                    dropList = itemsList.subList(itemsList.size() - 10,itemsList.size());
-                    itemsList = itemsList.subList(0, itemsList.size() -  10);
+
+                    int dropSize = itemsList.size() - 10;
+                    if(itemsList.size() < 10) dropSize = itemsList.size();
+                    dropList = itemsList.subList(dropSize,itemsList.size());
+                    itemsList = itemsList.subList(0, dropSize);
 
 
                     for(ItemStack item : dropList){

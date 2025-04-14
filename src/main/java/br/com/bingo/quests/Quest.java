@@ -22,7 +22,7 @@ public enum Quest {
     COLLECT_COMPOSTER(QuestType.COLLECT_ITEM, Material.COMPOSTER, Material.COMPOSTER, "Colete uma Composteira", 1),
     COLLECT_ARMOR_STAND(QuestType.COLLECT_ITEM, Material.ARMOR_STAND, Material.ARMOR_STAND, "Colete um Armor Stand", 1),
     COLLECT_CRACKED_STONE_BRICKS(QuestType.COLLECT_ITEM, Material.CRACKED_STONE_BRICKS, Material.CRACKED_STONE_BRICKS, "Colete um Cracked Stone Bricks", 2),
-    COLLECT_CHISELED_STONE_BRICKS(QuestType.COLLECT_ITEM, Material.CHISELED_STONE_BRICKS, Material.CHISELED_STONE_BRICKS, "Colete um Chiseled Stone Bricks", 2),
+    COLLECT_CHISELED_STONE_BRICKS(QuestType.COLLECT_ITEM, Material.CHISELED_STONE_BRICKS, Material.CHISELED_STONE_BRICKS, "Colete um Chiseled Stone Bricks", 1),
     COLLECT_RESPAWN_ANCHOR(QuestType.COLLECT_ITEM, Material.RESPAWN_ANCHOR, Material.RESPAWN_ANCHOR, "Colete um Respawn Anchor", 3),
     COLLECT_SHROOMLIGHT(QuestType.COLLECT_ITEM, Material.SHROOMLIGHT, Material.SHROOMLIGHT, "Colete um Shroomlight", 2),
     COLLECT_LOOM(QuestType.COLLECT_ITEM, Material.LOOM, Material.LOOM, "Colete um Loom", 1),

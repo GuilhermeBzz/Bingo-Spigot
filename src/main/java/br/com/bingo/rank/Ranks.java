@@ -1,5 +1,6 @@
 package br.com.bingo.rank;
 
+import br.com.bingo.Bingo;
 import br.com.bingo.rank.models.players.PlayersData;
 import br.com.bingo.rank.utils.players.PlayersStorageUtil;
 import br.com.bingo.team.TeamType;
@@ -10,7 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import xyz.haoshoku.nick.api.NickAPI;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.util.Map;
 import java.util.UUID;
@@ -196,28 +198,44 @@ public enum Ranks {
 
                 Ranks rank = Ranks.getRank(playerData.getPoints());
                 String prefix = rank.getColor() + rank.getPrefix();
-                String textColor = ChatColor.WHITE + "";
+                ChatColor textColor = ChatColor.WHITE ;
                 if(playerTeams.get(player.getUniqueId()) != null){
                     if(playerTeams.get(player.getUniqueId()).equals(TeamType.TEAM_BLUE)){
-                        textColor = ChatColor.BLUE + "";
+                        textColor = ChatColor.BLUE ;
                     }else if(playerTeams.get(player.getUniqueId()).equals(TeamType.TEAM_RED)){
-                        textColor = ChatColor.RED + "";
+                        textColor = ChatColor.RED ;
                     } else if (playerTeams.get(player.getUniqueId()).equals(TeamType.SOLO)) {
-                        textColor = ChatColor.LIGHT_PURPLE + "";
+                        textColor = ChatColor.LIGHT_PURPLE;
                     }
                 }
-                String finalName = prefix + " " + textColor + NickAPI.getOriginalName(player) + ChatColor.WHITE;
+
+                String playerOgName = Bingo.getInstance().getPlayerOriginalName(player.getUniqueId());
+                String finalName = prefix + " " + textColor + playerOgName + ChatColor.WHITE;
 
                 Bukkit.getLogger().info("Setando nome para: " + finalName + " para " + player.getName());
 
                 player.setPlayerListName(finalName);
                 player.setDisplayName(finalName);
-                NickAPI.setNick(player, finalName);
-                //for(Player online : Bukkit.getOnlinePlayers()){
-                //    NickAPI.hidePlayer(online, player);
-                //    NickAPI.showPlayer(online, player);
-                //}
+                setPlayerNameTag(player, prefix, textColor);
             }
         }
     }
+
+    public static void setPlayerNameTag(Player player, String prefix, ChatColor textColor) {
+        Scoreboard scoreboard = player.getScoreboard(); // <- importante!
+        String teamName = "tag_" + player.getName();
+
+        Team oldTeam = scoreboard.getTeam(teamName);
+        if (oldTeam != null) {
+            oldTeam.unregister();
+        }
+
+        Team team = scoreboard.registerNewTeam(teamName);
+        team.addEntry(player.getName());
+        prefix = prefix + " ";
+
+        team.setPrefix(prefix.length() > 16 ? prefix.substring(0, 16) : prefix);
+        team.setColor(textColor);
+    }
+
 }

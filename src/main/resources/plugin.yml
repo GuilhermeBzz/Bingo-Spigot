@@ -16,7 +16,6 @@ commands:
   adm:
   tpp:
   gm:
-  skin:
   bingoDebug:
 permissions:
   bingo.endgame:

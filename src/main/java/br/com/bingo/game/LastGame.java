@@ -41,7 +41,6 @@ import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.BiomeSearchResult;
-import xyz.haoshoku.nick.api.NickAPI;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
