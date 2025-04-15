@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="Bingo:jar">
-    <output-path>C:/Spigot/Test Server/plugins</output-path>
+    <output-path>C:/Spigot/Test Server 1.21.5/plugins</output-path>
     <root id="archive" name="Bingo.jar">
       <element id="module-output" name="Bingo" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar" path-in-jar="/" />
