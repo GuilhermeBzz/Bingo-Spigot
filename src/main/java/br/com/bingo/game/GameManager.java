@@ -685,7 +685,7 @@ public class GameManager {
                     miniFeast.generateMiniFeast(world);
 
                 }
-            }, 18000L); // 18000L
+            }, (20L) * (60L) * (15L)); // 18000L
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(Bingo.getInstance(),  new Runnable() {
                 @Override
