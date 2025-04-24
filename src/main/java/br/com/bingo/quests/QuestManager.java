@@ -1,5 +1,6 @@
 package br.com.bingo.quests;
 
+import br.com.bingo.game.GameType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
@@ -75,12 +76,18 @@ public class QuestManager {
     }
 
 
-    public Quest getSpecialQuest(){
+    public Quest getSpecialQuest(GameType gameType){
 
         ArrayList<Quest> allQuests = new ArrayList<>();
         Collections.addAll(allQuests, Quest.values());
         List<Quest> specialQuests =  allQuests.stream().filter(quest ->
-                quest.getDifficulty() == 4).collect(Collectors.toList());;
+                quest.getDifficulty() == 4).collect(Collectors.toList());
+
+        if(gameType.equals(GameType.SOLO)){
+            specialQuests.removeIf(quest -> quest.getType().equals(QuestType.DOMINATION));
+            specialQuests.removeIf(quest -> quest.getType().equals(QuestType.CAPTURE));
+        }
+
         List<Quest> armorQuests =  allQuests.stream().filter(quest ->
                 quest.getType() == QuestType.FULL_SET).collect(Collectors.toList());
 
@@ -90,6 +97,9 @@ public class QuestManager {
         specialQuests.removeIf(quest -> quest.getTarget() == QuestType.FULL_SET && quest.equals(armorQuest));
 
         Collections.shuffle(specialQuests);
-        return specialQuests.get(0);
+
+        return allQuests.stream().filter(q -> q.getType().equals(QuestType.CAPTURE)).collect(Collectors.toList()).get(0);
+
+        //return specialQuests.get(0);
     }
 }

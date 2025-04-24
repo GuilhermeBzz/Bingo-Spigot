@@ -99,11 +99,15 @@ public class CustomRecipe {
         recipes.add(new Quadruple<>(1, Material.SPRUCE_SAPLING, 1 , Material.JUNGLE_SAPLING));
         recipes.add(new Quadruple<>(1, Material.JUNGLE_SAPLING, 1 , Material.ACACIA_SAPLING));
         recipes.add(new Quadruple<>(1, Material.ACACIA_SAPLING, 1 , Material.DARK_OAK_SAPLING));
+        recipes.add(new Quadruple<>(1, Material.DARK_OAK_SAPLING, 1 , Material.OAK_SAPLING));
         recipes.add(new Quadruple<>(3, Material.LAPIS_LAZULI, 1 , Material.EMERALD));
         recipes.add(new Quadruple<>(3, Material.REDSTONE, 1 , Material.LAPIS_LAZULI));
         recipes.add(new Quadruple<>(3, Material.QUARTZ, 1 , Material.AMETHYST_SHARD));
         recipes.add(new Quadruple<>(9, Material.COBBLESTONE, 9 , Material.STONE));
         recipes.add(new Quadruple<>(9, Material.STONE, 9 , Material.SMOOTH_STONE));
+        recipes.add(new Quadruple<>(1, Material.BROWN_MUSHROOM, 1 , Material.RED_MUSHROOM));
+        recipes.add(new Quadruple<>(1, Material.RED_MUSHROOM, 1 , Material.BROWN_MUSHROOM));
+
 
         for(Quadruple<Integer, Material, Integer, Material> recipeGuide : recipes){
             createShapedRecipeAlchemist(recipeGuide, plugin);

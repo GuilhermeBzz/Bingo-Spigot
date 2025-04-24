@@ -8,12 +8,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
+
+import java.util.Objects;
 
 public class SpawnListener implements Listener{
 
@@ -25,45 +28,49 @@ public class SpawnListener implements Listener{
 
     @EventHandler
     public void  onSpawnEvent(PlayerRespawnEvent event){
+        Player player = event.getPlayer();
         if(!gameManager.isGameStarted()){
-            for (PotionEffect effect : event.getPlayer().getActivePotionEffects()) {
-                event.getPlayer().removePotionEffect(effect.getType());
+            for (PotionEffect effect : player.getActivePotionEffects()) {
+                player.removePotionEffect(effect.getType());
             }
-            BingoMenu.giveMenuOpener(event.getPlayer());
-            PlayerProfile.givePorfileOpener(event.getPlayer());
-            event.getPlayer().teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
+            BingoMenu.giveMenuOpener(player);
+            PlayerProfile.givePorfileOpener(player);
+            player.teleport(Bukkit.getWorlds().get(0).getSpawnLocation());
 
         }
         if(gameManager.getGameStatus().equals(GameStatus.CREATED)){return;}
-        if(!gameManager.checkPlayerTeam(event.getPlayer())){return;}
+        if(!gameManager.checkPlayerTeam(player)){return;}
 
 
-        if(event.getPlayer().getBedSpawnLocation() == null){
-            event.getPlayer().setBedSpawnLocation(Bukkit.getWorld("gameWorld").getSpawnLocation(), true);
-            event.setRespawnLocation(event.getPlayer().getBedSpawnLocation());
+        Location spawnLocation = player.getRespawnLocation();
+        Location respawnLocation = Objects.requireNonNull(Bukkit.getWorld("gameWorld")).getSpawnLocation();
+
+        if(spawnLocation == null){
+            player.setRespawnLocation(respawnLocation, true);
+            event.setRespawnLocation(respawnLocation);
         }
 
-        Location respawnLocation = event.getRespawnLocation();
+
         if(respawnLocation.add(0,-1,0).getBlock().getType().equals(Material.AIR)){
             respawnLocation.add(0,-1,0).getBlock().setType(Material.STONE);
         }
 
         ItemStack item = new ItemStack(Material.PAPER);
-        gameManager.giveStarterKit(event.getPlayer());
+        gameManager.giveStarterKit(player);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD + "Cartela do Bingo");
         meta.setCustomModelData(777);
         item.setItemMeta(meta);
-        event.getPlayer().getInventory().addItem(item);
+        player.getInventory().addItem(item);
 
         if(!gameManager.kit) return;
 
 
         if(!(gameManager.getAvailableQuests().size() > gameManager.questLeftWhenChange)){
-            gameManager.playerKit.get(event.getPlayer().getUniqueId()).getKit().onRespawn(event.getPlayer());
+            gameManager.playerKit.get(player.getUniqueId()).getKit().onRespawn(player);
             return;
         }
-        gameManager.playerKit.get(event.getPlayer().getUniqueId()).getKit().onStartRespawn(event.getPlayer());
+        gameManager.playerKit.get(player.getUniqueId()).getKit().onStartRespawn(player);
         return;
     }
 }

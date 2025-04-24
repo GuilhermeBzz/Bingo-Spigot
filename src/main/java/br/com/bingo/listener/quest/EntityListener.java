@@ -1,10 +1,12 @@
 package br.com.bingo.listener.quest;
 
+import br.com.bingo.quests.boss.entities.EntityBoss;
 import br.com.bingo.game.GameManager;
 import br.com.bingo.quests.Quest;
 import br.com.bingo.quests.QuestType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_21_R4.entity.CraftLivingEntity;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,12 +37,23 @@ public class EntityListener implements Listener {
         if(!gameManager.checkPlayerTeam(player)){return;}
 
         for(Quest quest : gameManager.getAvailableQuests()){
-            if(!(quest.getType() == QuestType.KILL_MOB)){continue;}
-            if(entity.getType().equals(quest.getTarget()) ){
-                if(entity.getCustomName() != null && entity.getCustomName().equalsIgnoreCase("necro")) continue;
-                gameManager.completeQuest(player.getUniqueId(), quest);
-                return;
+            if(!(quest.getType() == QuestType.KILL_MOB || quest.getType() == QuestType.KILL_BOSS)){continue;}
+
+            if(quest.getType().equals(QuestType.KILL_MOB)){
+                if(entity.getType().equals(quest.getTarget()) ){
+                    if(entity.getCustomName() != null && entity.getCustomName().equalsIgnoreCase("necro")) continue;
+                    gameManager.completeQuest(player.getUniqueId(), quest);
+                    return;
+                }
+            } else {
+                if(entity.getType() == EntityType.ZOMBIE && entity instanceof CraftLivingEntity craftEntity){
+                    if(craftEntity.getHandle() instanceof EntityBoss){
+                        gameManager.completeQuest(player.getUniqueId(), quest);
+                        return;
+                    }
+                }
             }
+
         }
     }
 
@@ -122,5 +135,6 @@ public class EntityListener implements Listener {
         }
         return nearestPlayer;
     }
+
 
 }

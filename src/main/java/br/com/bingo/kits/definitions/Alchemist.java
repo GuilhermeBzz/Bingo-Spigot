@@ -90,6 +90,11 @@ public class Alchemist extends Kit {
                 ChatColor.BLUE + "9 Stone\n" +
                 ChatColor.GOLD + "9 Stone =>\n" +
                 ChatColor.GOLD + "9 Smooth Stone\n"+
+                ChatColor.BLUE + "1 Brown Mushroom <=>;\n" +
+                ChatColor.BLUE + "1 Red Mushroom\n");
+
+        bookMeta.addPage(ChatColor.GOLD + "1 Dark Oak Sapling =>\n" +
+                ChatColor.GOLD + "1 Oak Sapling\n" +
                 ChatColor.RED + "Formas =>");
 
         bookMeta.addPage("3 Items:\n"

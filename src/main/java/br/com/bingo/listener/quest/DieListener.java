@@ -20,8 +20,8 @@ public class DieListener implements Listener {
         if(!gameManager.isGameStarted()){return;}
         Player player = event.getEntity();
         if(!gameManager.checkPlayerTeam(player)){return;}
-        if(player.getBedSpawnLocation() == null){
-            player.setBedSpawnLocation(player.getWorld().getSpawnLocation(), true);
+        if(player.getRespawnLocation() == null){
+            player.setRespawnLocation(player.getWorld().getSpawnLocation(), true);
         }
 
         EntityDamageEvent.DamageCause deathCause = null;

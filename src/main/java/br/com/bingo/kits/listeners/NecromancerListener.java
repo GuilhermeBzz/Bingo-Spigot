@@ -122,7 +122,7 @@ public class NecromancerListener implements Listener {
                         mobs.add(EntityType.WITHER_SKELETON);
                         break;
                     case 10:
-                        mobs.add(EntityType.BREEZE);
+                        mobs.add(EntityType.EVOKER);
                         break;
                     default:
                         mobs.add(EntityType.ZOMBIE);

@@ -55,7 +55,10 @@ public class AlchemistListener implements Listener {
                 Map.entry(Material.REDSTONE, Material.LAPIS_LAZULI),
                 Map.entry(Material.QUARTZ, Material.AMETHYST_SHARD),
                 Map.entry(Material.COBBLESTONE, Material.STONE),
-                Map.entry(Material.STONE, Material.SMOOTH_STONE)
+                Map.entry(Material.STONE, Material.SMOOTH_STONE),
+                Map.entry(Material.BROWN_MUSHROOM, Material.RED_MUSHROOM),
+                Map.entry(Material.RED_MUSHROOM, Material.BROWN_MUSHROOM),
+                Map.entry(Material.DARK_OAK_SAPLING, Material.OAK_SAPLING)
                 );
 
         for(Material ingredient : recipeMap.keySet()){

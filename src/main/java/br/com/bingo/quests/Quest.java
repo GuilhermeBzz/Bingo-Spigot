@@ -97,7 +97,7 @@ public enum Quest {
     COLLECT_ENDER_PEARL(QuestType.COLLECT_ITEM, Material.ENDER_PEARL, Material.ENDER_PEARL, "Colete uma Perola do Fim", 2),
     COLLECT_GLOW_INK_SAC(QuestType.COLLECT_ITEM, Material.GLOW_INK_SAC, Material.GLOW_INK_SAC, "Colete uma Glow Ink Sac", 2),
     COLLECT_GOLDEN_CARROT(QuestType.COLLECT_ITEM, Material.GOLDEN_CARROT, Material.GOLDEN_CARROT, "Colete uma Cenoura Dourada", 2),
-    COLLECT_REDSAND(QuestType.COLLECT_ITEM, Material.RED_SAND, Material.RED_SAND, "Colete uma Red Sand", 3),
+    COLLECT_REDSAND(QuestType.COLLECT_ITEM, Material.RED_SAND, Material.RED_SAND, "Colete uma Red Sand", 2),
     KILL_HORSE(QuestType.KILL_MOB, EntityType.HORSE, EntityHead.HORSE,"Mate um Cavalo", 1),
     KILL_DOLPHIN(QuestType.KILL_MOB, EntityType.DOLPHIN, EntityHead.DOLPHIN,"Mate um Golfinho", 1),
     KILL_VILLAGER(QuestType.KILL_MOB, EntityType.VILLAGER, EntityHead.VILLAGER,"Mate um Villager", 1),
@@ -242,8 +242,20 @@ public enum Quest {
     COLLECT_CHISELED_BOOKSHELF(QuestType.COLLECT_ITEM, Material.CHISELED_BOOKSHELF, Material.CHISELED_BOOKSHELF, "Colete uma Estante Entalhada", 1),
     COLLECT_JUNGLE_SAPPLING(QuestType.COLLECT_ITEM, Material.JUNGLE_SAPLING, Material.JUNGLE_SAPLING, "Colete uma Muda de Jungle", 1),
     BUILD_HEROBRINE_TOTEM(QuestType.BUILD_STRUCTURE, "Herobrine", EntityHead.HEROBRINE, "Construa um Totem do Herobrine", 4),
-    ;
+    COLLECT_BUSH(QuestType.COLLECT_ITEM, Material.BUSH, Material.BUSH, "Colete um Bush", 1),
+    COLLECT_LEAF_LITTER(QuestType.COLLECT_ITEM, Material.LEAF_LITTER, Material.LEAF_LITTER, "Colete um Leaf Litter", 1),
+    COLLECT_WILD_FLOWER(QuestType.COLLECT_ITEM, Material.WILDFLOWERS, Material.WILDFLOWERS, "Colete Wildflowers", 1),
+    COLLECT_FIREFLY_BUSH(QuestType.COLLECT_ITEM, Material.FIREFLY_BUSH, Material.FIREFLY_BUSH, "Colete um Firefly Bush", 1),
+    COLLECT_CACTUS_FLOWER(QuestType.COLLECT_ITEM, Material.CACTUS_FLOWER, Material.CACTUS_FLOWER, "Colete uma Cactus Flower", 1),
+    COLLECT_LOADSTONE(QuestType.COLLECT_ITEM, Material.LODESTONE, Material.LODESTONE, "Colete um Loadstone", 2),
+    COLLECT_WARPED_HYPHAE(QuestType.COLLECT_ITEM, Material.WARPED_HYPHAE, Material.WARPED_HYPHAE, "Colete um Warped Hyphae", 2),
+    COLLECT_CRIMSON_HYPHAE(QuestType.COLLECT_ITEM, Material.CRIMSON_HYPHAE, Material.CRIMSON_HYPHAE, "Colete um Crimson Hyphae", 2),
+    KILL_BOSS(QuestType.KILL_BOSS, "Boss",EntityHead.BOSS ,"Mate o Boss", 4),
+    DOMINATION(QuestType.DOMINATION, "Domination", Material.TARGET, "Domine o território por 1 minuto seguido", 4),
+    CAPTURE_THE_FLAG(QuestType.CAPTURE, "Capture,", Material.PURPLE_BANNER, "Capture a bandeira inimiga!", 4),
 
+    ;
+    //Type, Target, Icon,Name, Difficulty
 
     private final QuestType type;
     private final Object target;

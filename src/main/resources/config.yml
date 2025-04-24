@@ -1,0 +1,15 @@
+#timers in minutes
+timers:
+  miniFeast-1: 15
+  miniFeast-2: 20
+  miniFeast-3: 45
+  feast: 25
+  bonusFeast: 60
+
+# Number of Quests
+gameplay:
+  questLeftWhenChange: 13
+
+
+web:
+  url: "http://localhost:8080"

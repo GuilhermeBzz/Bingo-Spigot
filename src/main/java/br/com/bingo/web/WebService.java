@@ -1,6 +1,7 @@
 package br.com.bingo.web;
 
 import br.com.bingo.Bingo;
+import br.com.bingo.ServerConfig;
 import br.com.bingo.quests.Quest;
 import br.com.bingo.rank.models.players.PlayersData;
 import br.com.bingo.rank.utils.players.PlayersStorageUtil;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 public class WebService {
 
     private static List<QuestDto> allQuests = new ArrayList<>();
-    public static String urlBase = "https://minecraft-bingo-webapp.vercel.app";
+    public static String urlBase = ServerConfig.WEB_SERVICE_URL;
 
 
 

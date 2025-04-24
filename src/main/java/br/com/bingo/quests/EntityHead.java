@@ -365,7 +365,12 @@ public enum EntityHead {
     HEROBRINE(
             "d0b15454-36fa-43e4-a247-f882bb9fe288",
             "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOThiN2NhM2M3ZDMxNGE2MWFiZWQ4ZmMxOGQ3OTdmYzMwYjZlZmM4NDQ1NDI1YzRlMjUwOTk3ZTUyZTZjYiJ9fX0="
-    );
+    ),
+    BOSS(
+            "196dc204-bfc5-4570-9fb7-be2d4fc0bc0a",
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjJlNjg1OGQ1ZTIzZGNmY2M3YTY2MmIzZmM2ZTlkZjg0ZTdjMjFhNDcyNTJhNjA3NDJhZDIyZDNjZTk0ZSJ9fX0="
+    ),
+    ;
 
     public final String UUID;
     public final String texture;

@@ -2,6 +2,10 @@ package br.com.bingo.game;
 
 
 import br.com.bingo.*;
+import br.com.bingo.quests.boss.BossFight;
+import br.com.bingo.quests.capture.CaptureTheFlag;
+import br.com.bingo.quests.domination.Domination;
+import br.com.bingo.feast.BonusFeast;
 import br.com.bingo.feast.Feast;
 import br.com.bingo.feast.MiniFeast;
 import br.com.bingo.kits.KitManager;
@@ -59,9 +63,14 @@ public class GameManager {
     public Map<Biome, Material> biomeIconsMap = new HashMap<>();
     public Map<Biome, String> biomeNameMap = new HashMap<>();
     Map<UUID, Map<Biome, Location>> playersBiomeMap = new HashMap<>();
+    public Set<Location> blocosIndestrutiveis = new HashSet<>();
 
     public Feast feast;
     public MiniFeast miniFeast;
+    public BonusFeast bonusFeast;
+    public Location bossFightLocation;
+    public Location dominationLocation;
+    public HashMap<TeamType, Location> flagBaseLocationsMap = new HashMap<>();
     public BarTimer barTimer;
     QuestManager questManager = new QuestManager();
     public String gameWebId;
@@ -69,10 +78,13 @@ public class GameManager {
     public Map<UUID, KitType> playerKit = new HashMap<>();
     public LastGame lastGame;
 
-    public final int questLeftWhenChange = 13; //13
+    public final int questLeftWhenChange = ServerConfig.QUEST_LEFT_WHEN_CHANGE; //13
     public TeamType teamWinner;
 
     public boolean ranked;
+    public boolean bossSpawned;
+    public boolean dominationEnded;
+    public boolean captureEnded;
 
 
     public GameManager(Bingo plugin) {
@@ -85,10 +97,18 @@ public class GameManager {
         this.barTimer = new BarTimer(this);
         this.feast = new Feast(this);
         this.miniFeast = new MiniFeast(this);
+        this.bonusFeast = new BonusFeast(this);
+        this.bossFightLocation = null;
+        this.dominationLocation = null;
+
+
         this.lastGame = null;
         this.gameDifficulty = 5;
         this.teamWinner = null;
         this.ranked = false;
+        this.bossSpawned = false;
+        this.dominationEnded = false;
+        this.captureEnded = false;
     }
 
     public void generateBiomeMap(){
@@ -422,14 +442,22 @@ public class GameManager {
         this.kit = false;
         this.gameDifficulty = 5;
         this.ranked = false;
+        this.bossSpawned = false;
+        this.dominationEnded = false;
+        this.captureEnded = false;
         this.biomeLocationMap= new HashMap<>();
         this.biomeIconsMap  = new HashMap<>();
         this.playersBiomeMap = new HashMap<>();
+        blocosIndestrutiveis = new HashSet<>();
         this.gameWebId = null;
         Bukkit.getScheduler().cancelTasks(plugin);
         barTimer.stopBarTimer();
         feast.eraseFeast();
         miniFeast.eraseMiniFeast();
+        bonusFeast.eraseBonusFeast();
+        bossFightLocation = null;
+        dominationLocation = null;
+        flagBaseLocationsMap = new HashMap<>();
         LeaderBoard.createLeaderBoard();
 
         Bukkit.getScheduler().runTaskLater(Bingo.getInstance(), () -> {
@@ -666,10 +694,26 @@ public class GameManager {
             Bukkit.getScheduler().scheduleSyncDelayedTask(Bingo.getInstance(),  new Runnable() {
                 @Override
                 public void run() {
+                    miniFeast.generateMiniFeast(world);
+
+                }
+            }, (20L) * (60L) * (ServerConfig.MINI_FEAST_ONE_TIME)); // 18000L
+
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Bingo.getInstance(),  new Runnable() {
+                @Override
+                public void run() {
+                    miniFeast.generateMiniFeast(world);
+
+                }
+            }, (20L) * (60L) * (ServerConfig.MINI_FEAST_TWO_TIME)); // 24000L
+
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Bingo.getInstance(),  new Runnable() {
+                @Override
+                public void run() {
                     feast.startFeast(world);
 
                 }
-            }, 30000L); // 30000L
+            }, (20L) * (60L) * (ServerConfig.FEAST_TIME)); // 30000L
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(Bingo.getInstance(),  new Runnable() {
                 @Override
@@ -677,23 +721,15 @@ public class GameManager {
                     miniFeast.generateMiniFeast(world);
 
                 }
-            }, 54000L); // 54000L
+            }, (20L) * (60L) * (ServerConfig.MINI_FEAST_THREE_TIME)); // 54000L
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(Bingo.getInstance(),  new Runnable() {
                 @Override
                 public void run() {
-                    miniFeast.generateMiniFeast(world);
-
+                    bonusFeast.startBonusFeast(world);
+                    
                 }
-            }, (20L) * (60L) * (15L)); // 18000L
-
-            Bukkit.getScheduler().scheduleSyncDelayedTask(Bingo.getInstance(),  new Runnable() {
-                @Override
-                public void run() {
-                    miniFeast.generateMiniFeast(world);
-
-                }
-            }, 24000L); // 24000L
+            }, (20L) * (60L) * (ServerConfig.BONUS_FEAST_TIME)); // 72000L
 
 
             enablePvP(5);
@@ -830,7 +866,7 @@ public class GameManager {
         questManager.availableQuests.remove(quest);
         if(getAvailableQuests().size() == questLeftWhenChange){
             if(getAvailableQuests().contains(Quest.QUESTION)){
-                Quest newQuest = questManager.getSpecialQuest();
+                Quest newQuest = questManager.getSpecialQuest(getGameType());
                 questManager.replaceQuest(Quest.QUESTION, newQuest);
                 questOrder.remove(Quest.QUESTION);
                 questOrder.put(newQuest, null);
@@ -841,6 +877,17 @@ public class GameManager {
                 }
                 playerQuests.remove(Quest.QUESTION);
                 playerQuests.put(newQuest, null);
+
+                if(newQuest.getType().equals(QuestType.KILL_BOSS)){
+                    this.bossFightLocation = BossFight.startBossFight(Bukkit.getWorld("gameWorld"));
+                }
+                if(newQuest.getType().equals(QuestType.DOMINATION)){
+                    this.dominationLocation = Domination.startDomination(Bukkit.getWorld("gameWorld"));
+                }
+                if(newQuest.getType().equals(QuestType.CAPTURE)){
+                    this.flagBaseLocationsMap = CaptureTheFlag.startCaptureTheFlag(Bukkit.getWorld("gameWorld"));
+                }
+
                 Bukkit.broadcastMessage(ChatColor.DARK_RED + "Nova Quest! " + ChatColor.YELLOW + newQuest.getName());
                 WebService.updateQuest(this.gameWebId, newQuest);
             }
@@ -880,17 +927,20 @@ public class GameManager {
                    int count = 0;
                    for(Map.Entry<UUID, Integer> entry : entries){
                        if(count>= 3) break;
+                       Player playerOfMessage = Bukkit.getPlayer(entry.getKey());
+                       if(playerOfMessage == null) continue;
+                       String playerName = player.getName();
                        if(count == 0){
                            if(uuidIterator == entry.getKey()){
                                player.sendTitle(ChatColor.GREEN + "Você Ganhou!", ChatColor.AQUA + "Seu time fez " + playerPoints.get(uuidIterator) + ChatColor.AQUA + " Pontos.",  10, 60, 10);
                            }else{
                                player.sendTitle(ChatColor.RED + "Você Perdeu!", ChatColor.AQUA + "Seu time fez " + playerPoints.get(uuidIterator) + ChatColor.AQUA + " Pontos.",  10, 60, 10);
-                               player.sendMessage(ChatColor.RED + Bukkit.getPlayer(entry.getKey()).getName() + " Ganhou com " + playerPoints.get(entry.getKey()) + " Pontos");
+                               player.sendMessage(ChatColor.RED + playerName + " Ganhou com " + playerPoints.get(entry.getKey()) + " Pontos");
                            }
                            player.sendMessage("");
                            player.sendMessage(ChatColor.GOLD + "-=-=-=-=-=-=- PLACAR FINAL -=-=-=-=-=-=-");
                        }
-                       player.sendMessage(ChatColor.GOLD + String.valueOf(count +1) + "o - " + Bukkit.getPlayer(entry.getKey()).getName() + " com "+ playerPoints.get(entry.getKey()) + " Pontos");
+                       player.sendMessage(ChatColor.GOLD + String.valueOf(count +1) + "o - " + playerName + " com "+ playerPoints.get(entry.getKey()) + " Pontos");
                        count++;
                    }
                    player.sendMessage(ChatColor.GOLD + "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");

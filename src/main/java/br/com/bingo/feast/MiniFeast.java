@@ -71,7 +71,7 @@ public class MiniFeast {
 
     public void constructMiniFeast(Location location){
         try{
-            SchematicManager.buildSchematic( "mini_feast.schem", location);
+            SchematicManager.buildSchematic( "mini_feast.schem", location, false);
         } catch (IOException e){
             e.printStackTrace();
         }

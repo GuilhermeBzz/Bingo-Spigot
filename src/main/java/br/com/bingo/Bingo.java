@@ -1,10 +1,13 @@
 package br.com.bingo;
 
+import br.com.bingo.quests.boss.listener.BossQuestListener;
 import br.com.bingo.commands.*;
 import br.com.bingo.game.GameManager;
 import br.com.bingo.kits.listeners.*;
 import br.com.bingo.listener.*;
 import br.com.bingo.listener.quest.*;
+import br.com.bingo.quests.capture.listener.CaptureQuestListener;
+import br.com.bingo.quests.domination.listener.DominationQuestListener;
 import br.com.bingo.rank.LeaderBoard;
 import br.com.bingo.rank.utils.match.MatchesStorageUtil;
 import br.com.bingo.rank.utils.players.PlayersStorageUtil;
@@ -21,17 +24,17 @@ import java.util.UUID;
 
 public final class Bingo extends JavaPlugin {
     private static Bingo instance;
-    GameManager gameManager;
+    public GameManager gameManager;
     Map<UUID, String> playerOriginalName;
 
     @Override
     public void onEnable() {
         Bukkit.getLogger().info("Iniciando Plugin....");
         instance = this;
+        ServerConfig.getInstance().load();
+
         playerOriginalName = new HashMap<>();
-
         gameManager = new GameManager(this);
-
         if(gameManager.testIfWorldExist("gameWorld")) gameManager.deleteWorlds();
 
         try {
@@ -57,6 +60,7 @@ public final class Bingo extends JavaPlugin {
         getCommand("profiles").setExecutor(new ProfileListCommand());
         getCommand("updateleaderboard").setExecutor(new UpdataLeaderBoardCommand());
         getCommand("bingoDebug").setExecutor(new BingoDebugCommand(gameManager));
+        getCommand("spawnboss").setExecutor(new SpawnBossCommand());
         getServer().getPluginManager().registerEvents(new InventoryListener(gameManager), this);
         getServer().getPluginManager().registerEvents(new LastGameListener(gameManager), this);
         getServer().getPluginManager().registerEvents(new MaterialListener(gameManager), this);
@@ -101,6 +105,10 @@ public final class Bingo extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new FullSetListener(gameManager), this);
         getServer().getPluginManager().registerEvents(new BuildListener(gameManager), this);
         getServer().getPluginManager().registerEvents(new AlchemistListener(gameManager), this);
+        getServer().getPluginManager().registerEvents(new ProtectedBLockListener(), this);
+        getServer().getPluginManager().registerEvents(new BossQuestListener(gameManager), this);
+        getServer().getPluginManager().registerEvents(new DominationQuestListener(gameManager), this);
+        getServer().getPluginManager().registerEvents(new CaptureQuestListener(gameManager), this);
 
         LeaderBoard.createLeaderBoard();
     }

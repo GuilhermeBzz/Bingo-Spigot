@@ -34,7 +34,7 @@ public class Feast {
         y = y + 15;
         feastLocation = new Location(world, x, y, z);
         generateFeast(feastLocation);
-        Bukkit.broadcastMessage(ChatColor.GREEN + "Feast vai aparecer em 10 minutos em X: " + x + " Y: " + y + " Z: " + z + "!");
+        Bukkit.broadcastMessage(ChatColor.GREEN + "Feast vai aparecer em 10 minutos em " +ChatColor.GOLD + " X: " + x + " Y: " + y + " Z: " + z + ChatColor.GREEN + "!");
         Bukkit.getScheduler().scheduleSyncDelayedTask(Bingo.getInstance(),  new Runnable() {
             @Override
             public void run() {
@@ -52,7 +52,7 @@ public class Feast {
 
     public void generateFeast(Location location){
         try{
-            SchematicManager.buildSchematic( "feast.schem", location);
+            SchematicManager.buildSchematic( "feast.schem", location, false);
         } catch (IOException e){
             e.printStackTrace();
         }

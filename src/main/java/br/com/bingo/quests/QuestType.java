@@ -19,4 +19,7 @@ public enum QuestType {
     SPECIAL_COLLECT,
     FULL_SET,
     BUILD_STRUCTURE,
+    KILL_BOSS,
+    DOMINATION,
+    CAPTURE,
 }

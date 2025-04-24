@@ -33,9 +33,9 @@ public class NetherExplorerListener implements Listener {
             }
             long currentTime = System.currentTimeMillis();
             long lastUsedTime = compassCooldown.getOrDefault(player.getUniqueId(), 0L);
-            long cooldown = 60*8*1000;
+            long cooldown = 10*1000;
             if(currentTime - lastUsedTime < cooldown){
-                player.sendMessage(ChatColor.RED + "Aguarde " + (60*8-(((currentTime - lastUsedTime)) / 1000)) + " segundos para usar novamente o seu kit");
+                player.sendMessage(ChatColor.RED + "Aguarde " + (10-(((currentTime - lastUsedTime)) / 1000)) + " segundos para usar novamente o seu kit");
                 return;
             }
             compassCooldown.put(player.getUniqueId(), currentTime);
