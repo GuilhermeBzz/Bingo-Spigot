@@ -19,7 +19,7 @@ public class Domination {
         int y = world.getHighestBlockYAt(x, z);
         if(y < 64) y = 64;
         if(y > 200) y = 200;
-        y = y + 1;
+        y = y + 4;
 
         Location location = new Location(world, x, y, z);
         generateArena(location);

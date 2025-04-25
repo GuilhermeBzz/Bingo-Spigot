@@ -13,6 +13,7 @@ import br.com.bingo.kits.KitType;
 import br.com.bingo.quests.Quest;
 import br.com.bingo.quests.QuestManager;
 import br.com.bingo.quests.QuestType;
+import br.com.bingo.quests.QuestInstance;
 import br.com.bingo.rank.LeaderBoard;
 import br.com.bingo.rank.Ranks;
 import br.com.bingo.rank.profile.PlayerProfile;
@@ -52,9 +53,9 @@ public class GameManager {
     public Boolean kit;
     ScoreboardBingo scoreboardBingo;
     public Map<UUID, TeamType>  playerTeam = new HashMap<>();
-    public Map<Quest, UUID>   playerQuests = new HashMap<>();
-    public Map<Quest, TeamType>   teamQuests = new HashMap<>();
-    public Map<Quest, Integer> questOrder = new HashMap<>();
+    public Map<QuestInstance, UUID>   playerQuests = new HashMap<>();
+    public Map<QuestInstance, TeamType>   teamQuests = new HashMap<>();
+    public Map<QuestInstance, Integer> questOrder = new HashMap<>();
     public Map<UUID, Integer> playerPoints = new HashMap<>();
     public Map<TeamType, Integer> teamPoints = new HashMap<>();
     public Map<UUID, Boolean> playerForfeit = new HashMap<>();
@@ -78,7 +79,8 @@ public class GameManager {
     public Map<UUID, KitType> playerKit = new HashMap<>();
     public LastGame lastGame;
 
-    public final int questLeftWhenChange = ServerConfig.QUEST_LEFT_WHEN_CHANGE; //13
+    public int questLeftWhenChange;
+    public int specialQuests;
     public TeamType teamWinner;
 
     public boolean ranked;
@@ -106,6 +108,8 @@ public class GameManager {
         this.gameDifficulty = 5;
         this.teamWinner = null;
         this.ranked = false;
+        this.questLeftWhenChange = 13;
+        this.specialQuests = 2;
         this.bossSpawned = false;
         this.dominationEnded = false;
         this.captureEnded = false;
@@ -129,7 +133,6 @@ public class GameManager {
         biomeLocationMap.put(Biome.DARK_FOREST, null);
         biomeLocationMap.put(Biome.OCEAN, null);
     }
-
     public void generateBiomeIcons(){
         biomeIconsMap.clear();
         biomeIconsMap.put(Biome.BADLANDS, Material.RED_SAND);
@@ -148,7 +151,6 @@ public class GameManager {
         biomeIconsMap.put(Biome.DARK_FOREST, Material.DARK_OAK_LOG);
         biomeIconsMap.put(Biome.OCEAN, Material.WATER_BUCKET);
     }
-
     public void generateBiomeNames(){
         biomeNameMap.clear();
         biomeNameMap.put(Biome.BADLANDS, "Badlands");
@@ -174,7 +176,7 @@ public class GameManager {
 
 
 
-    public void createCommand(Player sender, GameType gameType, boolean kitNew, int gameDifficulty, boolean rankedNew){
+    public void createCommand(Player sender, GameType gameType, boolean kitNew, int gameDifficulty, boolean rankedNew, int specialQuestsNew, int questLeftWhenChangeNew){
         if(existGame() || isGameStarted()){
             sender.sendMessage(ChatColor.RED + "Ja existe uma partida criada ou em andamento.");
             return;
@@ -183,6 +185,8 @@ public class GameManager {
         this.kit = kitNew;
         this.gameDifficulty = gameDifficulty;
         this.ranked = rankedNew;
+        this.questLeftWhenChange = questLeftWhenChangeNew;
+        this.specialQuests = specialQuestsNew;
 
         if(gameType.equals(GameType.SOLO)){
             for(Player target : Bukkit.getServer().getOnlinePlayers()){
@@ -237,6 +241,8 @@ public class GameManager {
             if(this.ranked) Bukkit.broadcastMessage(ChatColor.GREEN + "Partida Rankeada");
             else Bukkit.broadcastMessage(ChatColor.GREEN + "Partida Nao Rankeada");
         }
+        Bukkit.broadcastMessage(ChatColor.GREEN + "Quests Especiais: " + ChatColor.YELLOW + specialQuests);
+        Bukkit.broadcastMessage(ChatColor.GREEN + "Quests restantes para fase 2: " + ChatColor.YELLOW + questLeftWhenChange);
 
     }
 
@@ -442,6 +448,8 @@ public class GameManager {
         this.kit = false;
         this.gameDifficulty = 5;
         this.ranked = false;
+        this.specialQuests = 2;
+        this.questLeftWhenChange = 13;
         this.bossSpawned = false;
         this.dominationEnded = false;
         this.captureEnded = false;
@@ -503,7 +511,10 @@ public class GameManager {
         }
 
         this.gameStatus = GameStatus.STARTED;
-        questManager.initializeQuests(gameDifficulty);
+        questManager.initializeQuests(gameDifficulty, specialQuests);
+        if(this.specialQuests == 25 || questLeftWhenChange == 25){
+            replaceSpecialQuestIfNeeded();
+        }
         teleportPlayersToGame();
         World world = Bukkit.getWorld("gameWorld");
         world.setDifficulty(Difficulty.NORMAL);
@@ -512,19 +523,20 @@ public class GameManager {
         world.setGameRule(GameRule.DO_INSOMNIA, false);
 
         if(this.gameType == GameType.SOLO){
-            for(Quest quest : questManager.availableQuests) playerQuests.put(quest, null);
+            for(Quest quest : questManager.availableQuests) playerQuests.put(new QuestInstance(quest), null);
             for(UUID uuid : playerTeam.keySet()) playerPoints.put(uuid, 0);
 
         } else if (this.gameType == GameType.TEAM_MANUAL || this.gameType == GameType.TEAM_AUTO) {
-            for(Quest quest : questManager.availableQuests) teamQuests.put(quest, null);
-            for(Quest quest : questManager.availableQuests) playerQuests.put(quest, null);
+            for(Quest quest : questManager.availableQuests) teamQuests.put(new QuestInstance(quest), null);
+            for(Quest quest : questManager.availableQuests) playerQuests.put(new QuestInstance(quest), null);
             teamPoints.put(TeamType.TEAM_RED, 0);
             teamPoints.put(TeamType.TEAM_BLUE, 0);
         }
 
-        for(Quest quest : questManager.availableQuests) questOrder.put(quest, null);
+        for(Quest quest : questManager.availableQuests) questOrder.put(new QuestInstance(quest), null);
 
-        List<Quest> questList = new ArrayList<>(playerQuests.keySet());
+        List<Quest> questList = new ArrayList<>();
+        for(QuestInstance questInstance : playerQuests.keySet()) questList.add(questInstance.quest());
 
         if(gameType.equals(GameType.SOLO)){
             List<Player> playerList = new ArrayList<>();
@@ -545,8 +557,10 @@ public class GameManager {
 
         ItemStack cartela = new ItemStack(Material.PAPER);
         ItemMeta meta = cartela.getItemMeta();
-        meta.setDisplayName(ChatColor.GOLD + "Cartela do Bingo");
-        meta.setCustomModelData(777);
+        if(meta != null){
+            meta.setDisplayName(ChatColor.GOLD + "Cartela do Bingo");
+            meta.setCustomModelData(777);
+        }
         cartela.setItemMeta(meta);
 
         for(UUID uuid :playerTeam.keySet()){
@@ -564,7 +578,7 @@ public class GameManager {
             player.setLevel(0);
             player.getInventory().setItem(8, cartela);
 
-            if(playerKit.get(player.getUniqueId()).equals(KitType.EXPLORER)){
+            if(kit && playerKit.get(player.getUniqueId()).equals(KitType.EXPLORER)){
                 giveNewBiome(player);
             }
         }
@@ -677,7 +691,11 @@ public class GameManager {
                     }
 
                     player.sendMessage(ChatColor.WHITE + "Seu Kit é: " +ChatColor.YELLOW + (playerKit.get(player.getUniqueId()).getKit().getName()) + "!");
-                    playerKit.get(player.getUniqueId()).getKit().startKit(player);
+                    if(questLeftWhenChange == 25){
+                        playerKit.get(player.getUniqueId()).getKit().giveKit(player);
+                    } else{
+                        playerKit.get(player.getUniqueId()).getKit().startKit(player);
+                    }
                 }
 
                 //player.getInventory().setItem(8, item);
@@ -865,32 +883,7 @@ public class GameManager {
         WebService.completeQuest(quest, playerThatCompleted, playerTeam.get(uuid), this.gameWebId);
         questManager.availableQuests.remove(quest);
         if(getAvailableQuests().size() == questLeftWhenChange){
-            if(getAvailableQuests().contains(Quest.QUESTION)){
-                Quest newQuest = questManager.getSpecialQuest(getGameType());
-                questManager.replaceQuest(Quest.QUESTION, newQuest);
-                questOrder.remove(Quest.QUESTION);
-                questOrder.put(newQuest, null);
-
-                if (getGameType() != GameType.SOLO) {
-                    teamQuests.remove(Quest.QUESTION);
-                    teamQuests.put(newQuest, null);
-                }
-                playerQuests.remove(Quest.QUESTION);
-                playerQuests.put(newQuest, null);
-
-                if(newQuest.getType().equals(QuestType.KILL_BOSS)){
-                    this.bossFightLocation = BossFight.startBossFight(Bukkit.getWorld("gameWorld"));
-                }
-                if(newQuest.getType().equals(QuestType.DOMINATION)){
-                    this.dominationLocation = Domination.startDomination(Bukkit.getWorld("gameWorld"));
-                }
-                if(newQuest.getType().equals(QuestType.CAPTURE)){
-                    this.flagBaseLocationsMap = CaptureTheFlag.startCaptureTheFlag(Bukkit.getWorld("gameWorld"));
-                }
-
-                Bukkit.broadcastMessage(ChatColor.DARK_RED + "Nova Quest! " + ChatColor.YELLOW + newQuest.getName());
-                WebService.updateQuest(this.gameWebId, newQuest);
-            }
+            replaceSpecialQuestIfNeeded();
 
             if(kit){
                 for(UUID uuidIterator : playerKit.keySet()){
@@ -899,10 +892,18 @@ public class GameManager {
             }
 
         }
-        questOrder.replace(quest, 25 - getAvailableQuests().size());
+        for(QuestInstance questInstance : questOrder.keySet()){
+            if(questInstance.quest().equals(quest)){
+                questOrder.replace(questInstance, 25 - getAvailableQuests().size());
+            }
+        }
 
         if(getGameType().equals(GameType.SOLO)){
-            playerQuests.replace(quest, uuid);
+            for(QuestInstance questInstance: playerQuests.keySet()){
+                if(questInstance.quest().equals(quest)){
+                    playerQuests.replace(questInstance, uuid);
+                }
+            }
             playerPoints.replace(uuid, playerPoints.get(uuid) + 1);
             for(UUID uuidIterator : playerTeam.keySet()){
                 Player player = Bukkit.getPlayer(uuidIterator);
@@ -953,8 +954,16 @@ public class GameManager {
         }
         else if (getGameType().equals(GameType.TEAM_MANUAL) || getGameType().equals(GameType.TEAM_AUTO)) {
             Bukkit.getLogger().info("GameType Team...");
-            teamQuests.replace(quest, playerTeam.get(uuid));
-            playerQuests.replace(quest, uuid);
+            for(QuestInstance questInstance: teamQuests.keySet()){
+                if(questInstance.quest().equals(quest)){
+                    teamQuests.replace(questInstance, playerTeam.get(uuid));
+                }
+            }
+            for(QuestInstance questInstance: playerQuests.keySet()){
+                if(questInstance.quest().equals(quest)){
+                    playerQuests.replace(questInstance, uuid);
+                }
+            }
             teamPoints.replace(playerTeam.get(uuid), teamPoints.get(playerTeam.get(uuid)) + 1);
             for(UUID uuidIterator : playerTeam.keySet()){
                 Player player = Bukkit.getPlayer(uuidIterator);
@@ -998,6 +1007,53 @@ public class GameManager {
             }
         }
     }
+    public void replaceSpecialQuestIfNeeded(){
+        if(getAvailableQuests().contains(Quest.QUESTION)){
+            List<Quest> newQuestList = questManager.getSpecialQuest(getGameType(), specialQuests);
+            for(Quest newQuest : newQuestList){
+                questManager.replaceQuest(Quest.QUESTION, newQuest);
+                for (QuestInstance qi : questOrder.keySet()) {
+                    if (qi.quest() == Quest.QUESTION) {
+                        questOrder.remove(qi);
+                        break;
+                    }
+                }
+                questOrder.put(new QuestInstance(newQuest), null);
+
+                if (getGameType() != GameType.SOLO) {
+                    for (QuestInstance qi : teamQuests.keySet()) {
+                        if (qi.quest() == Quest.QUESTION) {
+                            teamQuests.remove(qi);
+                            break;
+                        }
+                    }
+                    teamQuests.put(new QuestInstance(newQuest), null);
+                }
+                for (QuestInstance qi : playerQuests.keySet()) {
+                    if (qi.quest() == Quest.QUESTION) {
+                        playerQuests.remove(qi);
+                        break;
+                    }
+                }
+                playerQuests.put(new QuestInstance(newQuest), null);
+
+                if(newQuest.getType().equals(QuestType.KILL_BOSS)){
+                    this.bossFightLocation = BossFight.startBossFight(Bukkit.getWorld("gameWorld"));
+                }
+                if(newQuest.getType().equals(QuestType.DOMINATION)){
+                    this.dominationLocation = Domination.startDomination(Bukkit.getWorld("gameWorld"));
+                }
+                if(newQuest.getType().equals(QuestType.CAPTURE)){
+                    this.flagBaseLocationsMap = CaptureTheFlag.startCaptureTheFlag(Bukkit.getWorld("gameWorld"));
+                }
+
+                Bukkit.broadcastMessage(ChatColor.DARK_RED + "Nova Quest! " + ChatColor.YELLOW + newQuest.getName());
+                WebService.updateQuest(this.gameWebId, newQuest);
+            }
+
+        }
+    }
+
 
     //usado no comando finish
     public void endGame(){

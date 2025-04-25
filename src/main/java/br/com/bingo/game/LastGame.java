@@ -1,57 +1,30 @@
 package br.com.bingo.game;
 
-import br.com.bingo.*;
-import br.com.bingo.feast.Feast;
-import br.com.bingo.feast.MiniFeast;
-import br.com.bingo.kits.KitManager;
 import br.com.bingo.kits.KitType;
 import br.com.bingo.quests.EntityHead;
 import br.com.bingo.quests.Quest;
-import br.com.bingo.quests.QuestManager;
-import br.com.bingo.quests.QuestType;
-import br.com.bingo.rank.LeaderBoard;
+import br.com.bingo.quests.QuestInstance;
 import br.com.bingo.rank.RankCalculator;
-import br.com.bingo.rank.Ranks;
-import br.com.bingo.rank.models.match.MatchesData;
-import br.com.bingo.rank.models.match.PlayersFromMatch;
-import br.com.bingo.rank.models.match.QuestsFromMatch;
-import br.com.bingo.rank.models.players.PlayersData;
-import br.com.bingo.rank.models.quests.QuestsData;
-import br.com.bingo.rank.utils.match.MatchesStorageUtil;
-import br.com.bingo.rank.utils.players.PlayersStorageUtil;
-import br.com.bingo.rank.utils.quests.QuestsStorageUtil;
 import br.com.bingo.team.TeamType;
-import br.com.bingo.ui.BarTimer;
-import br.com.bingo.ui.BingoMenu;
-import br.com.bingo.ui.ScoreboardBingo;
-import br.com.bingo.web.WebService;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
-import org.bukkit.advancement.Advancement;
-import org.bukkit.advancement.AdvancementProgress;
-import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.BiomeSearchResult;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
 
 public class LastGame {
 
     public GameType gameType;
-    public Map<Quest, UUID> playerQuests = new HashMap<>();
-    public Map<Quest, TeamType>   teamQuests = new HashMap<>();
-    public Map<Quest, Integer> questOrder = new HashMap<>();
+    public Map<QuestInstance, UUID> playerQuests = new HashMap<>();
+    public Map<QuestInstance, TeamType>   teamQuests = new HashMap<>();
+    public Map<QuestInstance, Integer> questOrder = new HashMap<>();
     public Map<UUID, TeamType>  playerTeam = new HashMap<>();
     public Map<UUID, Integer> playerPoints = new HashMap<>();
     public Map<TeamType, Integer> teamPoints = new HashMap<>();
@@ -60,7 +33,7 @@ public class LastGame {
     public TeamType teamWinner;
     public boolean ranked;
 
-    public LastGame(GameType gameType, Map<Quest, UUID> playerQuests, Map<Quest, TeamType> teamQuests, Map<Quest, Integer> questOrder, Map<UUID, TeamType>  playerTeam, Map<UUID, Integer> playerPoints, Map<TeamType, Integer> teamPoints, Map<UUID, KitType> playerKit, TeamType teamWinner, boolean ranked) {
+    public LastGame(GameType gameType, Map<QuestInstance, UUID> playerQuests, Map<QuestInstance, TeamType> teamQuests, Map<QuestInstance, Integer> questOrder, Map<UUID, TeamType>  playerTeam, Map<UUID, Integer> playerPoints, Map<TeamType, Integer> teamPoints, Map<UUID, KitType> playerKit, TeamType teamWinner, boolean ranked) {
         this.gameType = gameType;
         this.playerQuests = playerQuests;
         this.teamQuests = teamQuests;
@@ -96,7 +69,8 @@ public class LastGame {
         bingoInventory.setItem(8, menu);
 
         int slot = 11;
-        for(Quest quest : playerQuests.keySet()){
+        for(QuestInstance questInstance : playerQuests.keySet()){
+            Quest quest = questInstance.quest();
             ItemStack questItem = null;
             ChatColor questColor = null;
 
@@ -104,9 +78,9 @@ public class LastGame {
                 questItem = new ItemStack((Material) quest.getIcon());
 
                 if(gameType.equals(GameType.SOLO)){
-                    if(playerQuests.get(quest) == null){
+                    if(playerQuests.get(questInstance) == null){
                         questColor = ChatColor.GREEN;
-                    }else if (playerQuests.get(quest) == uuid) {
+                    }else if (playerQuests.get(questInstance) == uuid) {
                         questColor = ChatColor.GOLD;
                         questItem = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
 
@@ -116,10 +90,10 @@ public class LastGame {
                     }
 
                 } else{
-                    if(teamQuests.get(quest) == null){
+                    if(teamQuests.get(questInstance) == null){
                         questColor = ChatColor.GREEN;
 
-                    } else if (teamQuests.get(quest) == playerTeam.get(uuid)) {
+                    } else if (teamQuests.get(questInstance) == playerTeam.get(uuid)) {
                         questColor = ChatColor.GOLD;
                         questItem = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
                     } else {
@@ -131,8 +105,8 @@ public class LastGame {
                 meta.setDisplayName(questColor + quest.getName());
                 if(!questColor.equals(ChatColor.GREEN)){
                     List<String> lore = new ArrayList<>();
-                    lore.add(questColor + "Concluida por " + Bukkit.getOfflinePlayer(playerQuests.get(quest)).getName());
-                    lore.add(questColor + questOrder.get(quest).toString() + "ª Quest Concluida");
+                    lore.add(questColor + "Concluida por " + Bukkit.getOfflinePlayer(playerQuests.get(questInstance)).getName());
+                    lore.add(questColor + questOrder.get(questInstance).toString() + "ª Quest Concluida");
                     meta.setLore(lore);
                 }
                 questItem.setItemMeta(meta);
@@ -168,10 +142,10 @@ public class LastGame {
                 ItemMeta newMeta = null;
 
                 if(gameType.equals(GameType.SOLO)){
-                    if(playerQuests.get(quest) == null){
+                    if(playerQuests.get(questInstance) == null){
                         questColor = ChatColor.GREEN;
 
-                    } else if (playerQuests.get(quest) == player.getUniqueId()) {
+                    } else if (playerQuests.get(questInstance) == player.getUniqueId()) {
                         questColor = ChatColor.GOLD;
                         questItem = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
                         newMeta = questItem.getItemMeta();
@@ -182,10 +156,10 @@ public class LastGame {
                     }
 
                 }else{
-                    if(teamQuests.get(quest) == null){
+                    if(teamQuests.get(questInstance) == null){
                         questColor = ChatColor.GREEN;
 
-                    } else if (teamQuests.get(quest) == playerTeam.get(uuid)) {
+                    } else if (teamQuests.get(questInstance) == playerTeam.get(uuid)) {
                         questColor = ChatColor.GOLD;
                         questItem = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
                         newMeta = questItem.getItemMeta();
@@ -202,8 +176,8 @@ public class LastGame {
                 }else {
                     newMeta.setDisplayName(questColor + quest.getName());
                     List<String> lore = new ArrayList<>();
-                    lore.add(questColor + "Concluida por " + Bukkit.getOfflinePlayer(playerQuests.get(quest)).getName());
-                    lore.add(questColor + questOrder.get(quest).toString() + "ª Quest Concluida");
+                    lore.add(questColor + "Concluida por " + Bukkit.getOfflinePlayer(playerQuests.get(questInstance)).getName());
+                    lore.add(questColor + questOrder.get(questInstance).toString() + "ª Quest Concluida");
                     newMeta.setLore(lore);
                     questItem.setItemMeta(newMeta);
                 }

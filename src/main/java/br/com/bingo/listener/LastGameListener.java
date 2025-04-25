@@ -4,6 +4,7 @@ import br.com.bingo.game.GameManager;
 import br.com.bingo.game.GameType;
 import br.com.bingo.game.LastGame;
 import br.com.bingo.quests.Quest;
+import br.com.bingo.quests.QuestInstance;
 import br.com.bingo.team.TeamType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -139,12 +140,13 @@ public class LastGameListener implements Listener {
             int bluePosition = 14;
             int redPosition = 12;
             Map<UUID, Integer> eachPlayerPoints = new HashMap<>();
-            for(Quest quest : lastGame.playerQuests.keySet()){
-                if(lastGame.playerQuests.get(quest) == null) continue;
-                if(eachPlayerPoints.containsKey(lastGame.playerQuests.get(quest))){
-                    eachPlayerPoints.put(lastGame.playerQuests.get(quest), eachPlayerPoints.get(lastGame.playerQuests.get(quest)) + 1);
+            for(QuestInstance questInstance : lastGame.playerQuests.keySet()){
+                Quest quest = questInstance.quest();
+                if(lastGame.playerQuests.get(questInstance) == null) continue;
+                if(eachPlayerPoints.containsKey(lastGame.playerQuests.get(questInstance))){
+                    eachPlayerPoints.put(lastGame.playerQuests.get(questInstance), eachPlayerPoints.get(lastGame.playerQuests.get(questInstance)) + 1);
                 }else{
-                    eachPlayerPoints.put(lastGame.playerQuests.get(quest), 1);
+                    eachPlayerPoints.put(lastGame.playerQuests.get(questInstance), 1);
                 }
                 for(UUID uuid : lastGame.playerTeam.keySet()){
                     if(eachPlayerPoints.containsKey(uuid)) continue;

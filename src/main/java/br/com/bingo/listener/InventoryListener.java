@@ -1,5 +1,6 @@
 package br.com.bingo.listener;
 
+import br.com.bingo.quests.QuestInstance;
 import br.com.bingo.ui.BingoMenu;
 import br.com.bingo.quests.EntityHead;
 import br.com.bingo.game.GameManager;
@@ -22,8 +23,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import com.mojang.authlib.GameProfile;
-import org.bukkit.profile.PlayerProfile;
-import org.bukkit.profile.PlayerTextures;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -95,7 +94,8 @@ public class InventoryListener implements Listener {
         int slot = 11;
         if(gameManager.getGameType() == GameType.SOLO){
 
-            for(Quest quest : gameManager.playerQuests.keySet()){
+            for(QuestInstance questInstance : gameManager.playerQuests.keySet()){
+                Quest quest = questInstance.quest();
                 ItemStack questItem = null;
                 ChatColor questColor = null;
 
@@ -106,10 +106,10 @@ public class InventoryListener implements Listener {
 
 
 
-                    if(gameManager.playerQuests.get(quest) == null){
+                    if(gameManager.playerQuests.get(questInstance) == null){
                         questColor = ChatColor.GREEN;
 
-                    } else if (gameManager.playerQuests.get(quest) == player.getUniqueId()) {
+                    } else if (gameManager.playerQuests.get(questInstance) == player.getUniqueId()) {
                         questColor = ChatColor.GOLD;
                         questItem = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
                         
@@ -122,8 +122,8 @@ public class InventoryListener implements Listener {
                     meta.setDisplayName(questColor + quest.getName());
                     if(!questColor.equals(ChatColor.GREEN)){
                         List<String> lore = new ArrayList<>();
-                        lore.add(questColor + "Concluida por " + Bukkit.getOfflinePlayer(gameManager.playerQuests.get(quest)).getName());
-                        lore.add(questColor + gameManager.questOrder.get(quest).toString() + "ª Quest Concluida");
+                        lore.add(questColor + "Concluida por " + Bukkit.getOfflinePlayer(gameManager.playerQuests.get(questInstance)).getName());
+                        lore.add(questColor + gameManager.questOrder.get(questInstance).toString() + "ª Quest Concluida");
                         meta.setLore(lore);
                     }
                     questItem.setItemMeta(meta);
@@ -157,10 +157,10 @@ public class InventoryListener implements Listener {
 
 
                     ItemMeta newMeta = null;
-                    if(gameManager.playerQuests.get(quest) == null){
+                    if(gameManager.playerQuests.get(questInstance) == null){
                         questColor = ChatColor.GREEN;
 
-                    } else if (gameManager.playerQuests.get(quest) == player.getUniqueId()) {
+                    } else if (gameManager.playerQuests.get(questInstance) == player.getUniqueId()) {
                         questColor = ChatColor.GOLD;
                         questItem = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
                         newMeta = questItem.getItemMeta();
@@ -175,8 +175,8 @@ public class InventoryListener implements Listener {
                     }else {
                         newMeta.setDisplayName(questColor + quest.getName());
                         List<String> lore = new ArrayList<>();
-                        lore.add(questColor + "Concluida por " + Bukkit.getOfflinePlayer(gameManager.playerQuests.get(quest)).getName());
-                        lore.add(questColor + gameManager.questOrder.get(quest).toString() + "ª Quest Concluida");
+                        lore.add(questColor + "Concluida por " + Bukkit.getOfflinePlayer(gameManager.playerQuests.get(questInstance)).getName());
+                        lore.add(questColor + gameManager.questOrder.get(questInstance).toString() + "ª Quest Concluida");
                         newMeta.setLore(lore);
                         questItem.setItemMeta(newMeta);
                     }
@@ -190,7 +190,8 @@ public class InventoryListener implements Listener {
             }
         }
         else if (gameManager.getGameType() == GameType.TEAM_AUTO || gameManager.getGameType() == GameType.TEAM_MANUAL) {
-            for(Quest quest : gameManager.teamQuests.keySet()){
+            for(QuestInstance questInstance : gameManager.teamQuests.keySet()){
+                Quest quest = questInstance.quest();
                 ItemStack questItem = null;
                 ChatColor questColor = null;
 
@@ -199,10 +200,10 @@ public class InventoryListener implements Listener {
 
 
 
-                    if(gameManager.teamQuests.get(quest) == null){
+                    if(gameManager.teamQuests.get(questInstance) == null){
                         questColor = ChatColor.GREEN;
 
-                    } else if (gameManager.teamQuests.get(quest) == gameManager.getPlayerTeam(player)) {
+                    } else if (gameManager.teamQuests.get(questInstance) == gameManager.getPlayerTeam(player)) {
                         questColor = ChatColor.GOLD;
                         questItem = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
 
@@ -216,8 +217,8 @@ public class InventoryListener implements Listener {
                     meta.setDisplayName(questColor + quest.getName());
                     if(!questColor.equals(ChatColor.GREEN)){
                         List<String> lore = new ArrayList<>();
-                        lore.add(questColor + "Concluida por " + Bukkit.getOfflinePlayer(gameManager.playerQuests.get(quest)).getName());
-                        lore.add(questColor + gameManager.questOrder.get(quest).toString() + "ª Quest Concluida");
+                        lore.add(questColor + "Concluida por " + Bukkit.getOfflinePlayer(gameManager.playerQuests.get(questInstance)).getName());
+                        lore.add(questColor + gameManager.questOrder.get(questInstance).toString() + "ª Quest Concluida");
                         meta.setLore(lore);
                     }
                     questItem.setItemMeta(meta);
@@ -250,10 +251,10 @@ public class InventoryListener implements Listener {
 
 
                     ItemMeta newMeta = null;
-                    if(gameManager.teamQuests.get(quest) == null){
+                    if(gameManager.teamQuests.get(questInstance) == null){
                         questColor = ChatColor.GREEN;
 
-                    } else if (gameManager.teamQuests.get(quest) == gameManager.getPlayerTeam(player)) {
+                    } else if (gameManager.teamQuests.get(questInstance) == gameManager.getPlayerTeam(player)) {
                         questColor = ChatColor.GOLD;
                         questItem = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
                         newMeta = questItem.getItemMeta();
@@ -268,8 +269,9 @@ public class InventoryListener implements Listener {
                     }else {
                         newMeta.setDisplayName(questColor + quest.getName());
                         List<String> lore = new ArrayList<>();
-                        lore.add(questColor + "Concluida por " + Bukkit.getOfflinePlayer(gameManager.playerQuests.get(quest)).getName());
-                        lore.add(questColor + gameManager.questOrder.get(quest).toString() + "ª Quest Concluida");
+                        UUID uuid = gameManager.playerQuests.get(questInstance);
+                        lore.add(questColor + "Concluida por " + Bukkit.getOfflinePlayer(gameManager.playerQuests.get(questInstance)).getName());
+                        lore.add(questColor + gameManager.questOrder.get(questInstance).toString() + "ª Quest Concluida");
                         newMeta.setLore(lore);
                         questItem.setItemMeta(newMeta);
                     }

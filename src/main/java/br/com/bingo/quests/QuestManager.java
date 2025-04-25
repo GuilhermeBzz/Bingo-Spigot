@@ -15,12 +15,13 @@ public class QuestManager {
 
     public List<Quest> availableQuests = new ArrayList<>();
 
-    public void initializeQuests(int difficulty){
+    public void initializeQuests(int difficulty, int specialQuests){
         availableQuests = new ArrayList<>();
 
         List<Quest> allQuests = new ArrayList<>();
         Collections.addAll(allQuests, Quest.values());
         allQuests.removeIf(quest -> quest.getDifficulty() == 4);
+        allQuests.removeIf(quest -> quest.getDifficulty() == 0);
         List<Quest> easyQuests = new ArrayList<>();
         List<Quest> mediumQuests = new ArrayList<>();
         List<Quest> hardQuests = new ArrayList<>();
@@ -45,7 +46,7 @@ public class QuestManager {
             }
         }
 
-        ensureQuest(Quest.QUESTION);
+        if(specialQuests != 0) setSpecialQuests(specialQuests);
     }
 
     public void removeQuests(Quest quest){
@@ -59,24 +60,37 @@ public class QuestManager {
         return false;
     }
 
-    public void ensureQuest (Quest quest){
-        if(!availableQuests.contains(quest)){
-            availableQuests.remove(0);
-            availableQuests.add(quest);
-            Collections.shuffle(availableQuests);
+    public void setSpecialQuests (int specialQuests){
+        Collections.shuffle(availableQuests);
+
+        Quest quest = Quest.QUESTION;
+
+        for(int i = 0; i < specialQuests; i++){
+            if(availableQuests.size() > 0){
+                Quest questToRemove = availableQuests.get(0);
+                availableQuests.remove(questToRemove);
+                availableQuests.add(quest);
+            }
         }
+        Collections.shuffle(availableQuests);
     }
 
     public void replaceQuest(Quest questOld, Quest questNew){
-        availableQuests.remove(questOld);
-        availableQuests.add(questNew);
+        for(Quest quest : availableQuests){
+            if(quest.equals(questOld)){
+                availableQuests.remove(questOld);
+                availableQuests.add(questNew);
+                return;
+            }
+        }
+
 
         Bukkit.getLogger().info(ChatColor.LIGHT_PURPLE + "NEW: " + availableQuests.toString());
 
     }
 
 
-    public Quest getSpecialQuest(GameType gameType){
+    public List<Quest> getSpecialQuest(GameType gameType, int specialQuestNumber){
 
         ArrayList<Quest> allQuests = new ArrayList<>();
         Collections.addAll(allQuests, Quest.values());
@@ -88,6 +102,8 @@ public class QuestManager {
             specialQuests.removeIf(quest -> quest.getType().equals(QuestType.CAPTURE));
         }
 
+        specialQuests.removeIf(quest-> availableQuests.contains(quest));
+
         List<Quest> armorQuests =  allQuests.stream().filter(quest ->
                 quest.getType() == QuestType.FULL_SET).collect(Collectors.toList());
 
@@ -98,8 +114,8 @@ public class QuestManager {
 
         Collections.shuffle(specialQuests);
 
-        return allQuests.stream().filter(q -> q.getType().equals(QuestType.CAPTURE)).collect(Collectors.toList()).get(0);
+        //return allQuests.stream().filter(q -> q.getType().equals(QuestType.CAPTURE)).collect(Collectors.toList()).get(0);
 
-        //return specialQuests.get(0);
+        return specialQuests.subList(0, specialQuestNumber);
     }
 }

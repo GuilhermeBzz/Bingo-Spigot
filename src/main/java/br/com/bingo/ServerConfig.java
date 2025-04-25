@@ -11,7 +11,6 @@ public class ServerConfig {
     private File file;
     private YamlConfiguration config;
 
-    public static Integer QUEST_LEFT_WHEN_CHANGE;
     public static String WEB_SERVICE_URL;
     public static Long MINI_FEAST_ONE_TIME;
     public static Long MINI_FEAST_TWO_TIME;
@@ -39,7 +38,6 @@ public class ServerConfig {
             e.printStackTrace();
         }
 
-        QUEST_LEFT_WHEN_CHANGE = config.getInt("gameplay.questLeftWhenChange");
         WEB_SERVICE_URL = config.getString("web.url");
         MINI_FEAST_ONE_TIME = config.getLong("timers.miniFeast-1");
         MINI_FEAST_TWO_TIME = config.getLong("timers.miniFeast-2");

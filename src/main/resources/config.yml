@@ -6,10 +6,5 @@ timers:
   feast: 25
   bonusFeast: 60
 
-# Number of Quests
-gameplay:
-  questLeftWhenChange: 13
-
-
 web:
   url: "http://localhost:8080"

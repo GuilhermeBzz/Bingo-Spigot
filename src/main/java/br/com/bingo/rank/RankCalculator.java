@@ -1,5 +1,6 @@
 package br.com.bingo.rank;
 
+import br.com.bingo.quests.QuestInstance;
 import br.com.bingo.rank.models.players.PlayersData;
 import br.com.bingo.rank.utils.players.PlayersStorageUtil;
 import br.com.bingo.team.TeamType;
@@ -30,7 +31,7 @@ public class RankCalculator {
         }
     }
 
-    public static List<RankResult> calculateRankResults(Map<UUID, TeamType> playerTeam, Map<Quest, UUID> playerQuests, TeamType teamWinner) {
+    public static List<RankResult> calculateRankResults(Map<UUID, TeamType> playerTeam, Map<QuestInstance, UUID> playerQuests, TeamType teamWinner) {
         List<RankResult> results = new ArrayList<>();
         
         // Count quests completed by each player
@@ -38,9 +39,10 @@ public class RankCalculator {
         Map<UUID, Integer> mediumQuestCompleted = new HashMap<>();
         Map<UUID, Integer> hardQuestCompleted = new HashMap<>();
         
-        for(Quest quest : playerQuests.keySet()) {
-            if(playerQuests.get(quest) != null) {
-                UUID playerUUID = playerQuests.get(quest);
+        for(QuestInstance questInstance : playerQuests.keySet()) {
+            Quest quest = questInstance.quest();
+            if(playerQuests.get(questInstance) != null) {
+                UUID playerUUID = playerQuests.get(questInstance);
                 switch (quest.getDifficulty()) {
                     case 1:
                         easyQuestCompleted.merge(playerUUID, 1, Integer::sum);
