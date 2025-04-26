@@ -109,6 +109,7 @@ public final class Bingo extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new BossQuestListener(gameManager), this);
         getServer().getPluginManager().registerEvents(new DominationQuestListener(gameManager), this);
         getServer().getPluginManager().registerEvents(new CaptureQuestListener(gameManager), this);
+        getServer().getPluginManager().registerEvents(new FreezePlayersListener(gameManager), this);
 
         LeaderBoard.createLeaderBoard();
     }

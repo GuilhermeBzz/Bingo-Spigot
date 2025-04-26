@@ -88,6 +88,8 @@ public class GameManager {
     public boolean dominationEnded;
     public boolean captureEnded;
 
+    public boolean freezePlayers = false;
+
 
     public GameManager(Bingo plugin) {
         Bukkit.getLogger().info("Iniciando GameManager...");
@@ -277,41 +279,47 @@ public class GameManager {
     public void forfeitCommand(Player sender){
         if(forfeitingTeam == null){
             forfeitingTeam = playerTeam.get(sender.getUniqueId());
-            if(forfeitingTeam.equals(TeamType.SOLO)){
-                sender.sendMessage(ChatColor.RED + "Ainda nao implementado para partida solo.");
-                forfeitingTeam = null;
-                return;
-            } else{
-                for(UUID uuid : playerTeam.keySet()){
-                    if(playerTeam.get(uuid).equals(forfeitingTeam)){
-                       playerForfeit.put(uuid, false);
-                    }
+            for(UUID uuid : playerTeam.keySet()){
+                if(playerTeam.get(uuid).equals(forfeitingTeam)){
+                    playerForfeit.put(uuid, false);
                 }
                 playerForfeit.put(sender.getUniqueId(), true);
-                sender.sendMessage(ChatColor.RED + "Voce esta desistindo. Aguarde o resto do time");
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {
-                    @Override
-                    public void run() {
-                        for(UUID uuid: playerForfeit.keySet()){
-                            Player player = Bukkit.getPlayer(uuid);
-                            if(player != null && player.isOnline()){
-                                player.sendMessage(ChatColor.RED + "Seu time nao desistiu. A partida continua");
-                            }
+            }
+            String senderMessage;
+            String cancelMessage;
+            String recieverMessage;
+            if(forfeitingTeam.equals(TeamType.SOLO)){
+                senderMessage = ChatColor.RED +  "Voce esta desistindo. Aguarde o resto dos jogadores";
+                cancelMessage = ChatColor.RED + "Os outros jogadores não desistiram. A partida continua";
+                recieverMessage = ChatColor.RED + "Um jogador está desistindo. Use " + ChatColor.YELLOW + "/ff" + ChatColor.RED + " para concordar.";
+            } else{
+                senderMessage = "Voce esta desistindo. Aguarde o resto do time";
+                cancelMessage = ChatColor.RED + "Seu time nao desistiu. A partida continua";
+                recieverMessage = ChatColor.RED + "Seu time esta desistindo. Use " + ChatColor.YELLOW + "/ff" + ChatColor.RED + " para concordar.";
+            }
+            sender.sendMessage(senderMessage);
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,  new Runnable() {
+                @Override
+                public void run() {
+                    for(UUID uuid: playerForfeit.keySet()){
+                        Player player = Bukkit.getPlayer(uuid);
+                        if(player != null && player.isOnline()){
+                            player.sendMessage(cancelMessage);
                         }
-                        forfeitingTeam = null;
-                        playerForfeit.clear();
                     }
-                }, 1200L);
-                for(UUID uuid:playerForfeit.keySet()){
-                    if(playerForfeit.get(uuid).equals(false)){
-                        Player receiver = Bukkit.getPlayer(uuid);
-                        if(receiver!= null && receiver.isOnline()){
-                            receiver.sendMessage(ChatColor.RED + "Seu time esta desistindo. Use " + ChatColor.YELLOW + "/ff" + ChatColor.RED + " para concordar.");
-                        }
+                    forfeitingTeam = null;
+                    playerForfeit.clear();
+                }
+            }, 1200L);
+            for(UUID uuid:playerForfeit.keySet()){
+                if(playerForfeit.get(uuid).equals(false)){
+                    Player receiver = Bukkit.getPlayer(uuid);
+                    if(receiver!= null && receiver.isOnline()){
+                        receiver.sendMessage(recieverMessage);
                     }
                 }
             }
-        } else{
+        } else if (!forfeitingTeam.equals(TeamType.SOLO)){
             if(playerTeam.get(sender.getUniqueId()).equals(forfeitingTeam)){
                 playerForfeit.put(sender.getUniqueId(), true);
                 sender.sendMessage(ChatColor.RED + "Voce aceitou a desistencia. Aguarde o resto do time");
@@ -319,20 +327,76 @@ public class GameManager {
                 sender.sendMessage("Voce nao pode desistir agora. Tente novamente em 1 minuto");
                 return;
             }
-        }
-        boolean forfeit = false;
-        for(UUID uuid : playerForfeit.keySet()){
-            if(playerForfeit.get(uuid)){
-                forfeit = true;
-            } else{
-                forfeit = false;
-                break;
+        } else{
+            if(playerTeam.get(sender.getUniqueId()).equals(forfeitingTeam)){
+                playerForfeit.put(sender.getUniqueId(), true);
+                sender.sendMessage(ChatColor.RED + "Voce aceitou a desistencia. Aguarde os outros jogadores");
             }
         }
-        if(forfeit) forfeitGame(forfeitingTeam);
-        return;
+        if(forfeitingTeam == null) return;
+
+        if(forfeitingTeam.equals(TeamType.SOLO)){
+            Player player = null;
+            int totalPlayers = playerForfeit.size();
+            int playersForfeit = 0;
+            for(UUID uuid : playerForfeit.keySet()){
+                if(playerForfeit.get(uuid)){
+                    playersForfeit++;
+                } else if(Bukkit.getPlayer(uuid) == null || !Bukkit.getPlayer(uuid).isOnline()){
+                    playersForfeit++;
+                } else{
+                    player = Bukkit.getPlayer(uuid);
+                }
+            }
+            if(playersForfeit + 1 >= totalPlayers) forfeitSoloGame();
+
+        }else{
+            boolean forfeit = false;
+            for(UUID uuid : playerForfeit.keySet()){
+                if(playerForfeit.get(uuid)){
+                    forfeit = true;
+                } else{
+                    forfeit = false;
+                    break;
+                }
+            }
+            if(forfeit) forfeitTeamGame(forfeitingTeam);
+        }
+
     }
-    public void forfeitGame(TeamType forfeitingTeam){
+
+    public void forfeitSoloGame(){
+
+        for(UUID uuid : playerTeam.keySet()){
+            Player target = Bukkit.getPlayer(uuid);
+            if(target == null || !target.isOnline()) continue;
+
+            if(playerForfeit.get(uuid)){
+                target.playSound(target.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1.0f, 1.0f);
+                target.sendTitle(ChatColor.RED + "Voce perdeu!", ChatColor.RED + "Você e os outros jogadores desistiram", 10, 70, 20);
+                target.sendMessage("");
+            } else {
+                target.playSound(target.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1.0f, 1.0f);
+                target.sendTitle(ChatColor.GREEN + "Voce ganhou!", ChatColor.GREEN + "Os outros jogadores desistiram", 10, 70, 20);
+                target.sendMessage("");
+            }
+
+            target.sendMessage("");
+            target.sendMessage(ChatColor.GOLD + "-=-=-=-=-=-=- PLACAR FINAL -=-=-=-=-=-=-");
+            for(UUID uuidPoint : playerPoints.keySet()){
+                String playerName = Bukkit.getOfflinePlayer(uuidPoint).getName();
+                if(playerName == null) continue;
+                target.sendMessage(ChatColor.GOLD + playerName + ChatColor.YELLOW + " fez " + ChatColor.GOLD + playerPoints.get(uuidPoint) + " Pontos");
+            }
+            target.sendMessage(ChatColor.GOLD + "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+
+        }
+        teamWinner = TeamType.SOLO;
+        playerForfeit.clear();
+        finishGame();
+    }
+
+    public void forfeitTeamGame(TeamType forfeitingTeam){
         for(UUID uuid : playerTeam.keySet()){
             Player player = Bukkit.getPlayer(uuid);
             if(player != null && player.isOnline()){
@@ -521,6 +585,7 @@ public class GameManager {
         world.setPVP(false);
         world.setTime(0L);
         world.setGameRule(GameRule.DO_INSOMNIA, false);
+        freezePlayers = true;
 
         if(this.gameType == GameType.SOLO){
             for(Quest quest : questManager.availableQuests) playerQuests.put(new QuestInstance(quest), null);
@@ -570,8 +635,9 @@ public class GameManager {
                 player.removePotionEffect(effect.getType());
             }
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 99999, 10, false, false, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 99999, 100, false, false, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 99999, 200, false, false, false));
+            //player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 99999, 100, false, false, false));
+            //player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 99999, 250, false, false, false));
+            player.setWalkSpeed(0);
             player.setBedSpawnLocation(Bukkit.getWorld("gameWorld").getSpawnLocation(), true);
             player.getInventory().clear();
             player.getInventory().setArmorContents(null);
@@ -654,6 +720,7 @@ public class GameManager {
 
         if(seconds == 0){
 
+            freezePlayers = false;
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "recipe give @a *");
             barTimer.startBarTimer();
             for(UUID uuid : playerTeam.keySet()){
@@ -663,8 +730,9 @@ public class GameManager {
 
                 player.playSound(player, Sound.ENTITY_WITHER_DEATH, 1.0f, 1.0f);
                 player.removePotionEffect(PotionEffectType.BLINDNESS);
-                player.removePotionEffect(PotionEffectType.SLOWNESS);
-                player.removePotionEffect(PotionEffectType.JUMP_BOOST);
+                //player.removePotionEffect(PotionEffectType.SLOWNESS);
+                //player.removePotionEffect(PotionEffectType.JUMP_BOOST);
+                player.setWalkSpeed(0.2f);
                 player.sendTitle(ChatColor.GREEN + "Partida Iniciada!", ChatColor.AQUA + "Conclua as Quests da cartela para fazer pontos.",  10, 60, 10);
 
                 giveStarterKit(player);
@@ -1060,6 +1128,8 @@ public class GameManager {
         if(gameType.equals(GameType.TEAM_MANUAL) || gameType.equals(GameType.TEAM_AUTO)){
             for(UUID uuid : playerTeam.keySet()){
                 Player player = Bukkit.getPlayer(uuid);
+                if(player == null) continue;
+                if(!player.isOnline()) continue;
                 player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1.0f, 1.0f);
                 player.sendTitle(ChatColor.GOLD + "Fim de Jogo!", ChatColor.AQUA + "Seu time fez " + teamPoints.get(playerTeam.get(player.getUniqueId())) + " pontos!",  10, 60, 10);
                 player.sendMessage("");
