@@ -478,7 +478,7 @@ public class GameManager {
             Player player = Bukkit.getPlayer(uuid);
             if(player != null) {
                 player.sendMessage(ChatColor.RED + "Partida Encerrada!");
-                player.setBedSpawnLocation(Bukkit.getWorlds().get(0).getSpawnLocation(), true);
+                player.setRespawnLocation(Bukkit.getWorlds().get(0).getSpawnLocation(), true);
                 player.setSaturation(20);
                 player.setHealth(20);
                 player.setFoodLevel(20);
@@ -638,7 +638,7 @@ public class GameManager {
             //player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 99999, 100, false, false, false));
             //player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 99999, 250, false, false, false));
             player.setWalkSpeed(0);
-            player.setBedSpawnLocation(Bukkit.getWorld("gameWorld").getSpawnLocation(), true);
+            player.setRespawnLocation(Bukkit.getWorld("gameWorld").getSpawnLocation(), true);
             player.getInventory().clear();
             player.getInventory().setArmorContents(null);
             player.setLevel(0);
