@@ -35,7 +35,7 @@ public class ServerConfig {
             config.load(file);
 
         } catch (Exception e){
-            e.printStackTrace();
+            br.com.bingo.Bingo.getInstance().getLogger().log(java.util.logging.Level.SEVERE, "Erro inesperado no plugin Bingo (veja o stacktrace)", e);
         }
 
         WEB_SERVICE_URL = config.getString("web.url");
@@ -50,7 +50,7 @@ public class ServerConfig {
         try {
             config.save(file);
         } catch (Exception e) {
-            e.printStackTrace();
+            br.com.bingo.Bingo.getInstance().getLogger().log(java.util.logging.Level.SEVERE, "Erro inesperado no plugin Bingo (veja o stacktrace)", e);
         }
     }
 

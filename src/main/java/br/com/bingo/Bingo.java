@@ -42,7 +42,7 @@ public final class Bingo extends JavaPlugin {
             QuestsStorageUtil.loadQuests();
             PlayersStorageUtil.loadPlayers();
         } catch (IOException e) {
-            e.printStackTrace();
+            br.com.bingo.Bingo.getInstance().getLogger().log(java.util.logging.Level.SEVERE, "Erro inesperado no plugin Bingo (veja o stacktrace)", e);
         }
 
         CustomRecipe.registerRecipes(this);

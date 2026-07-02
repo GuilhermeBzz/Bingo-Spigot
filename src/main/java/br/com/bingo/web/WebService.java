@@ -111,12 +111,12 @@ public class WebService {
             endGameDto.setPlayerUpdates(generatePlayerUpdateDto(uuidList));
         }
 
-        String url = urlBase + ":" + "/api/games/" + gameId + "/end";
+        String url = urlBase + "/api/games/" + gameId + "/end";
 
         String json = EndGameDto.toJson(endGameDto);
         Bukkit.getLogger().info(json);
         Bukkit.getLogger().info(url);
-        String response = sendPostRequest(url, json);
+        sendAsyncPostRequest(url, json);
         Bukkit.getLogger().info("Jogo finalizado com id: " + gameId);
     }
 
@@ -127,7 +127,7 @@ public class WebService {
         updateQuestDto.setQuestName(Quest.QUESTION.getName());
         String json = UpdateQuestDto.toJson(updateQuestDto);
 
-        String url = urlBase + ":" + "/api/games/" + gameId + "/updateQuest";
+        String url = urlBase + "/api/games/" + gameId + "/updateQuest";
         Bukkit.getLogger().info(json);
         sendAsyncPostRequest(url, json);
     }
@@ -142,6 +142,8 @@ public class WebService {
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setDoOutput(true); // Permite envio de corpo
+            conn.setConnectTimeout(5000); // evita travar a main thread se o serviço estiver fora do ar
+            conn.setReadTimeout(5000);
 
             // Enviar JSON no corpo da requisição
             try (OutputStream os = conn.getOutputStream()) {
@@ -163,16 +165,20 @@ public class WebService {
             return jsonResponse;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            br.com.bingo.Bingo.getInstance().getLogger().log(java.util.logging.Level.SEVERE, "Erro inesperado no plugin Bingo (veja o stacktrace)", e);
             return null;
         }
     }
 
     private static void sendAsyncPostRequest(String urlString, String jsonBody){
-        Bukkit.getScheduler().runTaskAsynchronously(Bingo.getInstance(), () ->{
-            String response = sendPostRequest(urlString, jsonBody);
-            //Bukkit.getLogger().info(response);
-        });
+        Bingo plugin = Bingo.getInstance();
+        if (plugin.isEnabled()) {
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> sendPostRequest(urlString, jsonBody));
+        } else {
+            // Servidor desligando: não é possível agendar task async, então envia de forma
+            // síncrona (agora limitada pelo timeout de 5s para não travar o shutdown).
+            sendPostRequest(urlString, jsonBody);
+        }
     }
 
     private static String extractJsonField(String json, String field) {

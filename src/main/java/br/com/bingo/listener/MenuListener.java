@@ -1,16 +1,13 @@
 package br.com.bingo.listener;
 
 import br.com.bingo.quests.EntityHead;
+import br.com.bingo.utils.HeadUtil;
 import br.com.bingo.quests.Quest;
 import br.com.bingo.ui.BingoMenu;
 import br.com.bingo.ChangeLog;
 import br.com.bingo.game.GameManager;
 import br.com.bingo.game.GameType;
 import br.com.bingo.kits.KitManager;
-import com.google.common.collect.ImmutableMultimap;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-import com.mojang.authlib.properties.PropertyMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -26,7 +23,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 public class MenuListener implements Listener {
@@ -171,24 +167,10 @@ public class MenuListener implements Listener {
         difficultyMeta.setLore(lore);
         difficulty.setItemMeta(difficultyMeta);
 
-        UUID headUuid = UUID.fromString((String) ((EntityHead) Quest.QUESTION.getIcon()).UUID);
         String texture = ((EntityHead) Quest.QUESTION.getIcon()).texture;
-        PropertyMap properties = new PropertyMap(ImmutableMultimap.of("textures", new Property("textures", texture)));
-        GameProfile profile = new GameProfile(headUuid, "pizza", properties);
         ItemStack specialQuests = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) specialQuests.getItemMeta();
-        assert meta != null;
-        try{
-            Field profileField = meta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-
-            Object resolvableProfile = Class.forName("net.minecraft.world.item.component.ResolvableProfile")
-                    .getMethod("createResolved", GameProfile.class)
-                    .invoke(null, profile);
-            profileField.set(meta, resolvableProfile);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        HeadUtil.applyTexture(meta, texture);
         meta.setDisplayName(ChatColor.GOLD + "Quests Especiais");
         specialQuests.setItemMeta(meta);
 
@@ -349,24 +331,10 @@ public class MenuListener implements Listener {
                 if(event.getClick().equals(ClickType.LEFT)){
                     if(specialQuests < 25){
                         specialQuests++;
-                        UUID headUuid = UUID.fromString((String) ((EntityHead) Quest.QUESTION.getIcon()).UUID);
                         String texture = ((EntityHead) Quest.QUESTION.getIcon()).texture;
-                        PropertyMap properties = new PropertyMap(ImmutableMultimap.of("textures", new Property("textures", texture)));
-                        GameProfile profile = new GameProfile(headUuid, "pizza", properties);
                         ItemStack specialItem = new ItemStack(Material.PLAYER_HEAD);
                         SkullMeta meta = (SkullMeta) specialItem.getItemMeta();
-                        assert meta != null;
-                        try{
-                            Field profileField = meta.getClass().getDeclaredField("profile");
-                            profileField.setAccessible(true);
-
-                            Object resolvableProfile = Class.forName("net.minecraft.world.item.component.ResolvableProfile")
-                                    .getMethod("createResolved", GameProfile.class)
-                                    .invoke(null, profile);
-                            profileField.set(meta, resolvableProfile);
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
+                        HeadUtil.applyTexture(meta, texture);
                         meta.setDisplayName(ChatColor.GOLD + "Quests Especiais");
                         specialItem.setItemMeta(meta);
 
@@ -382,24 +350,10 @@ public class MenuListener implements Listener {
                 } else if(event.getClick().equals(ClickType.RIGHT)){
                     if(specialQuests > 1){
                         specialQuests--;
-                        UUID headUuid = UUID.fromString((String) ((EntityHead) Quest.QUESTION.getIcon()).UUID);
                         String texture = ((EntityHead) Quest.QUESTION.getIcon()).texture;
-                        PropertyMap properties = new PropertyMap(ImmutableMultimap.of("textures", new Property("textures", texture)));
-                        GameProfile profile = new GameProfile(headUuid, "pizza", properties);
                         ItemStack specialItem = new ItemStack(Material.PLAYER_HEAD);
                         SkullMeta meta = (SkullMeta) specialItem.getItemMeta();
-                        assert meta != null;
-                        try{
-                            Field profileField = meta.getClass().getDeclaredField("profile");
-                            profileField.setAccessible(true);
-
-                            Object resolvableProfile = Class.forName("net.minecraft.world.item.component.ResolvableProfile")
-                                    .getMethod("createResolved", GameProfile.class)
-                                    .invoke(null, profile);
-                            profileField.set(meta, resolvableProfile);
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
+                        HeadUtil.applyTexture(meta, texture);
                         meta.setDisplayName(ChatColor.GOLD + "Quests Especiais");
                         specialItem.setItemMeta(meta);
 

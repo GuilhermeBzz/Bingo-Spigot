@@ -3,13 +3,11 @@ package br.com.bingo.listener;
 import br.com.bingo.quests.QuestInstance;
 import br.com.bingo.ui.BingoMenu;
 import br.com.bingo.quests.EntityHead;
+import br.com.bingo.utils.HeadUtil;
 import br.com.bingo.game.GameManager;
 import br.com.bingo.game.GameStatus;
 import br.com.bingo.game.GameType;
 import br.com.bingo.quests.Quest;
-import com.google.common.collect.ImmutableMultimap;
-import com.mojang.authlib.properties.Property;
-import com.mojang.authlib.properties.PropertyMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -24,9 +22,7 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import com.mojang.authlib.GameProfile;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -131,30 +127,11 @@ public class InventoryListener implements Listener {
                     questItem.setItemMeta(meta);
                 }
                 else if (quest.getIcon() instanceof EntityHead) {
-                    UUID headUuid = UUID.fromString((String) ((EntityHead) quest.getIcon()).UUID);
                     String texture = ((EntityHead) quest.getIcon()).texture;
-
-                    PropertyMap properties = new PropertyMap(ImmutableMultimap.of("textures", new Property("textures", texture)));
-                    GameProfile profile = new GameProfile(headUuid, "pizza", properties);
 
                     questItem = new ItemStack(Material.PLAYER_HEAD);
                     SkullMeta meta = (SkullMeta) questItem.getItemMeta();
-
-                    assert meta != null;
-                    try {
-                        // Pega o campo correto para a versão 1.21.4
-                        Field profileField = meta.getClass().getDeclaredField("profile");
-                        profileField.setAccessible(true);
-
-                        // Converte o GameProfile para o novo tipo ResolvableProfile
-                        Object resolvableProfile = Class.forName("net.minecraft.world.item.component.ResolvableProfile")
-                                .getMethod("createResolved", GameProfile.class)
-                                .invoke(null, profile);
-
-                        profileField.set(meta, resolvableProfile); // Define o perfil corretamente
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    HeadUtil.applyTexture(meta, texture);
                     questItem.setItemMeta(meta);
 
 
@@ -225,30 +202,11 @@ public class InventoryListener implements Listener {
                     }
                     questItem.setItemMeta(meta);
                 } else if (quest.getIcon() instanceof EntityHead) {
-                    UUID headUuid = UUID.fromString((String) ((EntityHead) quest.getIcon()).UUID);
                     String texture = ((EntityHead) quest.getIcon()).texture;
-
-                    PropertyMap properties = new PropertyMap(ImmutableMultimap.of("textures", new Property("textures", texture)));
-                    GameProfile profile = new GameProfile(headUuid, "pizza", properties);
 
                     questItem = new ItemStack(Material.PLAYER_HEAD);
                     SkullMeta meta = (SkullMeta) questItem.getItemMeta();
-
-                    assert meta != null;
-                    try {
-                        // Pega o campo correto para a versão 1.21.4
-                        Field profileField = meta.getClass().getDeclaredField("profile");
-                        profileField.setAccessible(true);
-
-                        // Converte o GameProfile para o novo tipo ResolvableProfile
-                        Object resolvableProfile = Class.forName("net.minecraft.world.item.component.ResolvableProfile")
-                                .getMethod("createResolved", GameProfile.class)
-                                .invoke(null, profile);
-
-                        profileField.set(meta, resolvableProfile); // Define o perfil corretamente
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    HeadUtil.applyTexture(meta, texture);
                     questItem.setItemMeta(meta);
 
 

@@ -41,7 +41,7 @@ public class BuildListener implements Listener {
     public boolean checkTotem(PlayerInteractEvent event){
         Bukkit.getLogger().info("check totem");
         Block block = event.getClickedBlock();
-        assert block != null;
+        if(block == null) return false;
 
         if(!block.getType().equals(Material.NETHERRACK)) return false;
         Location location = block.getLocation();

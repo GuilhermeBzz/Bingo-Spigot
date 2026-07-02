@@ -54,7 +54,7 @@ public class Feast {
         try{
             SchematicManager.buildSchematic( "feast.schem", location, false);
         } catch (IOException e){
-            e.printStackTrace();
+            br.com.bingo.Bingo.getInstance().getLogger().log(java.util.logging.Level.SEVERE, "Erro inesperado no plugin Bingo (veja o stacktrace)", e);
         }
 
     }

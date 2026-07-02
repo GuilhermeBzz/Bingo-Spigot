@@ -259,7 +259,7 @@ public enum Quest {
     COLLECT_COPPER_LANTERN(QuestType.COLLECT_ITEM, Material.COPPER_LANTERN, Material.COPPER_LANTERN, "Colete uma Lanterna de Cobre", 1),
     COLLECT_DARK_OAK_SHELF(QuestType.COLLECT_ITEM, Material.DARK_OAK_SHELF, Material.DARK_OAK_SHELF, "Colete uma Prateleira de Carvalho Escuro", 1),
     COLLECT_COPPER_FULL_SET(QuestType.FULL_SET, Material.COPPER_INGOT, Material.COPPER_CHESTPLATE, "Colete um Set Completo de Cobre \n e coloque ele em um Armor Stand", 4),
-    ADV_MOB_KABOB(QuestType.ADVANCEMENT, "Mob Kabob", Material.COOKED_BEEF, "Acerte 5 mobs com o mesmo Charge Atack da Lança", 3),
+    ADV_MOB_KABOB(QuestType.ADVANCEMENT, "Mob Kabob", Material.NETHERITE_SPEAR, "Acerte 5 mobs com o mesmo Charge Atack da Lança", 3),
     COLLECT_GOLDEN_SPEAR(QuestType.COLLECT_ITEM, Material.GOLDEN_SPEAR, Material.GOLDEN_SPEAR, "Colete uma Lança de Ouro", 1),
     COLLECT_GOLDEN_DANDELION(QuestType.COLLECT_ITEM, Material.GOLDEN_DANDELION, Material.GOLDEN_DANDELION, "Colete uma Dandelion Dourada", 1),
     KILL_PARCHED(QuestType.KILL_MOB, EntityType.PARCHED, EntityHead.PARCHED, "Mate um Parchado", 2),

@@ -73,7 +73,7 @@ public class MiniFeast {
         try{
             SchematicManager.buildSchematic( "mini_feast.schem", location, false);
         } catch (IOException e){
-            e.printStackTrace();
+            br.com.bingo.Bingo.getInstance().getLogger().log(java.util.logging.Level.SEVERE, "Erro inesperado no plugin Bingo (veja o stacktrace)", e);
         }
     }
 
