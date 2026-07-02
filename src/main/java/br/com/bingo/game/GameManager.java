@@ -653,6 +653,9 @@ public class GameManager {
             if(kit && playerKit.get(player.getUniqueId()).equals(KitType.EXPLORER)){
                 giveNewBiome(player);
             }
+            if(kit && playerKit.get(player.getUniqueId()).equals(KitType.CARTOGRAPHER)){
+                cartographerManager.initPlayer(player.getUniqueId());
+            }
         }
         scoreboardBingo.startScoreboard();
 

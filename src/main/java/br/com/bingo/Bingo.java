@@ -99,6 +99,7 @@ public final class Bingo extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ProfileListener(), this);
         getServer().getPluginManager().registerEvents(new BlacksmithListener(gameManager), this);
         getServer().getPluginManager().registerEvents(new ExplorerListener(gameManager), this);
+        getServer().getPluginManager().registerEvents(new CartographerListener(gameManager), this);
         getServer().getPluginManager().registerEvents(new SoulboundListener(gameManager), this);
         getServer().getPluginManager().registerEvents(new PyroListener(gameManager), this);
         getServer().getPluginManager().registerEvents(new BeastmasterListener(gameManager), this);
