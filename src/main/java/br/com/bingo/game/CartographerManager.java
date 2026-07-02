@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.generator.structure.Structure;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.StructureSearchResult;
 
 import java.util.ArrayList;
@@ -20,7 +21,9 @@ import java.util.UUID;
 
 public class CartographerManager {
 
-    private static final int SEARCH_RADIUS = 5000;
+    private static final int SEARCH_RADIUS_CHUNKS = 100; // em CHUNKS (~1600 blocos). locateNearestStructure usa raio em chunks
+    private static final long SEARCH_START_DELAY_TICKS = 20L; // 1s apos o inicio
+    private static final long SEARCH_PERIOD_TICKS = 2L;       // uma busca a cada 2 ticks (espalha o custo)
     private static final long COOLDOWN_PHASE1_MS = 180_000L; // 3 min
     private static final long COOLDOWN_PHASE2_MS = 60_000L;  // 1 min
     private static final int DRAFT_SIZE_PHASE1 = 3;
@@ -33,29 +36,53 @@ public class CartographerManager {
     private boolean phase2 = false;
     private final Random random = new Random();
 
-    /** Localiza (async) a variante mais proxima de cada MappedStructure no mundo dado. Espelha searchBiomes. */
+    /**
+     * Localiza a variante mais proxima de cada MappedStructure no mundo dado.
+     *
+     * IMPORTANTE: roda na MAIN THREAD (uma busca por vez, espalhada em ticks), NAO async.
+     * locateNearestStructure com findUnexplored=true MUTA o cache interno de estruturas do NMS
+     * (StructureCheck / Long2ObjectOpenHashMap), que NAO e thread-safe; chama-lo de outra thread
+     * corrompe o mapa e derruba o servidor (ArrayIndexOutOfBoundsException no rehash). Espalhar
+     * uma busca por tick na main thread evita tanto a corrupcao quanto um unico congelamento longo.
+     *
+     * Como tudo (busca + leitura via rollDraft/getLocation) roda na main thread, os mapas de estado
+     * nao precisam ser concorrentes.
+     */
     public void searchStructures(World world) {
-        Bukkit.getScheduler().runTaskAsynchronously(Bingo.getInstance(), () -> {
-            Location origin = world.getSpawnLocation();
-            for (MappedStructure structure : MappedStructure.values()) {
-                Location nearest = null;
-                double nearestDist = Double.MAX_VALUE;
-                for (Structure variant : structure.getVariants()) {
-                    StructureSearchResult result = world.locateNearestStructure(origin, variant, SEARCH_RADIUS, true);
-                    if (result != null) {
-                        double dist = result.getLocation().distanceSquared(origin);
-                        if (dist < nearestDist) {
-                            nearestDist = dist;
-                            nearest = result.getLocation();
-                        }
+        final Location origin = world.getSpawnLocation();
+        final List<MappedStructure> structureOf = new ArrayList<>();
+        final List<Structure> variantOf = new ArrayList<>();
+        for (MappedStructure ms : MappedStructure.values()) {
+            for (Structure variant : ms.getVariants()) {
+                structureOf.add(ms);
+                variantOf.add(variant);
+            }
+        }
+
+        new BukkitRunnable() {
+            private int index = 0;
+
+            @Override
+            public void run() {
+                if (index >= variantOf.size()) {
+                    Bukkit.getLogger().info("[Cartographer] Estruturas localizadas: " + located.size());
+                    cancel();
+                    return;
+                }
+                MappedStructure structure = structureOf.get(index);
+                Structure variant = variantOf.get(index);
+                index++;
+
+                StructureSearchResult result = world.locateNearestStructure(origin, variant, SEARCH_RADIUS_CHUNKS, true);
+                if (result != null) {
+                    Location found = result.getLocation();
+                    Location existing = located.get(structure);
+                    if (existing == null || found.distanceSquared(origin) < existing.distanceSquared(origin)) {
+                        located.put(structure, found);
                     }
                 }
-                if (nearest != null) {
-                    located.put(structure, nearest);
-                }
             }
-            Bukkit.getLogger().info("[Cartographer] Estruturas localizadas: " + located.size());
-        });
+        }.runTaskTimer(Bingo.getInstance(), SEARCH_START_DELAY_TICKS, SEARCH_PERIOD_TICKS);
     }
 
     /** Inicia o jogador com um conjunto vazio e o draft ja disponivel. */
