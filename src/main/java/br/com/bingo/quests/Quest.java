@@ -38,7 +38,7 @@ public enum Quest {
     COLLECT_ANVIL(QuestType.COLLECT_ITEM, Material.ANVIL, Material.ANVIL, "Colete uma Anvil", 2),
     COLLECT_ACTIVATOR_RAIL(QuestType.COLLECT_ITEM, Material.ACTIVATOR_RAIL, Material.ACTIVATOR_RAIL, "Colete um Activator Rail", 2),
     COLLECT_ARROW(QuestType.COLLECT_ITEM, Material.ARROW, Material.ARROW, "Colete uma Flecha", 1),
-    COLLECT_SADDLE(QuestType.COLLECT_ITEM, Material.SADDLE, Material.SADDLE, "Colete uma Sela", 3),
+    COLLECT_SADDLE(QuestType.COLLECT_ITEM, Material.SADDLE, Material.SADDLE, "Colete uma Sela", 2),
     COLLECT_CAKE(QuestType.COLLECT_ITEM, Material.CAKE, Material.CAKE, "Colete um Bolo", 3),
     COLLECT_PUFFERFISH(QuestType.COLLECT_ITEM, Material.PUFFERFISH, Material.PUFFERFISH, "Colete um Baiacu", 2),
     COLLECT_HAY_BALE(QuestType.COLLECT_ITEM, Material.HAY_BLOCK, Material.HAY_BLOCK, "Colete um Bloco de Feno", 1),
@@ -253,7 +253,19 @@ public enum Quest {
     KILL_BOSS(QuestType.KILL_BOSS, "Boss",EntityHead.BOSS ,"Mate o Boss", 4),
     DOMINATION(QuestType.DOMINATION, "Domination", Material.TARGET, "Domine o território por 1 minuto seguido", 4),
     CAPTURE_THE_FLAG(QuestType.CAPTURE, "Capture,", Material.PURPLE_BANNER, "Capture a bandeira inimiga!", 4),
-
+    COLLECT_LIME_HARNESS(QuestType.COLLECT_ITEM, Material.LIME_HARNESS, Material.LIME_HARNESS, "Colete um  Lime Harness", 2),
+    ADV_HAPPY_GHAST(QuestType.ADVANCEMENT, "Stay Hydrated!", Material.DRIED_GHAST, "Coloque um Dried Ghast na Água", 2),
+    KILL_COPPER_GOLEM(QuestType.KILL_MOB, EntityType.COPPER_GOLEM, Material.COPPER_GOLEM_STATUE, "Mate um Copper Golem", 2),
+    COLLECT_COPPER_LANTERN(QuestType.COLLECT_ITEM, Material.COPPER_LANTERN, Material.COPPER_LANTERN, "Colete uma Lanterna de Cobre", 1),
+    COLLECT_DARK_OAK_SHELF(QuestType.COLLECT_ITEM, Material.DARK_OAK_SHELF, Material.DARK_OAK_SHELF, "Colete uma Prateleira de Carvalho Escuro", 1),
+    COLLECT_COPPER_FULL_SET(QuestType.FULL_SET, Material.COPPER_INGOT, Material.COPPER_CHESTPLATE, "Colete um Set Completo de Cobre \n e coloque ele em um Armor Stand", 4),
+    ADV_MOB_KABOB(QuestType.ADVANCEMENT, "Mob Kabob", Material.COOKED_BEEF, "Acerte 5 mobs com o mesmo Charge Atack da Lança", 3),
+    COLLECT_GOLDEN_SPEAR(QuestType.COLLECT_ITEM, Material.GOLDEN_SPEAR, Material.GOLDEN_SPEAR, "Colete uma Lança de Ouro", 1),
+    COLLECT_GOLDEN_DANDELION(QuestType.COLLECT_ITEM, Material.GOLDEN_DANDELION, Material.GOLDEN_DANDELION, "Colete uma Dandelion Dourada", 1),
+    KILL_PARCHED(QuestType.KILL_MOB, EntityType.PARCHED, EntityHead.PARCHED, "Mate um Parchado", 2),
+    KILL_NAUTILUS(QuestType.KILL_MOB, EntityType.NAUTILUS, EntityHead.NAUTILUS, "Mate um Nautilus", 2),
+    COLLECT_NAME_TAG(QuestType.COLLECT_ITEM, Material.NAME_TAG, Material.NAME_TAG, "Colete uma Tag de Nome", 1),
+    
     ;
     //Type, Target, Icon,Name, Difficulty
 

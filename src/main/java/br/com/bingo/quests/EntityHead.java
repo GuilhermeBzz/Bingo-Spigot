@@ -370,6 +370,14 @@ public enum EntityHead {
             "196dc204-bfc5-4570-9fb7-be2d4fc0bc0a",
             "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjJlNjg1OGQ1ZTIzZGNmY2M3YTY2MmIzZmM2ZTlkZjg0ZTdjMjFhNDcyNTJhNjA3NDJhZDIyZDNjZTk0ZSJ9fX0="
     ),
+    PARCHED(
+                "f0e1c3d4-5b6a-4c7d-8e9f-0a1b2c3d4e5f",
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjRhZWNlZmY1ZjI2ZGQ4NDEzYzVjMDM1NDdjMjM0YWMwMzEwOGQxODdhZjBiOWNkODM0YThjZTEyNTk4NTkxYyJ9fX0="
+    ),
+    NAUTILUS(
+            "a1b2c3d4-5e6f-7g8h-9i0j-k1l2m3n4o5p6",
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2JiMzQwZGQzMzAyNjE1MzQ4ZGU1MTYyZmUxNjcwYjljNWM5YzYxNmNkOTJkMmRlOWQ4Mzk4Y2IzM2U4NDJhZSJ9fX0=="
+    )
     ;
 
     public final String UUID;
