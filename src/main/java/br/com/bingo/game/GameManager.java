@@ -584,7 +584,7 @@ public class GameManager {
         world.setDifficulty(Difficulty.NORMAL);
         world.setPVP(false);
         world.setTime(0L);
-        world.setGameRule(GameRule.DO_INSOMNIA, false);
+        world.setGameRule(GameRule.SPAWN_PHANTOMS, false);
         freezePlayers = true;
 
         if(this.gameType == GameType.SOLO){

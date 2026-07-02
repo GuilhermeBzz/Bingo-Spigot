@@ -1,7 +1,7 @@
 name: Bingo
 version: '${project.version}'
 main: br.com.bingo.Bingo
-api-version: '1.26'
+api-version: '26.1'
 
 commands:
   bingo:

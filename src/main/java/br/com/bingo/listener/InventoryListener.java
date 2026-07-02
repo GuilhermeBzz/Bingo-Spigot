@@ -7,7 +7,9 @@ import br.com.bingo.game.GameManager;
 import br.com.bingo.game.GameStatus;
 import br.com.bingo.game.GameType;
 import br.com.bingo.quests.Quest;
+import com.google.common.collect.ImmutableMultimap;
 import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -132,8 +134,8 @@ public class InventoryListener implements Listener {
                     UUID headUuid = UUID.fromString((String) ((EntityHead) quest.getIcon()).UUID);
                     String texture = ((EntityHead) quest.getIcon()).texture;
 
-                    GameProfile profile = new GameProfile(headUuid, "pizza");
-                    profile.getProperties().put("textures", new Property("textures", texture));
+                    PropertyMap properties = new PropertyMap(ImmutableMultimap.of("textures", new Property("textures", texture)));
+                    GameProfile profile = new GameProfile(headUuid, "pizza", properties);
 
                     questItem = new ItemStack(Material.PLAYER_HEAD);
                     SkullMeta meta = (SkullMeta) questItem.getItemMeta();
@@ -146,8 +148,8 @@ public class InventoryListener implements Listener {
 
                         // Converte o GameProfile para o novo tipo ResolvableProfile
                         Object resolvableProfile = Class.forName("net.minecraft.world.item.component.ResolvableProfile")
-                                .getConstructor(GameProfile.class)
-                                .newInstance(profile);
+                                .getMethod("createResolved", GameProfile.class)
+                                .invoke(null, profile);
 
                         profileField.set(meta, resolvableProfile); // Define o perfil corretamente
                     } catch (Exception e) {
@@ -226,8 +228,8 @@ public class InventoryListener implements Listener {
                     UUID headUuid = UUID.fromString((String) ((EntityHead) quest.getIcon()).UUID);
                     String texture = ((EntityHead) quest.getIcon()).texture;
 
-                    GameProfile profile = new GameProfile(headUuid, "pizza");
-                    profile.getProperties().put("textures", new Property("textures", texture));
+                    PropertyMap properties = new PropertyMap(ImmutableMultimap.of("textures", new Property("textures", texture)));
+                    GameProfile profile = new GameProfile(headUuid, "pizza", properties);
 
                     questItem = new ItemStack(Material.PLAYER_HEAD);
                     SkullMeta meta = (SkullMeta) questItem.getItemMeta();
@@ -240,8 +242,8 @@ public class InventoryListener implements Listener {
 
                         // Converte o GameProfile para o novo tipo ResolvableProfile
                         Object resolvableProfile = Class.forName("net.minecraft.world.item.component.ResolvableProfile")
-                                .getConstructor(GameProfile.class)
-                                .newInstance(profile);
+                                .getMethod("createResolved", GameProfile.class)
+                                .invoke(null, profile);
 
                         profileField.set(meta, resolvableProfile); // Define o perfil corretamente
                     } catch (Exception e) {

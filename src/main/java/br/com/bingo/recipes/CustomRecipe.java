@@ -58,24 +58,24 @@ public class CustomRecipe {
         ShapedRecipe chainHelmetRecipe = new ShapedRecipe(new NamespacedKey(plugin, "chain_helmet"), new ItemStack(Material.CHAINMAIL_HELMET));
         chainHelmetRecipe.shape("XXX",
                 "X X");
-        chainHelmetRecipe.setIngredient('X', Material.CHAIN);
+        chainHelmetRecipe.setIngredient('X', Material.IRON_CHAIN);
         plugin.getServer().addRecipe(chainHelmetRecipe);
         ShapedRecipe chainChestplateRecipe = new ShapedRecipe(new NamespacedKey(plugin, "chain_chestplate"), new ItemStack(Material.CHAINMAIL_CHESTPLATE));
         chainChestplateRecipe.shape("X X",
                 "XXX",
                 "XXX");
-        chainChestplateRecipe.setIngredient('X', Material.CHAIN);
+        chainChestplateRecipe.setIngredient('X', Material.IRON_CHAIN);
         plugin.getServer().addRecipe(chainChestplateRecipe);
         ShapedRecipe chainLeggingsRecipe = new ShapedRecipe(new NamespacedKey(plugin, "chain_leggings"), new ItemStack(Material.CHAINMAIL_LEGGINGS));
         chainLeggingsRecipe.shape("XXX",
                 "X X",
                 "X X");
-        chainLeggingsRecipe.setIngredient('X', Material.CHAIN);
+        chainLeggingsRecipe.setIngredient('X', Material.IRON_CHAIN);
         plugin.getServer().addRecipe(chainLeggingsRecipe);
         ShapedRecipe chainBootsRecipe = new ShapedRecipe(new NamespacedKey(plugin, "chain_boots"), new ItemStack(Material.CHAINMAIL_BOOTS));
         chainBootsRecipe.shape("X X",
                 "X X");
-        chainBootsRecipe.setIngredient('X', Material.CHAIN);
+        chainBootsRecipe.setIngredient('X', Material.IRON_CHAIN);
         plugin.getServer().addRecipe(chainBootsRecipe);
     }
 

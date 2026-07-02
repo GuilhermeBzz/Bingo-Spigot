@@ -193,49 +193,81 @@ public enum Ranks {
     }
 
     public static void setPrefixAndDisplayName(Player player, Map<UUID, TeamType> playerTeams){
-        for(PlayersData playerData : PlayersStorageUtil.getPlayers()){
-            if(playerData.getUuid().equals(player.getUniqueId())){
+        TagData data = computeTagData(player, playerTeams);
+        if(data == null) return; // jogador ainda sem PlayersData
 
-                Ranks rank = Ranks.getRank(playerData.getPoints());
-                String prefix = rank.getColor() + rank.getPrefix();
-                ChatColor textColor = ChatColor.WHITE ;
-                if(playerTeams.get(player.getUniqueId()) != null){
-                    if(playerTeams.get(player.getUniqueId()).equals(TeamType.TEAM_BLUE)){
-                        textColor = ChatColor.BLUE ;
-                    }else if(playerTeams.get(player.getUniqueId()).equals(TeamType.TEAM_RED)){
-                        textColor = ChatColor.RED ;
-                    } else if (playerTeams.get(player.getUniqueId()).equals(TeamType.SOLO)) {
-                        textColor = ChatColor.LIGHT_PURPLE;
-                    }
-                }
+        String playerOgName = Bingo.getInstance().getPlayerOriginalName(player.getUniqueId());
+        String finalName = data.prefix + " " + data.textColor + playerOgName + ChatColor.WHITE;
 
-                String playerOgName = Bingo.getInstance().getPlayerOriginalName(player.getUniqueId());
-                String finalName = prefix + " " + textColor + playerOgName + ChatColor.WHITE;
+        player.setPlayerListName(finalName);
+        player.setDisplayName(finalName);
 
-                Bukkit.getLogger().info("Setando nome para: " + finalName + " para " + player.getName());
+        // Direção 1: todos os jogadores online passam a enxergar a nametag deste jogador.
+        // A nametag acima da cabeça é renderizada a partir da scoreboard de quem VÊ, então o
+        // time precisa existir na scoreboard de cada viewer (e não só na do próprio jogador).
+        for(Player viewer : Bukkit.getOnlinePlayers()){
+            applyNameTag(viewer.getScoreboard(), player, data);
+        }
 
-                player.setPlayerListName(finalName);
-                player.setDisplayName(finalName);
-                setPlayerNameTag(player, prefix, textColor);
+        // Direção 2: a scoreboard deste jogador recebe a nametag de todos os outros, para que
+        // ele também veja as cores/prefixos de quem já estava online (ex.: join no meio da partida).
+        Scoreboard ownScoreboard = player.getScoreboard();
+        for(Player other : Bukkit.getOnlinePlayers()){
+            if(other.equals(player)) continue;
+            TagData otherData = computeTagData(other, playerTeams);
+            if(otherData != null){
+                applyNameTag(ownScoreboard, other, otherData);
             }
         }
     }
 
-    public static void setPlayerNameTag(Player player, String prefix, ChatColor textColor) {
-        Scoreboard scoreboard = player.getScoreboard(); // <- importante!
-        String teamName = "tag_" + player.getName();
+    private static TagData computeTagData(Player player, Map<UUID, TeamType> playerTeams){
+        for(PlayersData playerData : PlayersStorageUtil.getPlayers()){
+            if(playerData.getUuid().equals(player.getUniqueId())){
+                Ranks rank = Ranks.getRank(playerData.getPoints());
+                String prefix = rank.getColor() + rank.getPrefix();
+                ChatColor textColor = ChatColor.WHITE;
+                TeamType team = playerTeams.get(player.getUniqueId());
+                if(team != null){
+                    if(team.equals(TeamType.TEAM_BLUE)){
+                        textColor = ChatColor.BLUE;
+                    }else if(team.equals(TeamType.TEAM_RED)){
+                        textColor = ChatColor.RED;
+                    }else if(team.equals(TeamType.SOLO)){
+                        textColor = ChatColor.LIGHT_PURPLE;
+                    }
+                }
+                return new TagData(prefix, textColor);
+            }
+        }
+        return null;
+    }
 
-        Team oldTeam = scoreboard.getTeam(teamName);
-        if (oldTeam != null) {
-            oldTeam.unregister();
+    // Registra/atualiza o time de nametag de 'target' em uma scoreboard específica (a de quem vê).
+    private static void applyNameTag(Scoreboard scoreboard, Player target, TagData data) {
+        String teamName = "tag_" + target.getName();
+
+        Team team = scoreboard.getTeam(teamName);
+        if (team == null) {
+            team = scoreboard.registerNewTeam(teamName);
+        }
+        if (!team.hasEntry(target.getName())) {
+            team.addEntry(target.getName());
         }
 
-        Team team = scoreboard.registerNewTeam(teamName);
-        team.addEntry(player.getName());
-        prefix = prefix + " ";
-
+        String prefix = data.prefix + " ";
         team.setPrefix(prefix.length() > 16 ? prefix.substring(0, 16) : prefix);
-        team.setColor(textColor);
+        team.setColor(data.textColor);
+    }
+
+    private static class TagData {
+        final String prefix;
+        final ChatColor textColor;
+
+        TagData(String prefix, ChatColor textColor) {
+            this.prefix = prefix;
+            this.textColor = textColor;
+        }
     }
 
 }

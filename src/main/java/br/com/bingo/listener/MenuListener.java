@@ -7,8 +7,10 @@ import br.com.bingo.ChangeLog;
 import br.com.bingo.game.GameManager;
 import br.com.bingo.game.GameType;
 import br.com.bingo.kits.KitManager;
+import com.google.common.collect.ImmutableMultimap;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -171,8 +173,8 @@ public class MenuListener implements Listener {
 
         UUID headUuid = UUID.fromString((String) ((EntityHead) Quest.QUESTION.getIcon()).UUID);
         String texture = ((EntityHead) Quest.QUESTION.getIcon()).texture;
-        GameProfile profile = new GameProfile(headUuid, "pizza");
-        profile.getProperties().put("textures", new Property("textures", texture));
+        PropertyMap properties = new PropertyMap(ImmutableMultimap.of("textures", new Property("textures", texture)));
+        GameProfile profile = new GameProfile(headUuid, "pizza", properties);
         ItemStack specialQuests = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) specialQuests.getItemMeta();
         assert meta != null;
@@ -181,8 +183,8 @@ public class MenuListener implements Listener {
             profileField.setAccessible(true);
 
             Object resolvableProfile = Class.forName("net.minecraft.world.item.component.ResolvableProfile")
-                    .getConstructor(GameProfile.class)
-                    .newInstance(profile);
+                    .getMethod("createResolved", GameProfile.class)
+                    .invoke(null, profile);
             profileField.set(meta, resolvableProfile);
         } catch (Exception e){
             e.printStackTrace();
@@ -349,8 +351,8 @@ public class MenuListener implements Listener {
                         specialQuests++;
                         UUID headUuid = UUID.fromString((String) ((EntityHead) Quest.QUESTION.getIcon()).UUID);
                         String texture = ((EntityHead) Quest.QUESTION.getIcon()).texture;
-                        GameProfile profile = new GameProfile(headUuid, "pizza");
-                        profile.getProperties().put("textures", new Property("textures", texture));
+                        PropertyMap properties = new PropertyMap(ImmutableMultimap.of("textures", new Property("textures", texture)));
+                        GameProfile profile = new GameProfile(headUuid, "pizza", properties);
                         ItemStack specialItem = new ItemStack(Material.PLAYER_HEAD);
                         SkullMeta meta = (SkullMeta) specialItem.getItemMeta();
                         assert meta != null;
@@ -359,8 +361,8 @@ public class MenuListener implements Listener {
                             profileField.setAccessible(true);
 
                             Object resolvableProfile = Class.forName("net.minecraft.world.item.component.ResolvableProfile")
-                                    .getConstructor(GameProfile.class)
-                                    .newInstance(profile);
+                                    .getMethod("createResolved", GameProfile.class)
+                                    .invoke(null, profile);
                             profileField.set(meta, resolvableProfile);
                         } catch (Exception e){
                             e.printStackTrace();
@@ -382,8 +384,8 @@ public class MenuListener implements Listener {
                         specialQuests--;
                         UUID headUuid = UUID.fromString((String) ((EntityHead) Quest.QUESTION.getIcon()).UUID);
                         String texture = ((EntityHead) Quest.QUESTION.getIcon()).texture;
-                        GameProfile profile = new GameProfile(headUuid, "pizza");
-                        profile.getProperties().put("textures", new Property("textures", texture));
+                        PropertyMap properties = new PropertyMap(ImmutableMultimap.of("textures", new Property("textures", texture)));
+                        GameProfile profile = new GameProfile(headUuid, "pizza", properties);
                         ItemStack specialItem = new ItemStack(Material.PLAYER_HEAD);
                         SkullMeta meta = (SkullMeta) specialItem.getItemMeta();
                         assert meta != null;
@@ -392,8 +394,8 @@ public class MenuListener implements Listener {
                             profileField.setAccessible(true);
 
                             Object resolvableProfile = Class.forName("net.minecraft.world.item.component.ResolvableProfile")
-                                    .getConstructor(GameProfile.class)
-                                    .newInstance(profile);
+                                    .getMethod("createResolved", GameProfile.class)
+                                    .invoke(null, profile);
                             profileField.set(meta, resolvableProfile);
                         } catch (Exception e){
                             e.printStackTrace();

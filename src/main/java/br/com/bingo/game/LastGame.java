@@ -6,8 +6,10 @@ import br.com.bingo.quests.Quest;
 import br.com.bingo.quests.QuestInstance;
 import br.com.bingo.rank.RankCalculator;
 import br.com.bingo.team.TeamType;
+import com.google.common.collect.ImmutableMultimap;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -115,8 +117,8 @@ public class LastGame {
                 UUID headUuid = UUID.fromString((String) ((EntityHead) quest.getIcon()).UUID);
                 String texture = ((EntityHead) quest.getIcon()).texture;
 
-                GameProfile profile = new GameProfile(headUuid, "pizza");
-                profile.getProperties().put("textures", new Property("textures", texture));
+                PropertyMap properties = new PropertyMap(ImmutableMultimap.of("textures", new Property("textures", texture)));
+                GameProfile profile = new GameProfile(headUuid, "pizza", properties);
 
                 questItem = new ItemStack(Material.PLAYER_HEAD);
                 SkullMeta meta = (SkullMeta) questItem.getItemMeta();
@@ -129,8 +131,8 @@ public class LastGame {
 
                     // Converte o GameProfile para o novo tipo ResolvableProfile
                     Object resolvableProfile = Class.forName("net.minecraft.world.item.component.ResolvableProfile")
-                            .getConstructor(GameProfile.class)
-                            .newInstance(profile);
+                            .getMethod("createResolved", GameProfile.class)
+                            .invoke(null, profile);
 
                     profileField.set(meta, resolvableProfile); // Define o perfil corretamente
                 } catch (Exception e) {

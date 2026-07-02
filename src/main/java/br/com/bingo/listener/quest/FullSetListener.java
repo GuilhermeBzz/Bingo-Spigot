@@ -44,7 +44,7 @@ public class FullSetListener implements Listener {
         if(material.equals(Material.IRON_INGOT)) type = "IRON";
         if(material.equals(Material.GOLD_INGOT)) type = "GOLDEN";
         if(material.equals(Material.DIAMOND)) type = "DIAMOND";
-        if(material.equals(Material.CHAIN)) type = "CHAINMAIL";
+        if(material.equals(Material.IRON_CHAIN)) type = "CHAINMAIL";
         if(material.equals(Material.LEATHER)) type = "LEATHER";
 
         ItemStack helmet = armorStand.getEquipment().getHelmet();
