@@ -82,7 +82,7 @@ public class CartographerListener implements Listener {
             return;
         }
         Inventory draft = Bukkit.createInventory(null, 9, DRAFT_TITLE);
-        int slot = 2;
+        int slot = (draft.getSize() - options.size()) / 2; // centraliza (3 -> slots 3,4,5; 5 -> 2..6)
         for (MappedStructure structure : options) {
             ItemStack icon = new ItemStack(structure.getIcon());
             ItemMeta meta = icon.getItemMeta();
