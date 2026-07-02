@@ -52,6 +52,7 @@ public class GameManager {
 
     public Boolean kit;
     ScoreboardBingo scoreboardBingo;
+    public CartographerManager cartographerManager = new CartographerManager();
     public Map<UUID, TeamType>  playerTeam = new HashMap<>();
     public Map<QuestInstance, UUID>   playerQuests = new HashMap<>();
     public Map<QuestInstance, TeamType>   teamQuests = new HashMap<>();
@@ -115,6 +116,10 @@ public class GameManager {
         this.bossSpawned = false;
         this.dominationEnded = false;
         this.captureEnded = false;
+    }
+
+    public CartographerManager getCartographerManager() {
+        return cartographerManager;
     }
 
     public void generateBiomeMap(){
@@ -540,6 +545,7 @@ public class GameManager {
         }, 20L); // 1 segundo de delay
 
         if(scoreboardBingo != null) this.scoreboardBingo = new ScoreboardBingo(this);
+        this.cartographerManager = new CartographerManager();
     }
 
     public void startCommand(Player sender){
@@ -1198,6 +1204,7 @@ public class GameManager {
         Bukkit.broadcastMessage(ChatColor.AQUA + "Mundo gerado com sucesso!");
 
         searchBiomes(overworld);
+        cartographerManager.searchStructures(overworld);
 
     }
 
